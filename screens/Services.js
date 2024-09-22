@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Alert, Platform, TextInput, Button } from 'react-native';
+import { View, FlatList, StyleSheet, Alert, Platform, TextInput } from 'react-native';
 import supabase from '../supabaseClient'; // Ensure the correct import path
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
-import DriverItem from '../component/Transport/DriverItem';
+import ServiceItem from './services/ServiceItem';
 import Loading from '../component/loadingComponent/loading';
 import Error from '../component/loadingComponent/Error';
 
 const CAPE_TOWN_CENTRAL = { latitude: -33.9249, longitude: 18.4241 };
 
-const Transport = () => {
+const Services = () => {
   const navigation = useNavigation();
-  const [drivers, setDrivers] = useState([]);
-  const [filteredDrivers, setFilteredDrivers] = useState([]);
+  const [services, setServices] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchLocationAndDrivers = async () => {
+  const fetchLocationAndServices = async () => {
     try {
       let location;
 
@@ -29,17 +29,17 @@ const Transport = () => {
               const { latitude, longitude } = position.coords;
               location = { latitude, longitude };
               setUserLocation(location);
-              await fetchDrivers(location);
+              await fetchServices(location);
             },
             (error) => {
               setUserLocation(CAPE_TOWN_CENTRAL); // Set default location
-              fetchDrivers(CAPE_TOWN_CENTRAL);
+              fetchServices(CAPE_TOWN_CENTRAL);
             }
           );
         } else {
           setError('Geolocation is not supported by this browser.');
           setUserLocation(CAPE_TOWN_CENTRAL); // Set default location
-          fetchDrivers(CAPE_TOWN_CENTRAL);
+          fetchServices(CAPE_TOWN_CENTRAL);
         }
       } else {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,10 +50,10 @@ const Transport = () => {
         try {
           location = await Location.getCurrentPositionAsync({});
           setUserLocation(location.coords);
-          await fetchDrivers(location.coords);
+          await fetchServices(location.coords);
         } catch (locationError) {
           setUserLocation(CAPE_TOWN_CENTRAL); // Set default location
-          fetchDrivers(CAPE_TOWN_CENTRAL);
+          fetchServices(CAPE_TOWN_CENTRAL);
         }
       }
     } catch (generalError) {
@@ -63,99 +63,55 @@ const Transport = () => {
     }
   };
 
-  const fetchDrivers = async (location) => {
+  const fetchServices = async (location) => {
     try {
       const { data, error } = await supabase
-        .from('users')
-        .select('id, display_name, email, phone_number, suburb, price, profile_picture_url')
-        .eq('role_id', await getDriverRoleId());
+        .from('services') // Change this to your services table
+        .select('id, name, description, price, call_out_fee, created_at, updated_at')
+        .eq('is_available', true); // Assuming there's an availability field
 
       if (error) {
         throw error;
       }
 
-      setDrivers(data);
-      setFilteredDrivers(data);
+      setServices(data);
+      setFilteredServices(data);
       setLoading(false);
     } catch (fetchError) {
-      setError(`Error fetching drivers: ${fetchError.message}`);
+      setError(`Error fetching services: ${fetchError.message}`);
       setLoading(false);
     }
-  };
-
-  const getDriverRoleId = async () => {
-    const { data, error } = await supabase
-      .from('roles')
-      .select('id')
-      .eq('role_name', 'Driver')
-      .single(); // assuming each role_name is unique
-
-    if (error || !data) {
-      throw new Error('Failed to fetch driver role ID');
-    }
-    return data.id;
   };
 
   useEffect(() => {
-    fetchLocationAndDrivers();
+    fetchLocationAndServices();
   }, []);
 
   useEffect(() => {
     if (userLocation) {
-      fetchDrivers(userLocation);
+      fetchServices(userLocation);
     }
   }, [userLocation]);
-
-  const handleUpdateLocation = async () => {
-    setLoading(true);
-    await fetchLocationAndDrivers();
-    setLoading(false);
-  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
 
-    // Filter drivers based on search query
+    // Filter services based on search query
     const queryLower = query.toLowerCase();
-    const filtered = drivers.filter(driver =>
-      driver.display_name.toLowerCase().includes(queryLower)
+    const filtered = services.filter(service =>
+      service.name.toLowerCase().includes(queryLower)
     );
-    setFilteredDrivers(filtered);
+    setFilteredServices(filtered);
   };
 
-  const handleHireDriver = async (driverId) => {
-    try {
-      Alert.alert('Hire Driver', 'Driver hired successfully!');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to hire driver');
-      console.error('Hire Driver Error:', error);
-    }
-  };
-
-  const handlePayDriver = async (driverId) => {
-    try {
-      Alert.alert('Pay Driver', 'Payment successful!');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to pay driver');
-      console.error('Pay Driver Error:', error);
-    }
-  };
-
-  const handleMessageDriver = (driverId) => {
-    navigation.navigate('ChatScreen', { otherUserId: driverId });
-  };
-
-  const handleProfilePress = (driverId) => {
-    navigation.navigate('UserProfileScreen', { userId: driverId });
+  const handleServicePress = (serviceId) => {
+    navigation.navigate('ServiceDetails', { serviceId });
   };
 
   const renderItem = ({ item }) => (
-    <DriverItem
-      driver={item}
-      onHire={() => handleHireDriver(item.id)}
-      onPay={() => handlePayDriver(item.id)}
-      onMessage={() => handleMessageDriver(item.id)}
-      onProfilePress={() => handleProfilePress(item.id)}
+    <ServiceItem
+      service={item}
+      onPress={() => handleServicePress(item.id)}
     />
   );
 
@@ -171,12 +127,12 @@ const Transport = () => {
     <View style={styles.container}>
       <TextInput
         style={styles.searchBar}
-        placeholder="Search drivers..."
+        placeholder="Search services..."
         value={searchQuery}
         onChangeText={handleSearch}
       />
       <FlatList
-        data={filteredDrivers}
+        data={filteredServices}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -200,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Transport;
+export default Services;

@@ -6,7 +6,7 @@ import supabase from '../supabaseClient';
 
 import HomeTabs from './HomeTabs';
 import Settings from '../screens/Settings';
-import Transport from '../screens/Transport';
+import Services from '../screens/Services';
 import News from '../screens/News';
 import Help from '../screens/Help'; 
 import Support from '../screens/Support'; 

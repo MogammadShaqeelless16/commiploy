@@ -7,7 +7,7 @@ import { fetchProfile } from '../component/UserOperations/fetchProfile';
 import JobList from '../screens/JobList';
 import YourApplications from '../screens/YourApplications';
 import NotificationsScreen from '../screens/Notifications';
-import Transport from '../screens/Transport';
+import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
 import MyCentre from '../screens/MyCentre';
 import supabase from '../supabaseClient';  // Import your supabase client
@@ -65,8 +65,8 @@ const HomeTabs = () => {
             case 'Notifications':
               iconName = 'notifications';
               break;
-            case 'Transport':
-              iconName = 'car';
+            case 'Services':
+              iconName = 'construct-outline'; // Updated to a more relevant icon
               break;
             case 'FeedsList':
               iconName = 'reader';
@@ -112,7 +112,7 @@ const HomeTabs = () => {
       <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Explore' }} />
       <Tab.Screen name="MyCentre" component={MyCentre} options={{ tabBarLabel: 'My Centres' }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Notifications' }} />
-      <Tab.Screen name="Transport" component={Transport} options={{ tabBarLabel: 'Transport' }} />
+      <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
     </Tab.Navigator>
   );
 };
