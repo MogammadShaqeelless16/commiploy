@@ -62,7 +62,7 @@ const AppNavigator = () => {
         </Stack.Screen>
       ) : (
         <>
-          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name="Apply" component={Apply} options={{ headerShown: false }} />
           <Stack.Screen name="CrecheDetails" component={CrecheDetails} options={{ headerShown: false }} />
@@ -77,7 +77,7 @@ const AppNavigator = () => {
           <Stack.Screen name="DeveloperScreen" component={DeveloperScreen} options={{ headerShown: false }} />
           <Stack.Screen name="NewsDetails" component={NewsDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
-          <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }} />
+
 
         </>
       )}
