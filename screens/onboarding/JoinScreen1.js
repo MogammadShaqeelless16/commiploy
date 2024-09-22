@@ -11,9 +11,9 @@ const JoinScreen1 = () => {
     <View style={styles.container}>
       {/* Display the logo */}
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>Welcome to CrecheSpots!</Text>
+      <Text style={styles.title}>Welcome to Commiploy!</Text>
       <Text style={styles.description}>
-        Discover the best creche options available for your little ones.
+      Opportunities by communities for communities.
       </Text>
     </View>
   );

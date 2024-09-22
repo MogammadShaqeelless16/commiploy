@@ -9,9 +9,9 @@ const registeredBadge = require('../../assets/images/Registered.png');
 const JoinScreen2 = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Find the Perfect Creche!</Text>
+      <Text style={styles.title}>Discover Local Opportunities!</Text>
       <Text style={styles.description}>
-        Browse through a variety of options to find the best fit for your child.
+        Explore a variety of local products and odd jobs to connect with your community.
       </Text>
       
       {/* Grid layout */}
@@ -19,14 +19,14 @@ const JoinScreen2 = () => {
         <View style={styles.gridItem}>
           <Image source={registeredBadge} style={styles.badgeImage} />
           <Text style={styles.featureText}>
-            Look out for creches with this badge, as these are registered and verified.
+            Look for sellers and job listings marked with this badge—they are verified and trustworthy.
           </Text>
         </View>
       </View>
       
       {/* Additional Information */}
       <Text style={styles.infoText}>
-        CrecheSpots ensures that all registered creches meet our high standards of quality and safety.
+        Commiploy ensures that all listed products and job opportunities meet our high standards of quality and reliability.
       </Text>
     </View>
   );

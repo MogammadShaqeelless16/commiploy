@@ -6,10 +6,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon l
 const { width: screenWidth } = Dimensions.get('window');
 
 const features = [
-  { label: 'Application', icon: 'description', color: '#4a90e2' }, // Blue
-  { label: 'Fee Payment', icon: 'payment', color: '#e94e77' }, // Pink
-  { label: 'Creche Listing', icon: 'list', color: '#f5a623' }, // Orange
-  { label: 'Local News', icon: 'announcement', color: '#50e3c2' }, // Teal
+  { label: 'Job Listings', icon: 'work', color: '#4a90e2' }, // Blue
+  { label: 'Local Products', icon: 'shopping-cart', color: '#e94e77' }, // Pink
+  { label: 'Community Events', icon: 'event', color: '#f5a623' }, // Orange
+  { label: 'User Reviews', icon: 'rate-review', color: '#50e3c2' }, // Teal
 ];
 
 const JoinScreen3 = ({ navigation }) => {
@@ -30,7 +30,7 @@ const JoinScreen3 = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Get Started Today!</Text>
       <Text style={styles.description}>
-        Discover our features and complete your profile to get the most out of CrecheSpots.
+        Explore our features and complete your profile to make the most of Commiploy.
       </Text>
       <View style={styles.gridContainer}>
         {features.map((feature, index) => (
@@ -43,6 +43,9 @@ const JoinScreen3 = ({ navigation }) => {
       <Text style={styles.instructions}>
         To get started, please complete your profile with your information.
       </Text>
+      <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
     </View>
   );
 };
