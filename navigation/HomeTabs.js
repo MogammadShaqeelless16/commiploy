@@ -10,7 +10,8 @@ import NotificationsScreen from '../screens/Notifications';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
 import MyCentre from '../screens/MyCentre';
-import supabase from '../supabaseClient';  // Import your supabase client
+import ProductsList from '../screens/ProductsList'; // New ProductsList screen
+import supabase from '../supabaseClient'; 
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ const HomeTabs = () => {
   useEffect(() => {
     const fetchNotificationCount = async () => {
       try {
-        const profile = await fetchProfile();  // Assuming you have a function to fetch the user profile
+        const profile = await fetchProfile();
 
         const { data: notificationsData, error } = await supabase
           .from('notifications')
@@ -33,7 +34,7 @@ const HomeTabs = () => {
           return;
         }
 
-        setNotificationCount(notificationsData.length);  // Update the notification count
+        setNotificationCount(notificationsData.length);
       } catch (fetchError) {
         console.error('Error fetching notifications:', fetchError.message);
       }
@@ -54,10 +55,13 @@ const HomeTabs = () => {
 
           switch (route.name) {
             case 'JobList':
-              iconName = 'earth-outline';
+              iconName = 'briefcase'; // Updated to a briefcase icon for jobs
               break;
             case 'ApplicationList':
-              iconName = 'work';
+              iconName = 'paper'; // New icon for applications
+              break;
+            case 'ProductsList':
+              iconName = 'cart'; // Icon for products
               break;
             case 'MyCentre':
               iconName = 'school';
@@ -66,7 +70,7 @@ const HomeTabs = () => {
               iconName = 'notifications';
               break;
             case 'Services':
-              iconName = 'construct-outline'; // Updated to a more relevant icon
+              iconName = 'construct-outline';
               break;
             case 'FeedsList':
               iconName = 'reader';
@@ -109,7 +113,8 @@ const HomeTabs = () => {
       })}
     >
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Explore' }} />
+      <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
+      <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
       <Tab.Screen name="MyCentre" component={MyCentre} options={{ tabBarLabel: 'My Centres' }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Notifications' }} />
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />

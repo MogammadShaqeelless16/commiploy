@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import supabase from '../supabaseClient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ProfileAlert from '../component/Profile/ProfileAlert';
 
 const JobList = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
@@ -95,7 +96,10 @@ const JobList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+            <ProfileAlert navigation={navigation} />
+
       <View style={styles.locationSection}>
+
         <Text style={styles.locationTitle}>
           <Icon name="my-location" size={20} color="#007bff" /> Your Location:
         </Text>

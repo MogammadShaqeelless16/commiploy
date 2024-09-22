@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert, Button } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import supabase from '../supabaseClient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const JobDetails = ({ route }) => {
   const { jobId } = route.params;
@@ -39,30 +40,41 @@ const JobDetails = ({ route }) => {
   };
 
   const handleContactPoster = () => {
-    // Navigate to the user or business profile details page
-    navigation.navigate('UserProfileDetails', { userId: job.user_id }); // or job.business_id
+    navigation.navigate('UserProfileDetails', { userId: job.user_id });
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007bff" />;
+    return <ActivityIndicator size="large" color="#007bff" style={styles.loadingIndicator} />;
   }
 
   if (!job) {
-    return <Text>No job details found.</Text>;
+    return <Text style={styles.errorText}>No job details found.</Text>;
   }
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#007bff" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.jobTitle}>{job.title}</Text>
       <Text style={styles.jobDescription}>{job.description}</Text>
-      <Text style={styles.jobDetails}>Duration: {job.duration}</Text>
-      <Text style={styles.jobDetails}>Address: {job.address}</Text>
-      <Text style={styles.jobDetails}>Payment: R{job.payment.toFixed(2)}</Text>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.jobDetails}>Duration: {job.duration}</Text>
+        <Text style={styles.jobDetails}>Address: {job.address}</Text>
+        <Text style={styles.jobDetails}>Payment: R{job.payment.toFixed(2)}</Text>
+      </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Back" onPress={() => navigation.goBack()} />
-        <Button title="Apply" onPress={handleApply} />
-        <Button title="Contact Poster" onPress={handleContactPoster} />
+        <TouchableOpacity style={styles.button} onPress={handleApply}>
+          <Ionicons name="checkmark-circle" size={20} color="#fff" />
+          <Text style={styles.buttonText}>Apply</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleContactPoster}>
+          <Ionicons name="mail" size={20} color="#fff" />
+          <Text style={styles.buttonText}>Contact Poster</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -72,25 +84,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#ffffff',
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  backButton: {
+    marginRight: 10,
   },
   jobTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#333',
   },
   jobDescription: {
     fontSize: 16,
     marginBottom: 12,
+    color: '#555',
+  },
+  detailsContainer: {
+    backgroundColor: '#f4f4f4',
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 16,
   },
   jobDetails: {
     fontSize: 16,
     marginTop: 4,
+    color: '#333',
   },
   buttonContainer: {
-    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 5,
   },
 });
 

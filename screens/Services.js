@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import ServiceItem from './services/ServiceItem';
 import Loading from '../component/loadingComponent/loading';
 import Error from '../component/loadingComponent/Error';
+import ProfileAlert from '../component/Profile/ProfileAlert';
 
 const CAPE_TOWN_CENTRAL = { latitude: -33.9249, longitude: 18.4241 };
 
@@ -125,6 +126,8 @@ const Services = () => {
 
   return (
     <View style={styles.container}>
+            <ProfileAlert navigation={navigation} />
+
       <TextInput
         style={styles.searchBar}
         placeholder="Search services..."

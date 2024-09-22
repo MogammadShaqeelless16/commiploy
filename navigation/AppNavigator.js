@@ -66,7 +66,6 @@ const AppNavigator = () => {
       ) : (
         <>
           <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }} />
-          <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name="Apply" component={Apply} options={{ headerShown: false }} />
           <Stack.Screen name="JobDetails" component={JobDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplicationDetails" component={ApplicationDetails} options={{ headerShown: false }} />
@@ -82,7 +81,8 @@ const AppNavigator = () => {
           <Stack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
           <Stack.Screen name="ServiceDetails" component={ServiceDetails} options={{ headerShown: false }} />
           <Stack.Screen name="BusinessDetails" component={BusinessDetails} options={{ headerShown: false }} />
-
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
 
         </>
       )}

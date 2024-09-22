@@ -1,121 +1,93 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import supabase from '../supabaseClient';
-import ProfileAlert from '../component/user/ProfileAlert';
-import AddProductButton from '../component/Articles/AddProductButton';
-import ProductItem from './ProductItem';
+import React from 'react';
+import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
+import ProductCard from '../component/Feeds/ProductCard';
+import JobCard from '../component/Feeds/JobCard';
+import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
+import SectionHeader from '../component/Feeds/SectionHeader';
+import ProfileAlert from '../component/Profile/ProfileAlert';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
-  const [profile, setProfile] = useState({});
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isAlertVisible, setIsAlertVisible] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+  const products = [
+    { id: '1', title: 'Product 1', price: 'R199', description: 'Quality product 1' },
+    { id: '2', title: 'Product 2', price: 'R299', description: 'Quality product 2' },
+    { id: '3', title: 'Product 3', price: 'R399', description: 'Quality product 3' },
+  ];
 
-  useEffect(() => {
-    fetchProfile();
-    fetchProducts();
-  }, []);
+  const jobs = [
+    { id: '1', title: 'Software Engineer', description: 'Full-time position' },
+    { id: '2', title: 'Graphic Designer', description: 'Remote job opportunity' },
+  ];
 
-  const fetchProfile = async () => {
-    setLoading(true);
-    try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session) {
-        throw new Error('Unable to fetch user session');
-      }
-
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, display_name')
-        .eq('id', session.user.id)
-        .single();
-
-      if (error) {
-        throw new Error('Error fetching profile data');
-      }
-
-      setProfile(data);
-    } catch (error) {
-      Alert.alert('Error', error.message);
-      console.error('Profile Fetch Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('products') // Assuming the table is named 'products'
-        .select('*, shop:businesses(name)') // Fetch shop name using the relationship
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error('Error fetching products');
-      }
-
-      setProducts(data);
-    } catch (error) {
-      Alert.alert('Error', error.message);
-      console.error('Products Fetch Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchProducts(); // Refresh products
-    setRefreshing(false);
-  }, []);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#007bff" />;
-  }
+  const services = [
+    { id: '1', title: 'Plumbing Services', description: 'Expert plumbers available' },
+    { id: '2', title: 'Cleaning Services', description: 'Professional cleaning services' },
+    { id: '3', title: 'Electrical Services', description: 'Certified electricians' },
+    { id: '4', title: 'Landscaping Services', description: 'Beautiful gardens designed' },
+  ];
 
   return (
-    <FlatList
-      ListHeaderComponent={() => (
-        <View style={styles.header}>
-          <Text style={styles.title}>Products</Text>
-          <AddProductButton /> {/* Button to add new products */}
-        </View>
-      )}
-      data={products}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
-          <ProductItem product={item} />
-        </TouchableOpacity>
-      )}
-      numColumns={2} // Set number of columns to 2
-      columnWrapperStyle={styles.row} // Style for the rows
-      ListEmptyComponent={<Text style={styles.noProductsText}>No products available.</Text>}
-      onRefresh={handleRefresh}
-      refreshing={refreshing}
-    />
+    <ScrollView style={styles.container}>
+      {/* Profile Alert */}
+      <ProfileAlert navigation={navigation} />
+
+      {/* Profile Progress Bar */}
+      <View style={styles.progressBarContainer}>
+        <Text style={styles.progressText}>Profile Completion</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+
+      <SectionHeader title="Nearby Products" />
+      <FlatList
+        data={products}
+        renderItem={({ item }) => <ProductCard product={item} />}
+        keyExtractor={item => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalList}
+      />
+
+      <SectionHeader title="Nearby Jobs" />
+      <FlatList
+        data={jobs}
+        renderItem={({ item }) => <JobCard job={item} />}
+        keyExtractor={item => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalList}
+      />
+
+      <SectionHeader title="Service Providers" />
+      <FlatList
+        data={services}
+        renderItem={({ item }) => <ServiceProviderCard service={item} />}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        contentContainerStyle={styles.verticalList}
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
+  container: {
+    flex: 1,
     padding: 16,
+    backgroundColor: '#f9f9f9',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  horizontalList: {
+    paddingVertical: 10,
   },
-  noProductsText: {
-    textAlign: 'center',
-    margin: 20,
+  verticalList: {
+    paddingVertical: 10,
+  },
+  progressBarContainer: {
+    marginTop: 20,
+  },
+  progressText: {
     fontSize: 16,
-    color: '#888',
-  },
-  row: {
-    justifyContent: 'space-between', // Space between items in a row
+    marginBottom: 5,
   },
 });
 
