@@ -5,14 +5,14 @@ import OnboardingScreen from './OnboardingNavigator';
 import DrawerNavigator from './DrawerNavigator'; // Main app drawer
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
-import CrecheDetails from '../screens/CrecheDetails';
+import JobDetails from '../screens/JobDetails';
 import ApplicationDetails from '../screens/ApplicationDetails';
 import Apply from '../screens/Apply';
 import EditApplication from '../screens/EditApplication';
 import ForgotPassword from '../screens/ForgotPassword';
 import MyCentreDetails from '../screens/MyCentreDetails';
 import LessonsDetails from '../screens/mycreche/LessonsDetails'
-import FeedDetails from '../screens/FeedDetails';
+import FeedDetails from '../screens/ProductItem';
 import ChatScreen from '../screens/chat/ChatScreen';
 import UserProfileScreen from '../screens/chat/UserProfileScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
@@ -65,7 +65,7 @@ const AppNavigator = () => {
           <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name="Apply" component={Apply} options={{ headerShown: false }} />
-          <Stack.Screen name="CrecheDetails" component={CrecheDetails} options={{ headerShown: false }} />
+          <Stack.Screen name="JobDetails" component={JobDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplicationDetails" component={ApplicationDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ headerShown: false }} />
           <Stack.Screen name="EditApplication" component={EditApplication} options={{ headerShown: false }} /> 

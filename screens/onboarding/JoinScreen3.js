@@ -43,9 +43,6 @@ const JoinScreen3 = ({ navigation }) => {
       <Text style={styles.instructions}>
         To get started, please complete your profile with your information.
       </Text>
-      <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
-        <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
     </View>
   );
 };

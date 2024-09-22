@@ -129,7 +129,7 @@ const YourApplications = () => {
           <Text style={styles.noApplicationsText}>Otherwise, explore and apply at the centre!</Text>
           <TouchableOpacity
             style={styles.exploreButton}
-            onPress={() => navigation.navigate('CrecheList')}
+            onPress={() => navigation.navigate('JobList')}
           >
             <Text style={styles.buttonText}>Explore Creches</Text>
           </TouchableOpacity>

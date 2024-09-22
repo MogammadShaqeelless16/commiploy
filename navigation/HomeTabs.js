@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
 import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
-import CrecheList from '../screens/CrecheList';
+import JobList from '../screens/JobList';
 import YourApplications from '../screens/YourApplications';
 import NotificationsScreen from '../screens/Notifications';
 import Transport from '../screens/Transport';
@@ -53,7 +53,7 @@ const HomeTabs = () => {
           let iconName;
 
           switch (route.name) {
-            case 'CrecheList':
+            case 'JobList':
               iconName = 'earth-outline';
               break;
             case 'ApplicationList':
@@ -109,7 +109,7 @@ const HomeTabs = () => {
       })}
     >
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="CrecheList" component={CrecheList} options={{ tabBarLabel: 'Explore' }} />
+      <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Explore' }} />
       <Tab.Screen name="MyCentre" component={MyCentre} options={{ tabBarLabel: 'My Centres' }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Notifications' }} />
       <Tab.Screen name="Transport" component={Transport} options={{ tabBarLabel: 'Transport' }} />

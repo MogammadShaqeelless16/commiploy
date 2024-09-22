@@ -82,7 +82,7 @@ const NotificationsScreen = ({ navigation, updateNotificationCount }) => {
   };
 
   const handleExploreCenters = () => {
-    navigation.navigate('CrecheList'); // Navigate to the list of centers
+    navigation.navigate('JobList'); // Navigate to the list of centers
   };
 
   if (loading) {

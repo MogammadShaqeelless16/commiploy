@@ -3,46 +3,46 @@ import { View, Text, FlatList, ActivityIndicator, Alert, StyleSheet, TouchableOp
 import supabase from '../supabaseClient';
 
 const MyCentre = ({ navigation }) => {
-  const [students, setStudents] = useState([]);
-  const [creches, setCreches] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [localProducts, setLocalProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStudentsAndCreches();
+    fetchJobsAndProducts();
   }, []);
 
-  const fetchStudentsAndCreches = async () => {
+  const fetchJobsAndProducts = async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // Fetch students
-        const { data: studentData, error: studentError } = await supabase
-          .from('students') // Replace with the actual table name if different
+        // Fetch jobs
+        const { data: jobData, error: jobError } = await supabase
+          .from('jobs') // Replace with the actual table name for jobs
           .select('*')
           .eq('user_id', user.id);
 
-        if (studentError) {
-          throw studentError;
+        if (jobError) {
+          throw jobError;
         }
 
-        setStudents(studentData);
+        setJobs(jobData);
 
-        // Fetch creches
-        const { data: crecheData, error: crecheError } = await supabase
-          .from('creches') // Replace with the actual table name if different
+        // Fetch local products
+        const { data: productData, error: productError } = await supabase
+          .from('products') // Replace with the actual table name for products
           .select('*');
 
-        if (crecheError) {
-          throw crecheError;
+        if (productError) {
+          throw productError;
         }
 
-        setCreches(crecheData);
+        setLocalProducts(productData);
       } else {
         Alert.alert('Error', 'Unable to fetch user information');
       }
     } catch (error) {
-      Alert.alert('Error', error.message || 'Error fetching students and creches');
+      Alert.alert('Error', error.message || 'Error fetching jobs and products');
     } finally {
       setLoading(false);
     }
@@ -52,50 +52,42 @@ const MyCentre = ({ navigation }) => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
-  if (students.length === 0) {
+  if (jobs.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.noStudentsText}>Hi there, it seems you are not part of any creche or student groups.</Text>
-        <Text style={styles.noStudentsText}>Maybe try applying to a creche or check your existing applications.</Text>
+        <Text style={styles.noJobsText}>Hi there, it looks like you haven't applied for any jobs yet.</Text>
+        <Text style={styles.noJobsText}>Consider browsing local job opportunities or available products.</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Apply')}
+            onPress={() => navigation.navigate('BrowseJobs')}
           >
-            <Text style={styles.buttonText}>Apply to a Creche</Text>
+            <Text style={styles.buttonText}>Browse Jobs</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Applications')}
+            onPress={() => navigation.navigate('BrowseProducts')}
           >
-            <Text style={styles.buttonText}>Check Applications</Text>
+            <Text style={styles.buttonText}>Browse Products</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 
-  // Create a map of creche_id to creche name
-  const crecheMap = creches.reduce((acc, creche) => {
-    acc[creche.id] = creche.name;
-    return acc;
-  }, {});
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Centre</Text>
+      <Text style={styles.title}>My Opportunities</Text>
       <FlatList
-        data={students}
+        data={jobs}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.studentCard}>
-            <Text style={styles.crecheName}>Creche: {crecheMap[item.creche_id] || 'Unknown'}</Text>
-            <Text style={styles.studentName}>Name: {item.name}</Text>
-            <Text style={styles.studentDetails}>Fees Owed: {item.fees_owed}</Text>
-            <Text style={styles.studentDetails}>Fees Paid: {item.fees_paid}</Text>
+          <View style={styles.jobCard}>
+            <Text style={styles.jobTitle}>{item.title}</Text>
+            <Text style={styles.jobDetails}>Description: {item.description}</Text>
             <TouchableOpacity
               style={styles.detailsButton}
-              onPress={() => navigation.navigate('MyCentreDetails', { studentId: item.id })}
+              onPress={() => navigation.navigate('JobDetails', { jobId: item.id })}
             >
               <Text style={styles.detailsButtonText}>View Details</Text>
             </TouchableOpacity>
@@ -119,7 +111,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  studentCard: {
+  jobCard: {
     padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
@@ -127,22 +119,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  crecheName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  studentName: {
+  jobTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 4,
   },
-  studentDetails: {
+  jobDetails: {
     fontSize: 14,
     color: '#666',
     marginBottom: 2,
   },
-  noStudentsText: {
+  noJobsText: {
     textAlign: 'center',
     marginTop: 20,
     color: '#888',
