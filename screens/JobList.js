@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import supabase from '../supabaseClient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProfileAlert from '../component/Profile/ProfileAlert';
@@ -47,7 +47,12 @@ const JobList = ({ navigation }) => {
       <Text style={styles.jobDetails}>
         <Icon name="monetization-on" size={16} color="#888" /> Payment: ${item.payment.toFixed(2)}
       </Text>
-      <Button title="View Details" onPress={() => navigation.navigate('JobDetails', { jobId: item.id })} />
+      <TouchableOpacity
+        style={styles.detailsButton}
+        onPress={() => navigation.navigate('JobDetails', { jobId: item.id })}
+      >
+        <Text style={styles.buttonText}>View Details</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -58,7 +63,7 @@ const JobList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ProfileAlert navigation={navigation} />
-      <LocationDisplay /> {/* Use the LocationDisplay component */}
+      <LocationDisplay />
       <View style={styles.jobsSection}>
         <Text style={styles.jobsTitle}>Available Jobs</Text>
         <FlatList
@@ -89,15 +94,15 @@ const styles = StyleSheet.create({
   jobCard: {
     backgroundColor: '#fff',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+    shadowOpacity: 0.1,
+    shadowRadius: 2.22,
     elevation: 2,
   },
   jobTitle: {
@@ -107,6 +112,19 @@ const styles = StyleSheet.create({
   jobDetails: {
     fontSize: 16,
     marginTop: 4,
+  },
+  detailsButton: {
+    marginTop: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   noJobsText: {
     textAlign: 'center',

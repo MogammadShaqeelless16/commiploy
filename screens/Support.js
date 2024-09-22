@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Modal, Animated, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Updated import
-import supabase from '../supabaseClient'; // Adjust the path if necessary
+import { Picker } from '@react-native-picker/picker';
+import supabase from '../supabaseClient';
 import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
 const Support = () => {
@@ -11,7 +11,7 @@ const Support = () => {
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   
-  const slideAnim = useState(new Animated.Value(-100))[0]; // Initial position of the notification
+  const slideAnim = useState(new Animated.Value(-100))[0];
 
   const handleSubmit = async () => {
     if (!title || !message) {
@@ -20,22 +20,17 @@ const Support = () => {
     }
 
     try {
-      console.log('Fetching user profile...');
       const profile = await fetchProfile();
-      console.log('Fetched user profile:', profile);
 
       if (profile) {
-        console.log('Submitting support request...');
         const { error } = await supabase
           .from('support_requests')
           .insert([{ user_id: profile.id, title, category, message }]);
 
         if (error) {
-          console.error('Error inserting support request:', error);
           throw error;
         }
 
-        // Show success notification
         setNotificationMessage('Your support request has been submitted');
         setIsNotificationVisible(true);
         Animated.timing(slideAnim, {
@@ -43,8 +38,7 @@ const Support = () => {
           duration: 300,
           useNativeDriver: true,
         }).start();
-        
-        // Hide notification after 3 seconds
+
         setTimeout(() => {
           Animated.timing(slideAnim, {
             toValue: -100,
@@ -62,14 +56,13 @@ const Support = () => {
         Alert.alert('Error', 'You must be logged in to submit a support request');
       }
     } catch (error) {
-      console.error('Error handling support request:', error);
       Alert.alert('Error', error.message || 'An error occurred while submitting your request');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Do you have a problem? Let us help!</Text>
+      <Text style={styles.header}>Need Assistance? We're Here to Help!</Text>
 
       <TextInput
         style={styles.input}
@@ -89,7 +82,8 @@ const Support = () => {
           <Picker.Item label="Finance" value="Finance" />
           <Picker.Item label="Complaints" value="Complaints" />
           <Picker.Item label="Become a Driver" value="Become a Driver" />
-          <Picker.Item label="List Your Creche" value="List Your Creche" />
+          <Picker.Item label="List Your Business" value="List Your Business" />
+          <Picker.Item label="Report Someone" value="Report Someone" />
         </Picker>
       </View>
 
@@ -102,7 +96,9 @@ const Support = () => {
         numberOfLines={4}
       />
 
-      <Button title="Submit" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
 
       {isNotificationVisible && (
         <Animated.View style={[styles.notification, { transform: [{ translateY: slideAnim }] }]}>
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
@@ -130,8 +126,8 @@ const styles = StyleSheet.create({
   input: {
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
+    borderRadius: 8,
+    padding: 12,
     marginBottom: 15,
   },
   pickerContainer: {
@@ -145,11 +141,23 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 8,
   },
   messageInput: {
     height: 100,
     textAlignVertical: 'top',
+  },
+  submitButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   notification: {
     position: 'absolute',

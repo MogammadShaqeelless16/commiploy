@@ -6,7 +6,7 @@ import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
 import JobList from '../screens/JobList';
 import YourApplications from '../screens/YourApplications';
-import NotificationsScreen from '../screens/Notifications';
+import BusinessList from '../screens/BusinessList';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
 import MyCentre from '../screens/MyCentre';
@@ -16,36 +16,6 @@ import supabase from '../supabaseClient';
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
-  const [notificationCount, setNotificationCount] = useState(0);
-
-  useEffect(() => {
-    const fetchNotificationCount = async () => {
-      try {
-        const profile = await fetchProfile();
-
-        const { data: notificationsData, error } = await supabase
-          .from('notifications')
-          .select('id')
-          .eq('user_id', profile.id)
-          .is('deleted', false);
-
-        if (error) {
-          console.error('Error fetching notification count:', error.message);
-          return;
-        }
-
-        setNotificationCount(notificationsData.length);
-      } catch (fetchError) {
-        console.error('Error fetching notifications:', fetchError.message);
-      }
-    };
-
-    fetchNotificationCount();
-
-    const intervalId = setInterval(fetchNotificationCount, 60000); // Fetch every 60 seconds
-
-    return () => clearInterval(intervalId); // Clean up on component unmount
-  }, []);
 
   return (
     <Tab.Navigator
@@ -66,8 +36,8 @@ const HomeTabs = () => {
             case 'MyCentre':
               iconName = 'school';
               break;
-            case 'Notifications':
-              iconName = 'notifications';
+            case 'Business':
+              iconName = 'business';
               break;
             case 'Services':
               iconName = 'construct-outline';
@@ -115,7 +85,7 @@ const HomeTabs = () => {
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
-      <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Notifications' }} />
+      <Tab.Screen name="BusinessList" component={BusinessList} options={{ tabBarLabel: 'Business' }} />
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
     </Tab.Navigator>
   );
