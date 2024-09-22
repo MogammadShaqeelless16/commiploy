@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Image, TextInput } from 'react-native';
 import supabase from '../supabaseClient';
-import ProfileAlert from '../component/Profile/ProfileAlert';
+import LocationDisplay from '../component/LocationDisplay';
 
 const BusinessList = ({ navigation }) => {
   const [businesses, setBusinesses] = useState([]);
@@ -76,7 +76,7 @@ const BusinessList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ProfileAlert />
+      <LocationDisplay />
       <TextInput
         style={styles.searchInput}
         placeholder="Search for a business..."

@@ -3,24 +3,39 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const ServiceProviderCard = ({ service }) => (
   <TouchableOpacity style={styles.card}>
-    <Text style={styles.title}>{service.title}</Text>
-    <Text style={styles.description}>{service.description}</Text>
+    <Text style={styles.title}>{service.name}</Text>
+    <Text style={styles.price}>Price: R {service.price.toFixed(2)}</Text>
+    <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee.toFixed(2)}</Text>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
     padding: 16,
-    marginBottom: 10,
+    marginBottom: 15,
+    marginRight: 12,
+    width: '48%', // Adjust for grid layout (2 columns)
+    aspectRatio: 1, // Ensures consistent card size with square aspect ratio
     elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
   },
-  description: {
+  price: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  callOutFee: {
     fontSize: 14,
     color: '#666',
   },

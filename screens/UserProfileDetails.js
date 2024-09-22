@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, Image, TouchableOpacity } from 'react-native';
 import supabase from '../supabaseClient';
-import { Ionicons } from '@expo/vector-icons'; // Make sure to install this package if not already done
+import { Ionicons } from '@expo/vector-icons'; // Ensure you have this installed
 
 const UserProfileDetails = ({ route, navigation }) => {
   const { userId } = route.params; // Assuming userId is passed as a parameter
@@ -36,6 +36,11 @@ const UserProfileDetails = ({ route, navigation }) => {
     fetchUserDetails();
   }, [userId]); // Dependency array to re-fetch if userId changes
 
+  const handleReportUser = () => {
+    // Add your reporting logic here
+    Alert.alert('Report User', 'User has been reported.');
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" color="#007bff" />;
   }
@@ -61,6 +66,10 @@ const UserProfileDetails = ({ route, navigation }) => {
         <Text style={styles.socialMedia}>Twitter: {user.social_media_twitter}</Text>
         <Text style={styles.socialMedia}>LinkedIn: {user.social_media_linkedin}</Text>
       </View>
+      <TouchableOpacity style={styles.reportButton} onPress={handleReportUser}>
+        <Ionicons name="alert-circle" size={24} color="white" />
+        <Text style={styles.reportButtonText}>Report User</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -115,6 +124,20 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+  },
+  reportButton: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reportButtonText: {
+    color: 'white',
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
 

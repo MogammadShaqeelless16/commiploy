@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import supabase from '../supabaseClient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ProfileAlert from '../component/Profile/ProfileAlert';
 import LocationDisplay from '../component/LocationDisplay';
 
 const JobList = ({ navigation }) => {
@@ -45,7 +44,7 @@ const JobList = ({ navigation }) => {
         <Icon name="location-on" size={16} color="#888" /> Address: {item.address}
       </Text>
       <Text style={styles.jobDetails}>
-        <Icon name="monetization-on" size={16} color="#888" /> Payment: ${item.payment.toFixed(2)}
+        <Icon name="monetization-on" size={16} color="#888" /> Payment: R {item.payment.toFixed(2)}
       </Text>
       <TouchableOpacity
         style={styles.detailsButton}
@@ -62,7 +61,6 @@ const JobList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ProfileAlert navigation={navigation} />
       <LocationDisplay />
       <View style={styles.jobsSection}>
         <Text style={styles.jobsTitle}>Available Jobs</Text>

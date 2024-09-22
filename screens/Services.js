@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import ServiceItem from './services/ServiceItem';
 import Loading from '../component/loadingComponent/loading';
 import Error from '../component/loadingComponent/Error';
-import ProfileAlert from '../component/Profile/ProfileAlert';
 import LocationDisplay from '../component/LocationDisplay'; // Import the LocationDisplay component
 
 const Services = () => {
@@ -72,7 +71,6 @@ const Services = () => {
 
   return (
     <View style={styles.container}>
-      <ProfileAlert navigation={navigation} />
       <LocationDisplay /> {/* Include the LocationDisplay component */}
 
       <TextInput

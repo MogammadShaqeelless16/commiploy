@@ -1,52 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Ensure Ionicons is properly installed
 import { View, Text } from 'react-native';
-import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
+// Import your screens
 import JobList from '../screens/JobList';
 import YourApplications from '../screens/YourApplications';
 import BusinessList from '../screens/BusinessList';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
 import MyCentre from '../screens/MyCentre';
-import ProductsList from '../screens/ProductsList'; // New ProductsList screen
-import supabase from '../supabaseClient'; 
+import ProductsList from '../screens/ProductsList'; 
 
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
+          // Set different icons for each route name
           switch (route.name) {
-            case 'JobList':
-              iconName = 'briefcase'; // Updated to a briefcase icon for jobs
+            case 'FeedsList':
+              iconName = 'home-outline'; // Icon for the Home tab
               break;
-            case 'ApplicationList':
-              iconName = 'paper'; // New icon for applications
+            case 'JobList':
+              iconName = 'briefcase-outline'; // Icon for Jobs
               break;
             case 'ProductsList':
-              iconName = 'cart'; // Icon for products
+              iconName = 'cart-outline'; // Icon for Products
               break;
-            case 'MyCentre':
-              iconName = 'school';
-              break;
-            case 'Business':
-              iconName = 'business';
+            case 'BusinessList':
+              iconName = 'storefront-outline'; // Icon for Business
               break;
             case 'Services':
-              iconName = 'construct-outline';
-              break;
-            case 'FeedsList':
-              iconName = 'reader';
+              iconName = 'hammer-outline'; // Icon for Services
               break;
             default:
-              iconName = 'help-circle';
+              iconName = 'help-circle-outline'; // Default icon
           }
 
           return (
@@ -79,7 +72,7 @@ const HomeTabs = () => {
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
-        headerShown: false,
+        headerShown: false, // Hide header for all tabs
       })}
     >
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
