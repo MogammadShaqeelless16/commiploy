@@ -94,7 +94,6 @@ const JobList = ({ navigation }) => {
           ListEmptyComponent={<Text style={styles.noJobsText}>No jobs available.</Text>}
         />
       </View>
-      <Button title="Refresh Location" onPress={fetchLocation} />
     </View>
   );
 };

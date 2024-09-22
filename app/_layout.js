@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 const Layout = ({ children }) => {
   return (
     <View style={{ flex: 1 }}>
-      <Text>CrecheSpots</Text>
+      <Text>Commiploy</Text>
       {children}
     </View>
   );
