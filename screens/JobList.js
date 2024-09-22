@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, Alert } from 'react-native';
 import * as Location from 'expo-location';
-import supabase from '../supabaseClient'; // Make sure to import your Supabase client
+import supabase from '../supabaseClient';
 
-const JobList = () => {
+const JobList = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
+  const [streetName, setStreetName] = useState('');
   const [errorMsg, setErrorMsg] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingJobs, setLoadingJobs] = useState(true);
 
   const fetchLocation = async () => {
     try {
@@ -21,21 +22,30 @@ const JobList = () => {
         accuracy: Location.Accuracy.High,
       });
       setUserLocation(location.coords);
-      setErrorMsg(null);
-      fetchJobs(location.coords.latitude, location.coords.longitude);
+      await fetchStreetName(location.coords.latitude, location.coords.longitude);
     } catch (error) {
       setErrorMsg('Error fetching location: ' + error.message);
     }
   };
 
-  const fetchJobs = async (latitude, longitude) => {
-    setLoading(true);
+  const fetchStreetName = async (latitude, longitude) => {
+    try {
+      const response = await Location.reverseGeocodeAsync({ latitude, longitude });
+      if (response.length > 0) {
+        setStreetName(response[0].name || 'Unknown location');
+      }
+    } catch (error) {
+      console.error('Error fetching street name:', error);
+    }
+  };
+
+  const fetchJobs = async () => {
+    setLoadingJobs(true);
     try {
       const { data, error } = await supabase
         .from('jobs')
         .select('*')
-        .eq('latitude', latitude)
-        .eq('longitude', longitude);
+        .order('created_at', { ascending: false });
 
       if (error) {
         throw new Error('Error fetching jobs');
@@ -44,46 +54,46 @@ const JobList = () => {
       setJobs(data);
     } catch (error) {
       Alert.alert('Error', error.message);
-      console.error('Jobs Fetch Error:', error);
     } finally {
-      setLoading(false);
+      setLoadingJobs(false);
     }
   };
 
   useEffect(() => {
     fetchLocation();
+    fetchJobs();
   }, []);
+
+  const renderJobItem = ({ item }) => (
+    <View style={styles.jobCard}>
+      <Text style={styles.jobTitle}>{item.title}</Text>
+      <Text style={styles.jobDetails}>Duration: {item.duration}</Text>
+      <Text style={styles.jobDetails}>Address: {item.address}</Text>
+      <Text style={styles.jobDetails}>Payment: ${item.payment.toFixed(2)}</Text>
+      <Button title="View Details" onPress={() => navigation.navigate('JobDetails', { jobId: item.id })} />
+    </View>
+  );
+
+  if (loadingJobs) {
+    return <ActivityIndicator size="large" color="#007bff" />;
+  }
 
   return (
     <View style={styles.container}>
-      {errorMsg ? (
-        <Text style={styles.errorText}>{errorMsg}</Text>
-      ) : userLocation ? (
-        <View>
-          <Text style={styles.text}>Your Location:</Text>
-          <Text style={styles.text}>Latitude: {userLocation.latitude}</Text>
-          <Text style={styles.text}>Longitude: {userLocation.longitude}</Text>
-          {loading ? (
-            <ActivityIndicator size="large" color="#007bff" />
-          ) : (
-            <FlatList
-              data={jobs}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.jobCard}>
-                  <Text style={styles.jobTitle}>{item.title}</Text>
-                  <Text style={styles.jobDetails}>Duration: {item.duration}</Text>
-                  <Text style={styles.jobDetails}>Location: {item.address}</Text>
-                  <Text style={styles.jobDetails}>Payment: ${item.payment}</Text>
-                </View>
-              )}
-              ListEmptyComponent={<Text style={styles.noJobsText}>No jobs available.</Text>}
-            />
-          )}
-        </View>
-      ) : (
-        <Text style={styles.text}>Fetching your location...</Text>
-      )}
+      <View style={styles.locationSection}>
+        <Text style={styles.locationTitle}>Your Location:</Text>
+        <Text style={styles.locationText}>{streetName || errorMsg || 'Fetching location...'}</Text>
+      </View>
+
+      <View style={styles.jobsSection}>
+        <Text style={styles.jobsTitle}>Available Jobs</Text>
+        <FlatList
+          data={jobs}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderJobItem}
+          ListEmptyComponent={<Text style={styles.noJobsText}>No jobs available.</Text>}
+        />
+      </View>
       <Button title="Refresh Location" onPress={fetchLocation} />
     </View>
   );
@@ -92,31 +102,52 @@ const JobList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
+    backgroundColor: '#f9f9f9',
   },
-  text: {
-    fontSize: 18,
-    marginVertical: 8,
+  locationSection: {
+    backgroundColor: '#e1f5fe',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
   },
-  errorText: {
-    fontSize: 18,
-    color: 'red',
+  locationTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  locationText: {
+    fontSize: 16,
+    marginTop: 8,
+  },
+  jobsSection: {
+    flex: 1,
+  },
+  jobsTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
   },
   jobCard: {
+    backgroundColor: '#fff',
     padding: 16,
-    marginVertical: 8,
-    backgroundColor: '#f9f9f9',
     borderRadius: 8,
-    width: '100%',
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   jobTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   jobDetails: {
     fontSize: 16,
+    marginTop: 4,
   },
   noJobsText: {
     textAlign: 'center',
