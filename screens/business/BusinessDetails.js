@@ -89,7 +89,7 @@ const BusinessDetails = ({ route, navigation }) => {
           </TouchableOpacity>
         )}
         {business.twitter && (
-          <TouchableOpacity onPress={() => Linking.openURL(business.twitter)}>
+          <TouchableOpacity onPress={() => Linking.openURL(business.linkedin)}>
             <Text style={styles.socialLink}>Twitter</Text>
           </TouchableOpacity>
         )}

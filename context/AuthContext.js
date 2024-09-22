@@ -11,14 +11,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      console.log('Fetching session...'); // Log when fetching the session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
       if (sessionError || !session) {
+        console.error('Session Error:', sessionError); // Log session error if any
         setLoading(false);
         return;
       }
 
       setIsLoggedIn(true);
+      console.log('Session fetched successfully:', session); // Log session data
 
+      console.log('Fetching user profile...'); // Log when fetching user profile
       const { data, error } = await supabase
         .from('users')
         .select(`display_name, email, name,
@@ -28,8 +33,9 @@ export const AuthProvider = ({ children }) => {
 
       if (error) {
         Alert.alert('Error', 'Error fetching profile data');
-        console.error('Profile Fetch Error:', error);
+        console.error('Profile Fetch Error:', error); // Log profile fetch error
       } else {
+        console.log('Profile fetched successfully:', data); // Log successfully fetched profile
         setProfile(data);
       }
 

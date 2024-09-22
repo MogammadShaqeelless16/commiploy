@@ -1,64 +1,46 @@
-// context/AuthProvider.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
+import React, { createContext, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
+import supabase from '../supabaseClient';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if there's an existing session on load
-    const fetchSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error('Error fetching session:', error);
-      } else {
-        setUser(session?.user || null);
+    const fetchProfile = async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        setLoading(false);
+        return;
       }
+
+      setIsLoggedIn(true);
+
+      const { data, error } = await supabase
+        .from('users')
+        .select(`display_name, email, name, phone_number, id_number, profile_picture_url, bio, roles(role_name)`)
+        .eq('id', session.user.id)
+        .single();
+
+      if (error) {
+        Alert.alert('Error', 'Error fetching profile data');
+        console.error('Profile Fetch Error:', error);
+      } else {
+        setProfile(data);
+      }
+
+      setLoading(false);
     };
 
-    fetchSession();
-
-    // Set up a subscription to listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-    });
-
-    // Cleanup subscription on unmount
-    return () => {
-      authListener.unsubscribe();
-    };
+    fetchProfile();
   }, []);
 
-  const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    setUser(data.user);
-  };
-
-  const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    setUser(data.user);
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ profile, loading, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

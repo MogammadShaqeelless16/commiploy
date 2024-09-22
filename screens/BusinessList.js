@@ -15,7 +15,7 @@ const BusinessList = ({ navigation }) => {
       try {
         const { data, error } = await supabase
           .from('businesses')
-          .select('id, name, slogan, logo_url')
+          .select('id, name, slogan, header_image')
           .order('name', { ascending: true });
 
         if (error) {
@@ -52,7 +52,7 @@ const BusinessList = ({ navigation }) => {
       style={styles.businessCard}
       onPress={() => navigation.navigate('BusinessDetails', { businessId: item.id })}
     >
-      <Image source={{ uri: item.logo_url }} style={styles.logo} />
+      <Image source={{ uri: item.header_image }} style={styles.logo} />
       <Text style={styles.businessName}>{item.name}</Text>
       <Text style={styles.slogan}>{item.slogan}</Text>
     </TouchableOpacity>

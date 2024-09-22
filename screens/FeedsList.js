@@ -1,45 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
 import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
+import { AuthContext } from '../context/AuthContext';
+import supabase from '../supabaseClient'; // Import your Supabase client
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
-  const [showProfileAlert, setShowProfileAlert] = useState(true); // Manage visibility here
+  const { isLoggedIn } = useContext(AuthContext);
+  const [showProfileAlert, setShowProfileAlert] = useState(!isLoggedIn);
+  const [products, setProducts] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { id: '1', title: 'Product 1', price: 'R199', description: 'Quality product 1' },
-    { id: '2', title: 'Product 2', price: 'R299', description: 'Quality product 2' },
-    { id: '3', title: 'Product 3', price: 'R399', description: 'Quality product 3' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch products
+        const { data: productData, error: productError } = await supabase
+          .from('products')
+          .select('*'); // Adjust the selection as needed
 
-  const jobs = [
-    { id: '1', title: 'Software Engineer', description: 'Full-time position' },
-    { id: '2', title: 'Graphic Designer', description: 'Remote job opportunity' },
-  ];
+        if (productError) throw productError;
+        setProducts(productData);
 
-  const services = [
-    { id: '1', title: 'Plumbing Services', description: 'Expert plumbers available' },
-    { id: '2', title: 'Cleaning Services', description: 'Professional cleaning services' },
-    { id: '3', title: 'Electrical Services', description: 'Certified electricians' },
-    { id: '4', title: 'Landscaping Services', description: 'Beautiful gardens designed' },
-  ];
+        // Fetch jobs
+        const { data: jobData, error: jobError } = await supabase
+          .from('jobs')
+          .select('*'); // Adjust the selection as needed
+
+        if (jobError) throw jobError;
+        setJobs(jobData);
+
+        // Fetch services
+        const { data: serviceData, error: serviceError } = await supabase
+          .from('services')
+          .select('*'); // Adjust the selection as needed
+
+        if (serviceError) throw serviceError;
+        setServices(serviceData);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
-      {/* Profile Alert */}
       {showProfileAlert && (
         <ProfileAlert 
           navigation={navigation} 
-          onClose={() => setShowProfileAlert(false)} // Close alert immediately
+          onClose={() => setShowProfileAlert(false)} 
         />
       )}
-
-      {/* Profile Progress Bar */}
       <View style={styles.progressBarContainer}>
         <Text style={styles.progressText}>Profile Completion</Text>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -54,7 +86,6 @@ const FeedsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-
       <SectionHeader title="Nearby Jobs" />
       <FlatList
         data={jobs}
@@ -64,7 +95,6 @@ const FeedsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-
       <SectionHeader title="Service Providers" />
       <FlatList
         data={services}
@@ -95,6 +125,11 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
