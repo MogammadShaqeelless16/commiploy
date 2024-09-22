@@ -9,14 +9,17 @@ const BusinessDetails = ({ route }) => {
 
   const fetchBusinessDetails = async () => {
     setLoading(true);
+    console.log("Fetching details for business ID:", businessId);
     try {
       const { data, error } = await supabase
-        .from('businesses') // Adjust table name as necessary
+        .from('businesses')
         .select('*')
         .eq('id', businessId)
         .single();
 
+      console.log("Fetched Data:", data);
       if (error) {
+        console.error("Error:", error);
         throw new Error('Error fetching business details');
       }
 
@@ -37,7 +40,7 @@ const BusinessDetails = ({ route }) => {
   }
 
   if (!business) {
-    return <Text>No business details found.</Text>;
+    return <Text style={styles.errorText}>No business details found for ID: {businessId}</Text>;
   }
 
   return (
@@ -65,6 +68,11 @@ const styles = StyleSheet.create({
   businessDetails: {
     fontSize: 16,
     marginTop: 4,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

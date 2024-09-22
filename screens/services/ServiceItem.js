@@ -6,8 +6,8 @@ const ServiceItem = ({ service, onPress }) => {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Text style={styles.name}>{service.name}</Text>
       <Text style={styles.description}>{service.description}</Text>
-      <Text style={styles.price}>Price: ${service.price.toFixed(2)}</Text>
-      <Text style={styles.callOutFee}>Call-Out Fee: ${service.call_out_fee.toFixed(2)}</Text>
+      <Text style={styles.price}>Price: R{service.price.toFixed(2)}</Text>
+      <Text style={styles.callOutFee}>Call-Out Fee: R{service.call_out_fee.toFixed(2)}</Text>
       <Text style={styles.date}>Created At: {new Date(service.created_at).toLocaleDateString()}</Text>
       <Text style={styles.date}>Updated At: {new Date(service.updated_at).toLocaleDateString()}</Text>
     </TouchableOpacity>
