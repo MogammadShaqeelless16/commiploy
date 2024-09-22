@@ -115,7 +115,6 @@ const HomeTabs = () => {
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
-      <Tab.Screen name="MyCentre" component={MyCentre} options={{ tabBarLabel: 'My Centres' }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Notifications' }} />
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
     </Tab.Navigator>

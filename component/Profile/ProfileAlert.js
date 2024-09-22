@@ -1,17 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Adjust based on your chosen icon library
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const ProfileAlert = ({ navigation }) => {
+const ProfileAlert = ({ navigation, onClose }) => {
   return (
     <View style={styles.profileAlert}>
-      <Text style={styles.alertText}>
-        You are not signed in. Please create an account or log in.
-      </Text>
+      <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.7}>
+        <Icon name="times" size={20} color="#fff" />
+      </TouchableOpacity>
+      <View style={styles.textContainer}>
+        <Text style={styles.alertText}>
+          You are not signed in. Please create an account or log in.
+        </Text>
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => {
+            navigation.navigate('Login');
+            onClose(); // Close alert after navigating
+          }}
           activeOpacity={0.7}
         >
           <Icon name="sign-in" size={20} color="#fff" />
@@ -19,7 +27,10 @@ const ProfileAlert = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('SignUp')}
+          onPress={() => {
+            navigation.navigate('SignUp');
+            onClose(); // Close alert after navigating
+          }}
           activeOpacity={0.7}
         >
           <Icon name="user-plus" size={20} color="#fff" />
@@ -36,10 +47,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     borderRadius: 5,
     margin: 10,
+    position: 'relative',
+  },
+  textContainer: {
+    marginBottom: 10,
   },
   alertText: {
     color: '#fff',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -57,6 +72,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     marginLeft: 5,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 5,
   },
 });
 

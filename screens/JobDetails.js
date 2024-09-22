@@ -36,7 +36,7 @@ const JobDetails = ({ route }) => {
   }, []);
 
   const handleApply = () => {
-    Alert.alert('Applied', `You have applied for the job: ${job.title}`);
+    navigation.navigate('Apply', { crecheId: job.id }); // Pass job ID to Apply screen
   };
 
   const handleContactPoster = () => {

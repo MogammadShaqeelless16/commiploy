@@ -27,6 +27,8 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showProfileAlert, setShowProfileAlert] = useState(true); // Manage visibility here
+
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {

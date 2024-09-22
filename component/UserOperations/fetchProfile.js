@@ -20,10 +20,6 @@ export const fetchProfile = async () => {
     .select(`
       id, display_name, email, first_name, last_name,
       phone_number, id_number, profile_picture_url, bio,
-      creches (
-        id,
-        name
-      ),
       roles (
         id,
         role_name

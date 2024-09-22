@@ -18,7 +18,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const [profile, setProfile] = useState({
-    display_name: '',
+    username: '',
     profile_picture_url: '',
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,7 +37,7 @@ const DrawerNavigator = () => {
     setIsLoggedIn(true);
     const { data, error } = await supabase
       .from('users')
-      .select('display_name, profile_picture_url, roles(role_name)')
+      .select('username, profile_picture_url, roles(role_name)')
       .eq('id', session.user.id)
       .single();
 
@@ -45,7 +45,7 @@ const DrawerNavigator = () => {
       Alert.alert('Error', 'Error fetching profile data');
     } else {
       setProfile({
-        display_name: data.display_name,
+        username: data.username,
         profile_picture_url: data.profile_picture_url,
       });
       setIsDeveloper(data.roles.role_name === 'Developer');
@@ -74,7 +74,7 @@ const DrawerNavigator = () => {
           {isLoggedIn ? (
             <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
               <Image source={{ uri: profile.profile_picture_url }} style={styles.profileImage} />
-              <Text style={styles.profileName}>{profile.display_name || 'User Name'}</Text>
+              <Text style={styles.profileName}>{profile.username || 'User Name'}</Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.loginContainer}>

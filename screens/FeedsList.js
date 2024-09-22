@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
 import JobCard from '../component/Feeds/JobCard';
@@ -9,6 +9,8 @@ import ProfileAlert from '../component/Profile/ProfileAlert';
 const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
+  const [showProfileAlert, setShowProfileAlert] = useState(true); // Manage visibility here
+
   const products = [
     { id: '1', title: 'Product 1', price: 'R199', description: 'Quality product 1' },
     { id: '2', title: 'Product 2', price: 'R299', description: 'Quality product 2' },
@@ -30,7 +32,12 @@ const FeedsList = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       {/* Profile Alert */}
-      <ProfileAlert navigation={navigation} />
+      {showProfileAlert && (
+        <ProfileAlert 
+          navigation={navigation} 
+          onClose={() => setShowProfileAlert(false)} // Close alert immediately
+        />
+      )}
 
       {/* Profile Progress Bar */}
       <View style={styles.progressBarContainer}>
