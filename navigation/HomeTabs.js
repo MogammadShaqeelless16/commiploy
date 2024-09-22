@@ -57,7 +57,7 @@ const HomeTabs = () => {
               iconName = 'earth-outline';
               break;
             case 'ApplicationList':
-              iconName = 'global';
+              iconName = 'work';
               break;
             case 'MyCentre':
               iconName = 'school';

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import supabase from '../supabaseClient';
 
 import HomeTabs from './HomeTabs';
 import Settings from '../screens/Settings';
-import Services from '../screens/Services';
 import News from '../screens/News';
-import Help from '../screens/Help'; 
-import Support from '../screens/Support'; 
-import Profile from '../screens/Profile'; 
+import Help from '../screens/Help';
+import Support from '../screens/Support';
+import Profile from '../screens/Profile';
 import YourApplications from '../screens/YourApplications';
 import ChatListScreen from '../screens/chat/ChatListScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
@@ -20,16 +19,9 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   const [profile, setProfile] = useState({
     display_name: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    id_number: '',
     profile_picture_url: '',
-    bio: '',
-    role: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
 
   useEffect(() => {
@@ -37,117 +29,112 @@ const DrawerNavigator = () => {
   }, []);
 
   const fetchProfile = async () => {
-    setLoading(true);
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
-      Alert.alert('Error', 'Unable to fetch user session');
-      setLoading(false);
       return;
     }
 
+    setIsLoggedIn(true);
     const { data, error } = await supabase
       .from('users')
-      .select(`
-        display_name, email, first_name, last_name,
-        phone_number, id_number, profile_picture_url, bio, roles(role_name)
-      `)
+      .select('display_name, profile_picture_url, roles(role_name)')
       .eq('id', session.user.id)
       .single();
 
     if (error) {
       Alert.alert('Error', 'Error fetching profile data');
-      console.error('Profile Fetch Error:', error);
     } else {
       setProfile({
         display_name: data.display_name,
-        email: data.email,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        phone_number: data.phone_number,
-        id_number: data.id_number,
         profile_picture_url: data.profile_picture_url,
-        bio: data.bio,
-        role: data.roles.role_name
       });
-
       setIsDeveloper(data.roles.role_name === 'Developer');
     }
-    setLoading(false);
   };
+
+  const handleLogin = () => {
+    Alert.alert('Login', 'Navigating to login screen...');
+  };
+
+  const handleSignUp = () => {
+    Alert.alert('Sign Up', 'Navigating to signup screen...');
+  };
+
+  const CustomDrawerItem = ({ label, icon, onPress }) => (
+    <TouchableOpacity style={styles.drawerItem} onPress={onPress}>
+      {icon}
+      <Text style={styles.drawerItemLabel}>{label}</Text>
+    </TouchableOpacity>
+  );
 
   const CustomDrawerContent = (props) => {
     return (
       <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
         <View style={styles.profileContainer}>
-          <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
-            <Image
-              source={{ uri: profile.profile_picture_url }} 
-              style={styles.profileImage}
-            />
-            <Text style={styles.profileName}>{profile.display_name || 'User Name'}</Text>
-          </TouchableOpacity>
+          {isLoggedIn ? (
+            <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
+              <Image source={{ uri: profile.profile_picture_url }} style={styles.profileImage} />
+              <Text style={styles.profileName}>{profile.display_name || 'User Name'}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.loginContainer}>
+              <Text style={styles.loginText}>You are not logged in</Text>
+              <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
+                <Ionicons name="log-in" size={20} color="#fff" />
+                <Text style={styles.authButtonText}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.authButton} onPress={handleSignUp}>
+                <Ionicons name="person-add" size={20} color="#fff" />
+                <Text style={styles.authButtonText}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
 
         <View style={styles.drawerItemsContainer}>
-          <DrawerItem
+          <CustomDrawerItem
             label="Home"
-            icon={({ color, size }) => (
-              <Ionicons name="home" size={size} color={color} />
-            )}
+            icon={<Ionicons name="home" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('Home')}
           />
-          <DrawerItem
+          <CustomDrawerItem
             label="Settings"
-            icon={({ color, size }) => (
-              <Ionicons name="settings" size={size} color={color} />
-            )}
+            icon={<Ionicons name="settings" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('Settings')}
           />
-          <DrawerItem
+          <CustomDrawerItem
             label="Messages"
-            icon={({ color, size }) => (
-              <Ionicons name="chatbubble" size={size} color={color} />
-            )}
+            icon={<Ionicons name="chatbubble" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('ChatListScreen')}
           />
-          <DrawerItem
+          <CustomDrawerItem
             label="News"
-            icon={({ color, size }) => (
-              <Ionicons name="newspaper" size={size} color={color} />
-            )}
+            icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('News')}
           />
-          <DrawerItem
+          <CustomDrawerItem
             label="My Applications"
-            icon={({ color, size }) => (
-              <Ionicons name="apps" size={size} color={color} />
-            )}
+            icon={<Ionicons name="apps" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('YourApplications')}
           />
           {isDeveloper && (
-            <DrawerItem
+            <CustomDrawerItem
               label="Developer"
-              icon={({ color, size }) => (
-                <Ionicons name="code" size={size} color={color} />
-              )}
+              icon={<Ionicons name="code" size={20} color="#007BFF" />}
               onPress={() => props.navigation.navigate('DeveloperScreen')}
             />
           )}
         </View>
 
         <View style={styles.bottomDrawerSection}>
-          <DrawerItem
+          <CustomDrawerItem
             label="Help"
-            icon={({ color, size }) => (
-              <Ionicons name="help-circle" size={size} color={color} />
-            )}
+            icon={<Ionicons name="help-circle" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('Help')}
           />
-          <DrawerItem
+          <CustomDrawerItem
             label="Support"
-            icon={({ color, size }) => (
-              <Ionicons name="headset" size={size} color={color} />
-            )}
+            icon={<Ionicons name="headset" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('Support')}
           />
         </View>
@@ -158,42 +145,12 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={({ route }) => ({
-        drawerIcon: ({ color, size }) => {
-          let iconName;
-
-          switch (route.name) {
-            case 'Home':
-              iconName = 'home';
-              break;
-            case 'Settings':
-              iconName = 'settings';
-              break;
-            case 'ChatListScreen':
-              iconName = 'chatbubble';
-              break;
-            case 'News':
-              iconName = 'newspaper';
-              break;
-            case 'My Applications':
-              iconName = 'document';
-              break;
-            case 'Help':
-              iconName = 'help-circle';
-              break;
-            case 'Support':
-              iconName = 'headset';
-              break;
-            case 'DeveloperScreen':
-              iconName = 'code';
-              break;
-            default:
-              iconName = 'help-circle';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
+      screenOptions={{
+        drawerStyle: {
+          backgroundColor: '#ffffff',
+          width: 240,
         },
-      })}
+      }}
     >
       <Drawer.Screen name="Home" component={HomeTabs} />
       <Drawer.Screen name="Profile" component={Profile} />
@@ -203,9 +160,7 @@ const DrawerNavigator = () => {
       <Drawer.Screen name="Help" component={Help} />
       <Drawer.Screen name="Support" component={Support} />
       <Drawer.Screen name="YourApplications" component={YourApplications} />
-      {isDeveloper && (
-        <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />
-      )}
+      {isDeveloper && <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />}
     </Drawer.Navigator>
   );
 };
@@ -215,27 +170,72 @@ export default DrawerNavigator;
 const styles = StyleSheet.create({
   profileContainer: {
     padding: 20,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#f0f4f8',
     alignItems: 'center',
     justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#d1d1d1',
   },
   profileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
     marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#007BFF',
   },
   profileName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  loginContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  loginText: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: '#555',
+  },
+  authButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginVertical: 5,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  authButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 5,
   },
   drawerItemsContainer: {
     flex: 1,
     marginTop: 10,
+    paddingHorizontal: 10,
+  },
+  drawerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  drawerItemLabel: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 10,
   },
   bottomDrawerSection: {
-    borderTopColor: '#f4f4f4',
+    borderTopColor: '#f0f4f8',
     borderTopWidth: 1,
     paddingVertical: 10,
+    paddingHorizontal: 10,
   },
 });

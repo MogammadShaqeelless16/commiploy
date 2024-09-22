@@ -18,6 +18,9 @@ import UserProfileScreen from '../screens/chat/UserProfileScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
 import NewsDetails from '../screens/NewsDetails';
 import ChangePassword from '../screens/ChangePassword';
+import ServiceItem from '../screens/services/ServiceItem';
+import ServiceDetails from '../screens/services/ServiceDetails'; 
+import BusinessDetails from '../screens/business/BusinessDetails';
 
 const Stack = createStackNavigator();
 
@@ -77,6 +80,8 @@ const AppNavigator = () => {
           <Stack.Screen name="DeveloperScreen" component={DeveloperScreen} options={{ headerShown: false }} />
           <Stack.Screen name="NewsDetails" component={NewsDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
+          <Stack.Screen name="ServiceDetails" component={ServiceDetails} options={{ headerShown: false }} />
+          <Stack.Screen name="BusinessDetails" component={BusinessDetails} options={{ headerShown: false }} />
 
 
         </>

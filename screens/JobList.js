@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, ActivityIndicator, Alert } from 'react-native';
 import * as Location from 'expo-location';
+import axios from 'axios';
 import supabase from '../supabaseClient';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const JobList = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
@@ -30,12 +32,17 @@ const JobList = ({ navigation }) => {
 
   const fetchStreetName = async (latitude, longitude) => {
     try {
-      const response = await Location.reverseGeocodeAsync({ latitude, longitude });
-      if (response.length > 0) {
-        setStreetName(response[0].name || 'Unknown location');
+      const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+      if (response.data) {
+        const street = response.data.address.road || '';
+        const area = response.data.address.suburb || response.data.address.neighbourhood || '';
+        setStreetName(`${street}, ${area}`.trim());
+      } else {
+        setStreetName('Unknown location');
       }
     } catch (error) {
       console.error('Error fetching street name:', error);
+      setErrorMsg('Error fetching street name');
     }
   };
 
@@ -66,10 +73,18 @@ const JobList = ({ navigation }) => {
 
   const renderJobItem = ({ item }) => (
     <View style={styles.jobCard}>
-      <Text style={styles.jobTitle}>{item.title}</Text>
-      <Text style={styles.jobDetails}>Duration: {item.duration}</Text>
-      <Text style={styles.jobDetails}>Address: {item.address}</Text>
-      <Text style={styles.jobDetails}>Payment: ${item.payment.toFixed(2)}</Text>
+      <Text style={styles.jobTitle}>
+        <Icon name="work" size={20} color="#007bff" /> {item.title}
+      </Text>
+      <Text style={styles.jobDetails}>
+        <Icon name="access-time" size={16} color="#888" /> Duration: {item.duration}
+      </Text>
+      <Text style={styles.jobDetails}>
+        <Icon name="location-on" size={16} color="#888" /> Address: {item.address}
+      </Text>
+      <Text style={styles.jobDetails}>
+        <Icon name="monetization-on" size={16} color="#888" /> Payment: ${item.payment.toFixed(2)}
+      </Text>
       <Button title="View Details" onPress={() => navigation.navigate('JobDetails', { jobId: item.id })} />
     </View>
   );
@@ -81,7 +96,9 @@ const JobList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.locationSection}>
-        <Text style={styles.locationTitle}>Your Location:</Text>
+        <Text style={styles.locationTitle}>
+          <Icon name="my-location" size={20} color="#007bff" /> Your Location:
+        </Text>
         <Text style={styles.locationText}>{streetName || errorMsg || 'Fetching location...'}</Text>
       </View>
 
