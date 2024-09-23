@@ -3,12 +3,14 @@ import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } fr
 import { useNavigation } from '@react-navigation/native';
 import supabase from '../supabaseClient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertModal from '../component/AlertModal';
 
 const JobDetails = ({ route }) => {
   const { jobId } = route.params;
   const navigation = useNavigation();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
 
   const fetchJobDetails = async () => {
     setLoading(true);
@@ -35,8 +37,15 @@ const JobDetails = ({ route }) => {
     fetchJobDetails();
   }, []);
 
-  const handleApply = () => {
-    navigation.navigate('Apply', { crecheId: job.id }); // Pass job ID to Apply screen
+  const handleApply = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+      // Show alert if user is not signed in
+      setModalVisible(true);
+    } else {
+      // Navigate to the Apply screen if the user is signed in
+      navigation.navigate('Apply', { jobId: job.id }); // Pass job ID to Apply screen
+    }
   };
 
   const handleContactPoster = () => {
@@ -76,6 +85,13 @@ const JobDetails = ({ route }) => {
           <Text style={styles.buttonText}>Contact Poster</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Alert Modal */}
+      <AlertModal 
+        visible={modalVisible} 
+        message="You need to have an account to apply. Please log in or sign up."
+        onClose={() => setModalVisible(false)} 
+      />
     </View>
   );
 };

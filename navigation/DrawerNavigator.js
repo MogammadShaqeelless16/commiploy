@@ -106,7 +106,6 @@ const DrawerNavigator = ({ navigation }) => {
             label="Home"
             icon={<Ionicons name="home" size={20} color="#007BFF" />}
             onPress={() => {
-              console.log('Navigating to Home');
               props.navigation.navigate('Home');
             }}
           />
@@ -114,23 +113,20 @@ const DrawerNavigator = ({ navigation }) => {
             label="Settings"
             icon={<Ionicons name="settings" size={20} color="#007BFF" />}
             onPress={() => {
-              console.log('Navigating to Settings');
               props.navigation.navigate('Settings');
             }}
           />
           <CustomDrawerItem
-            label="Messages"
-            icon={<Ionicons name="chatbubble" size={20} color="#007BFF" />}
+            label="My Business"
+            icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
             onPress={() => {
-              console.log('Navigating to ChatListScreen');
               props.navigation.navigate('ChatListScreen');
             }}
           />
           <CustomDrawerItem
-            label="News"
+            label="Local News"
             icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
             onPress={() => {
-              console.log('Navigating to News');
               props.navigation.navigate('News');
             }}
           />

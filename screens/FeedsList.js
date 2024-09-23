@@ -7,6 +7,7 @@ import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
 import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient';
+import LocationDisplay from '../component/LocationDisplay';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -62,6 +63,7 @@ const FeedsList = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <LocationDisplay />
       {!isLoggedIn && showProfileAlert && (
         <ProfileAlert 
           navigation={navigation} 
