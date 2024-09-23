@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-na
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import supabase from '../supabaseClient';
+import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
 import HomeTabs from './HomeTabs';
 import Settings from '../screens/Settings';
@@ -16,7 +17,7 @@ import DeveloperScreen from '../screens/developer/DeveloperScreen';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({ navigation }) => {
   const [profile, setProfile] = useState({
     username: '',
     profile_picture_url: '',
@@ -25,39 +26,42 @@ const DrawerNavigator = () => {
   const [isDeveloper, setIsDeveloper] = useState(false);
 
   useEffect(() => {
-    fetchProfile();
+    fetchUserProfile();
   }, []);
 
-  const fetchProfile = async () => {
+  const fetchUserProfile = async () => {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
+      console.log('No active session found, user not logged in');
       return;
     }
 
     setIsLoggedIn(true);
-    const { data, error } = await supabase
-      .from('users')
-      .select('username, profile_picture_url, roles(role_name)')
-      .eq('id', session.user.id)
-      .single();
+    console.log('User is logged in:', session.user.id);
 
-    if (error) {
+    try {
+      const userProfile = await fetchProfile(session.user.id); // Use fetchProfile function
+      if (userProfile) {
+        console.log('User profile fetched:', userProfile);
+        setProfile({
+          username: userProfile.username,
+          profile_picture_url: userProfile.profile_picture_url,
+        });
+        setIsDeveloper(userProfile.roles.role_name === 'Developer');
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
       Alert.alert('Error', 'Error fetching profile data');
-    } else {
-      setProfile({
-        username: data.username,
-        profile_picture_url: data.profile_picture_url,
-      });
-      setIsDeveloper(data.roles.role_name === 'Developer');
     }
   };
 
   const handleLogin = () => {
-    Alert.alert('Login', 'Navigating to login screen...');
+    navigation.navigate('Login');
   };
 
   const handleSignUp = () => {
-    Alert.alert('Sign Up', 'Navigating to signup screen...');
+    console.log('Sign Up button pressed');
+    navigation.navigate('SignUp');
   };
 
   const CustomDrawerItem = ({ label, icon, onPress }) => (
@@ -79,11 +83,17 @@ const DrawerNavigator = () => {
           ) : (
             <View style={styles.loginContainer}>
               <Text style={styles.loginText}>You are not logged in</Text>
-              <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
+              <TouchableOpacity
+                style={styles.authButton}
+                onPress={handleLogin}
+              >
                 <Ionicons name="log-in" size={20} color="#fff" />
                 <Text style={styles.authButtonText}>Login</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.authButton} onPress={handleSignUp}>
+              <TouchableOpacity
+                style={styles.authButton}
+                onPress={handleSignUp}
+              >
                 <Ionicons name="person-add" size={20} color="#fff" />
                 <Text style={styles.authButtonText}>Sign Up</Text>
               </TouchableOpacity>
@@ -95,33 +105,51 @@ const DrawerNavigator = () => {
           <CustomDrawerItem
             label="Home"
             icon={<Ionicons name="home" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('Home')}
+            onPress={() => {
+              console.log('Navigating to Home');
+              props.navigation.navigate('Home');
+            }}
           />
           <CustomDrawerItem
             label="Settings"
             icon={<Ionicons name="settings" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('Settings')}
+            onPress={() => {
+              console.log('Navigating to Settings');
+              props.navigation.navigate('Settings');
+            }}
           />
           <CustomDrawerItem
             label="Messages"
             icon={<Ionicons name="chatbubble" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('ChatListScreen')}
+            onPress={() => {
+              console.log('Navigating to ChatListScreen');
+              props.navigation.navigate('ChatListScreen');
+            }}
           />
           <CustomDrawerItem
             label="News"
             icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('News')}
+            onPress={() => {
+              console.log('Navigating to News');
+              props.navigation.navigate('News');
+            }}
           />
           <CustomDrawerItem
             label="My Applications"
             icon={<Ionicons name="apps" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('YourApplications')}
+            onPress={() => {
+              console.log('Navigating to YourApplications');
+              props.navigation.navigate('YourApplications');
+            }}
           />
           {isDeveloper && (
             <CustomDrawerItem
               label="Developer"
               icon={<Ionicons name="code" size={20} color="#007BFF" />}
-              onPress={() => props.navigation.navigate('DeveloperScreen')}
+              onPress={() => {
+                console.log('Navigating to DeveloperScreen');
+                props.navigation.navigate('DeveloperScreen');
+              }}
             />
           )}
         </View>
@@ -130,12 +158,18 @@ const DrawerNavigator = () => {
           <CustomDrawerItem
             label="Help"
             icon={<Ionicons name="help-circle" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('Help')}
+            onPress={() => {
+              console.log('Navigating to Help');
+              props.navigation.navigate('Help');
+            }}
           />
           <CustomDrawerItem
             label="Support"
             icon={<Ionicons name="headset" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('Support')}
+            onPress={() => {
+              console.log('Navigating to Support');
+              props.navigation.navigate('Support');
+            }}
           />
         </View>
       </DrawerContentScrollView>
