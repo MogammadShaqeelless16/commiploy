@@ -72,7 +72,7 @@ const BusinessDetails = ({ route, navigation }) => {
         </View>
         <View style={styles.detailRow}>
           <Icon name="info" size={20} color="#555" />
-          <Text style={styles.businessDetails}>Description: {business.description}</Text>
+          <Text style={styles.businessDetails}>Description: {business.slogan}</Text>
         </View>
       </View>
 

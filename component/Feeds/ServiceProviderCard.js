@@ -1,13 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ServiceProviderCard = ({ service }) => (
-  <TouchableOpacity style={styles.card}>
-    <Text style={styles.title}>{service.name}</Text>
-    <Text style={styles.price}>Price: R {service.price.toFixed(2)}</Text>
-    <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee.toFixed(2)}</Text>
-  </TouchableOpacity>
-);
+const ServiceProviderCard = ({ service, navigation }) => {
+  const handlePress = () => {
+    // Navigate to the service details page
+    navigation.navigate('ServiceDetails', { serviceId: service.id });
+  };
+
+  return (
+    <TouchableOpacity style={styles.card} onPress={handlePress}>
+      <Text style={styles.title}>{service.name}</Text>
+      <Text style={styles.price}>Price: R {service.price.toFixed(2)}</Text>
+      <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee.toFixed(2)}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   card: {

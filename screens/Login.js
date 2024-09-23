@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, ImageBackground, Animated, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../supabaseClient';
 
@@ -8,7 +8,7 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [slideAnim] = useState(new Animated.Value(-200)); // Initial position off-screen to the right
+  const [slideAnim] = useState(new Animated.Value(-200));
 
   useEffect(() => {
     const checkSession = async () => {
@@ -28,7 +28,7 @@ const Login = ({ navigation }) => {
       toValue: -200,
       duration: 0,
       useNativeDriver: true,
-    }).start(); // Hide the overlay
+    }).start();
 
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
@@ -38,7 +38,7 @@ const Login = ({ navigation }) => {
           toValue: 0,
           duration: 300,
           useNativeDriver: true,
-        }).start(); // Show the overlay
+        }).start();
       } else {
         await AsyncStorage.setItem('userSession', JSON.stringify(data.session));
         navigation.navigate('DrawerNavigator');
@@ -49,20 +49,17 @@ const Login = ({ navigation }) => {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start(); // Show the overlay
+      }).start();
     } finally {
       setLoading(false);
     }
   };
 
-  // Determine the background image based on the platform
-  const backgroundImage = Platform.OS === 'web' ? require('../assets/images/Background_desktop.png') : require('../assets/images/Background_mobile.png');
-
   return (
-    <ImageBackground source={backgroundImage} style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.innerContainer}>
         <Image source={require('../assets/images/logo.png')} style={styles.logo} />
-        <Text style={styles.welcome}>Welcome to Creche Spots</Text>
+        <Text style={styles.welcome}>Welcome to Commiploy</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -94,7 +91,7 @@ const Login = ({ navigation }) => {
           <Text style={styles.overlayText}>{error}</Text>
         </Animated.View>
       ) : null}
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -103,17 +100,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f9f9f9', // Optional: add a light background color
   },
   innerContainer: {
     flex: 1,
     justifyContent: 'center',
     padding: 16,
     borderRadius: 10,
-    width: '90%',
+    width: '100%',
   },
   logo: {
     width: 200,
-    height: 120,
+    height: 200,
     alignSelf: 'center',
     marginBottom: 24,
   },

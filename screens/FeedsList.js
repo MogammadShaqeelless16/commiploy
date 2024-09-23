@@ -1,3 +1,4 @@
+// FeedsList.js
 import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
@@ -80,7 +81,7 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader title="Nearby Products" />
       <FlatList
         data={products}
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />} // Pass navigation
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -89,7 +90,7 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader title="Nearby Jobs" />
       <FlatList
         data={jobs}
-        renderItem={({ item }) => <JobCard job={item} />}
+        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />} // Pass navigation
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -98,7 +99,7 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader title="Service Providers" />
       <FlatList
         data={services}
-        renderItem={({ item }) => <ServiceProviderCard service={item} />}
+        renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={styles.verticalList}

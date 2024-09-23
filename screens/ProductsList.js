@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, Image, TouchableOpacity } from 'react-native';
 import supabase from '../supabaseClient';
 import placeholderImage from '../assets/images/itemplaceholder.jpg'; // Adjust the path as necessary
 
-const ProductsList = () => {
+const ProductsList = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,14 +34,14 @@ const ProductsList = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = products.filter(product => 
+    const filtered = products.filter(product =>
       product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredProducts(filtered);
   }, [searchQuery, products]);
 
   const renderProduct = ({ item }) => (
-    <View style={styles.productContainer}>
+    <TouchableOpacity style={styles.productContainer} onPress={() => navigation.navigate('ProductDetails', { productId: item.id })}>
       <Image
         source={item.image_url ? { uri: item.image_url } : placeholderImage}
         style={styles.productImage}
@@ -51,7 +51,7 @@ const ProductsList = () => {
       <Text style={styles.productPrice}>Price: R{item.price.toFixed(2)}</Text>
       {/* Display shop name */}
       {item.shop_id && <Text style={styles.shopName}>Sold by: {item.shop_id.name}</Text>}
-    </View>
+    </TouchableOpacity>
   );
 
   return (

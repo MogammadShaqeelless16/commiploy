@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import supabase from '../../supabaseClient';
-import { Ionicons } from '@expo/vector-icons'; // Make sure to install expo/vector-icons
+import { Ionicons } from '@expo/vector-icons';
 
 const ServiceDetails = ({ route, navigation }) => {
   const { serviceId } = route.params;
@@ -22,6 +22,7 @@ const ServiceDetails = ({ route, navigation }) => {
         throw new Error('Error fetching service details');
       }
 
+      console.log("Fetched Service Data: ", data);
       setService(data);
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -35,11 +36,19 @@ const ServiceDetails = ({ route, navigation }) => {
   }, []);
 
   const handleContactProvider = () => {
-    Alert.alert('Contact Provider', 'Feature to contact the provider will be implemented.');
+    if (service && service.shop_id) {
+      navigation.navigate('UserProfileDetails', { userId: service.shop_id.owner }); // Assuming owner is the user ID
+    } else {
+      Alert.alert('Error', 'Provider information is not available.');
+    }
   };
 
   const handleViewBusiness = () => {
-    navigation.navigate('BusinessDetails', { businessId: service.shop_id });
+    if (service && service.shop_id) {
+      navigation.navigate('BusinessDetails', { businessId: service.shop_id.id });
+    } else {
+      Alert.alert('Error', 'Business information is not available.');
+    }
   };
 
   const handleBackPress = () => {
@@ -60,17 +69,19 @@ const ServiceDetails = ({ route, navigation }) => {
         <Ionicons name="arrow-back" size={24} color="#007bff" />
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
-      
+
       <Text style={styles.serviceName}>{service.name}</Text>
       <Text style={styles.serviceDescription}>{service.description}</Text>
-      
+
       <View style={styles.detailsContainer}>
-        <Text style={styles.serviceDetails}>Price: ${service.price.toFixed(2)}</Text>
-        <Text style={styles.serviceDetails}>Call Out Fee: ${service.call_out_fee.toFixed(2)}</Text>
+        <Text style={styles.serviceDetails}>Price: R{service.price.toFixed(2)}</Text>
+        <Text style={styles.serviceDetails}>Call Out Fee: R{service.call_out_fee.toFixed(2)}</Text>
         <Text style={styles.serviceDetails}>
           Created At: {new Date(service.created_at).toLocaleDateString()}
         </Text>
-        <Text style={styles.serviceDetails}>Provided by: {service.shop_id.name}</Text>
+        {service.shop_id && (
+          <Text style={styles.serviceDetails}>Provided by: {service.shop_id.name}</Text>
+        )}
       </View>
 
       <View style={styles.ratingContainer}>

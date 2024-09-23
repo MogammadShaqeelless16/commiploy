@@ -22,6 +22,7 @@ import ServiceItem from '../screens/services/ServiceItem';
 import ServiceDetails from '../screens/services/ServiceDetails'; 
 import BusinessDetails from '../screens/business/BusinessDetails';
 import UserProfileDetails from '../screens/UserProfileDetails';
+import ProductDetails from '../screens/ProductDetails';
 
 const Stack = createStackNavigator();
 
@@ -87,7 +88,7 @@ const AppNavigator = () => {
           <Stack.Screen name="UserProfileDetails" component={UserProfileDetails} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={SignUp} />
-
+          <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>
