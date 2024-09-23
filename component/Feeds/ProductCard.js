@@ -9,7 +9,7 @@ const ProductCard = ({ product, navigation }) => {
       onPress={() => navigation.navigate('ProductDetails', { productId: product.id })}
     >
       <Image source={{ uri: product.image_url }} style={styles.image} />
-      <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.title}>{product.title}</Text>
       <Text style={styles.price}>Price: R{product.price.toFixed(2)}</Text>
       
       {/* Display rating with a star icon */}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 12,
-    color: '#888',
+    color: '#e9672b',
   },
   ratingContainer: {
     flexDirection: 'row',

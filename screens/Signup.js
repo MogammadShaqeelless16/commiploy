@@ -70,7 +70,6 @@ const SignUp = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.innerContainer}>
-        <Text style={styles.title}>Sign Up</Text>
 
         <TextInput
           style={styles.input}

@@ -48,8 +48,15 @@ const JobDetails = ({ route }) => {
     }
   };
 
-  const handleContactPoster = () => {
-    navigation.navigate('UserProfileDetails', { userId: job.user_id });
+  const handleContactPoster = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+      // Show alert if user is not signed in
+      setModalVisible(true);
+    } else {
+      // Navigate to UserProfileDetails if the user is signed in
+      navigation.navigate('UserProfileDetails', { userId: job.user_id });
+    }
   };
 
   if (loading) {
@@ -89,7 +96,7 @@ const JobDetails = ({ route }) => {
       {/* Alert Modal */}
       <AlertModal 
         visible={modalVisible} 
-        message="You need to have an account to apply. Please log in or sign up."
+        message="You need to have an account to access this feature. Please log in or sign up."
         onClose={() => setModalVisible(false)} 
       />
     </View>

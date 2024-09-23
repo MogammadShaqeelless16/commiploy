@@ -69,7 +69,7 @@ const HomeTabs = () => {
         tabBarLabelStyle: {
           fontSize: 12,
         },
-        tabBarActiveTintColor: 'tomato',
+        tabBarActiveTintColor: '#f5bb1b',
         tabBarInactiveTintColor: 'gray',
         headerShown: false, // Hide header for all tabs
       })}

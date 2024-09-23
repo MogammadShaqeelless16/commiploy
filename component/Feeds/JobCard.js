@@ -8,9 +8,9 @@ const JobCard = ({ job, navigation }) => {
   // Render the icon based on the job icon name from the database
   const renderIcon = () => {
     if (job.icon) {
-      return <MaterialIcons name={job.icon} size={40} color="#007bff" />;
+      return <MaterialIcons name={job.icon} size={40} color="#60b135" />;
     }
-    return <MaterialIcons name="work" size={40} color="#007bff" />; // Default icon
+    return <MaterialIcons name="work" size={40} color="#60b135" />; // Default icon
   };
 
   return (

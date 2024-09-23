@@ -6,12 +6,10 @@ import supabase from '../supabaseClient';
 import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
 import HomeTabs from './HomeTabs';
-import Settings from '../screens/Settings';
 import News from '../screens/News';
 import Help from '../screens/Help';
 import Support from '../screens/Support';
 import Profile from '../screens/Profile';
-import YourApplications from '../screens/YourApplications';
 import ChatListScreen from '../screens/chat/ChatListScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
 
@@ -24,6 +22,7 @@ const DrawerNavigator = ({ navigation }) => {
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
+  const [isBusinessOwner, setIsBusinessOwner] = useState(false);
 
   useEffect(() => {
     fetchUserProfile();
@@ -40,7 +39,7 @@ const DrawerNavigator = ({ navigation }) => {
     console.log('User is logged in:', session.user.id);
 
     try {
-      const userProfile = await fetchProfile(session.user.id); // Use fetchProfile function
+      const userProfile = await fetchProfile(session.user.id);
       if (userProfile) {
         console.log('User profile fetched:', userProfile);
         setProfile({
@@ -48,6 +47,7 @@ const DrawerNavigator = ({ navigation }) => {
           profile_picture_url: userProfile.profile_picture_url,
         });
         setIsDeveloper(userProfile.roles.role_name === 'Developer');
+        setIsBusinessOwner(userProfile.roles.role_name === 'Business Owner');
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -83,17 +83,11 @@ const DrawerNavigator = ({ navigation }) => {
           ) : (
             <View style={styles.loginContainer}>
               <Text style={styles.loginText}>You are not logged in</Text>
-              <TouchableOpacity
-                style={styles.authButton}
-                onPress={handleLogin}
-              >
+              <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
                 <Ionicons name="log-in" size={20} color="#fff" />
                 <Text style={styles.authButtonText}>Login</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.authButton}
-                onPress={handleSignUp}
-              >
+              <TouchableOpacity style={styles.authButton} onPress={handleSignUp}>
                 <Ionicons name="person-add" size={20} color="#fff" />
                 <Text style={styles.authButtonText}>Sign Up</Text>
               </TouchableOpacity>
@@ -109,20 +103,24 @@ const DrawerNavigator = ({ navigation }) => {
               props.navigation.navigate('Home');
             }}
           />
-          <CustomDrawerItem
-            label="Settings"
-            icon={<Ionicons name="settings" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('Settings');
-            }}
-          />
-          <CustomDrawerItem
-            label="My Business"
-            icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('ChatListScreen');
-            }}
-          />
+          {isLoggedIn && (
+            <CustomDrawerItem
+              label="Settings"
+              icon={<Ionicons name="settings" size={20} color="#007BFF" />}
+              onPress={() => {
+                props.navigation.navigate('Settings');
+              }}
+            />
+          )}
+          {isBusinessOwner && (
+            <CustomDrawerItem
+              label="My Business"
+              icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
+              onPress={() => {
+                props.navigation.navigate('ChatListScreen');
+              }}
+            />
+          )}
           <CustomDrawerItem
             label="Local News"
             icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
@@ -130,20 +128,20 @@ const DrawerNavigator = ({ navigation }) => {
               props.navigation.navigate('News');
             }}
           />
-          <CustomDrawerItem
-            label="My Applications"
-            icon={<Ionicons name="apps" size={20} color="#007BFF" />}
-            onPress={() => {
-              console.log('Navigating to YourApplications');
-              props.navigation.navigate('YourApplications');
-            }}
-          />
+          {isLoggedIn && (
+            <CustomDrawerItem
+              label="My Applications"
+              icon={<Ionicons name="apps" size={20} color="#007BFF" />}
+              onPress={() => {
+                props.navigation.navigate('YourApplications');
+              }}
+            />
+          )}
           {isDeveloper && (
             <CustomDrawerItem
               label="Developer"
               icon={<Ionicons name="code" size={20} color="#007BFF" />}
               onPress={() => {
-                console.log('Navigating to DeveloperScreen');
                 props.navigation.navigate('DeveloperScreen');
               }}
             />
@@ -184,12 +182,12 @@ const DrawerNavigator = ({ navigation }) => {
     >
       <Drawer.Screen name="Home" component={HomeTabs} />
       <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="Settings" component={Settings} />
+      {isLoggedIn && <Drawer.Screen name="Settings" component={Settings} />}
       <Drawer.Screen name="ChatListScreen" component={ChatListScreen} />
       <Drawer.Screen name="News" component={News} />
       <Drawer.Screen name="Help" component={Help} />
       <Drawer.Screen name="Support" component={Support} />
-      <Drawer.Screen name="YourApplications" component={YourApplications} />
+      {isLoggedIn && <Drawer.Screen name="YourApplications" component={YourApplications} />}
       {isDeveloper && <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />}
     </Drawer.Navigator>
   );

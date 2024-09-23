@@ -66,14 +66,6 @@ const BusinessList = ({ navigation }) => {
     );
   }
 
-  if (filteredBusinesses.length === 0) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.emptyText}>No businesses found.</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <LocationDisplay />
@@ -83,15 +75,18 @@ const BusinessList = ({ navigation }) => {
         value={searchQuery}
         onChangeText={handleSearch}
       />
-      <FlatList
-        data={filteredBusinesses}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderBusinessItem}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={<Text style={styles.emptyText}>No businesses found.</Text>}
-      />
+      {filteredBusinesses.length === 0 && searchQuery ? (
+        <Text style={styles.emptyText}>No businesses found.</Text>
+      ) : (
+        <FlatList
+          data={filteredBusinesses}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderBusinessItem}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
     </View>
   );
 };
@@ -135,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  businessDescription: {
+  slogan: {
     fontSize: 12,
     color: '#555',
   },

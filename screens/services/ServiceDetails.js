@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } fr
 import { Rating } from 'react-native-ratings';
 import supabase from '../../supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
+import AlertModal from '../../component/AlertModal';
 
 const ServiceDetails = ({ route, navigation }) => {
   const { serviceId } = route.params;
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false); // For alert modal visibility
 
   const fetchServiceDetails = async () => {
     setLoading(true);
@@ -35,11 +37,17 @@ const ServiceDetails = ({ route, navigation }) => {
     fetchServiceDetails();
   }, []);
 
-  const handleContactProvider = () => {
-    if (service && service.shop_id) {
-      navigation.navigate('UserProfileDetails', { userId: service.shop_id.owner }); // Assuming owner is the user ID
+  const handleContactProvider = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+      // Show alert if user is not signed in
+      Alert.alert('Login Required', 'You need to have an account to contact the provider. Please log in or sign up.');
     } else {
-      Alert.alert('Error', 'Provider information is not available.');
+      if (service && service.shop_id) {
+        navigation.navigate('UserProfileDetails', { userId: service.shop_id.owner }); // Assuming owner is the user ID
+      } else {
+        Alert.alert('Error', 'Provider information is not available.');
+      }
     }
   };
 
