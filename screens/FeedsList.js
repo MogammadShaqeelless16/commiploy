@@ -72,7 +72,8 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader 
         title="Nearby Products" 
         navigation={navigation} 
-        navigateTo="ProductsList" // Update this to your product list screen name
+        navigateTo="ProductsList" 
+        iconName="shopping-bag" // Icon for products
       />
       <FlatList
         data={products}
@@ -86,7 +87,8 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader 
         title="Nearby Jobs" 
         navigation={navigation} 
-        navigateTo="JobList" // Update this to your job list screen name
+        navigateTo="JobList" 
+        iconName="suitcase" // Icon for jobs
       />
       <FlatList
         data={jobs}
@@ -100,7 +102,8 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader 
         title="Service Providers" 
         navigation={navigation} 
-        navigateTo="ServiceProviderList" // Update this to your service provider list screen name
+        navigateTo="ServiceProviderList" 
+        iconName="wrench" // Icon for services
       />
       <FlatList
         data={services}

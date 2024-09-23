@@ -1,9 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Import MaterialIcons
 
 const JobCard = ({ job, navigation }) => {
   if (!job) return null; // Handle undefined job
+
+  // Render the icon based on the job icon name from the database
+  const renderIcon = () => {
+    if (job.icon) {
+      return <MaterialIcons name={job.icon} size={40} color="#007bff" />;
+    }
+    return <MaterialIcons name="work" size={40} color="#007bff" />; // Default icon
+  };
 
   return (
     <TouchableOpacity 
@@ -11,7 +19,7 @@ const JobCard = ({ job, navigation }) => {
       onPress={() => navigation.navigate('JobDetails', { jobId: job.id })} // Navigate to JobDetails with jobId
     >
       <View style={styles.iconContainer}>
-        {job.icon && <FontAwesome name={job.icon} size={40} color="#007bff" />} {/* Display icon */} 
+        {renderIcon()} {/* Display the appropriate icon */} 
       </View>
       <Text style={styles.title}>{job.title}</Text>
       <Text style={styles.payment}>R {job.payment.toFixed(2)}</Text>
@@ -21,17 +29,17 @@ const JobCard = ({ job, navigation }) => {
 
 const styles = StyleSheet.create({
   card: {
+    width: 150,
+    margin: 5,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 3, // Shadow effect for elevation
+    borderRadius: 8,
+    elevation: 2,
+    padding: 10,
     alignItems: 'center', // Center items horizontally
-    justifyContent: 'center', // Center items vertically
-    width: '80%', // Width for two-column layout
   },
   iconContainer: {
     marginBottom: 8, // Space between icon and text
+    alignItems: 'center', // Center the icon
   },
   title: {
     fontSize: 16,
