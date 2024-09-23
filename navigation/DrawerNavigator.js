@@ -19,7 +19,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = ({ navigation }) => {
   const [profile, setProfile] = useState({
-    username: '',
+    display_name: '',
     profile_picture_url: '',
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,7 +44,7 @@ const DrawerNavigator = ({ navigation }) => {
       if (userProfile) {
         console.log('User profile fetched:', userProfile);
         setProfile({
-          username: userProfile.username,
+          display_name: userProfile.display_name,
           profile_picture_url: userProfile.profile_picture_url,
         });
         setIsDeveloper(userProfile.roles.role_name === 'Developer');
@@ -78,7 +78,7 @@ const DrawerNavigator = ({ navigation }) => {
           {isLoggedIn ? (
             <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
               <Image source={{ uri: profile.profile_picture_url }} style={styles.profileImage} />
-              <Text style={styles.profileName}>{profile.username || 'User Name'}</Text>
+              <Text style={styles.profileName}>{profile.display_name || 'User Name'}</Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.loginContainer}>

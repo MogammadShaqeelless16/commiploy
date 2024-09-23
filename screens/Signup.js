@@ -14,8 +14,10 @@ const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [idNumber, setIdNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,7 +25,6 @@ const SignUp = ({ navigation }) => {
     setLoading(true);
     setError('');
 
-    // Validate password confirmation
     if (password !== confirmPassword) {
       setError("Passwords don't match");
       setLoading(false);
@@ -31,7 +32,6 @@ const SignUp = ({ navigation }) => {
     }
 
     try {
-      // Create user with Supabase Auth
       const { data, error: authError } = await supabase.auth.signUp({ email, password });
 
       if (authError) {
@@ -39,14 +39,15 @@ const SignUp = ({ navigation }) => {
         return;
       }
 
-      // Add additional user details to the 'users' table
       const userId = data.user.id;
       const { error: dbError } = await supabase
         .from('users')
         .upsert({
           id: userId,
-          display_name: displayName,
+          first_name: firstName,
+          last_name: lastName,
           phone_number: phoneNumber,
+          id_number: idNumber,
           email,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -73,9 +74,15 @@ const SignUp = ({ navigation }) => {
 
         <TextInput
           style={styles.input}
-          placeholder="Display Name"
-          value={displayName}
-          onChangeText={setDisplayName}
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
         />
         <TextInput
           style={styles.input}
@@ -106,19 +113,28 @@ const SignUp = ({ navigation }) => {
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
         />
+        <TextInput
+          style={styles.input}
+          placeholder="ID Number"
+          value={idNumber}
+          onChangeText={setIdNumber}
+          keyboardType="numeric"
+        />
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
-          <Text style={styles.buttonText}>{loading ? "Signing Up..." : "Sign Up"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.loginButton]}
-          onPress={() => navigation.navigate('Login')}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>Go to Login</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
+            <Text style={styles.buttonText}>{loading ? "Signing Up..." : "Sign Up"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.loginButton]}
+            onPress={() => navigation.navigate('Login')}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>Go to Login</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -129,38 +145,51 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff', // Set background color to white
+    backgroundColor: '#f5f5f5',
   },
   innerContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: 20,
     borderRadius: 10,
     width: '90%',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 24,
     textAlign: 'center',
+    color: '#333',
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: 16, // Increased margin for better spacing
     paddingHorizontal: 10,
-    borderRadius: 4,
-    backgroundColor: '#fff',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Align buttons side by side
+    marginTop: 20,
   },
   button: {
     backgroundColor: '#4a90e2',
-    borderRadius: 5,
+    borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    alignSelf: 'center',
-    marginTop: 20,
+    width: '48%', // Adjusted width for two columns
   },
   buttonText: {
     color: '#ffffff',
@@ -169,7 +198,6 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: '#841584',
-    marginTop: 10,
   },
   errorText: {
     color: 'red',
