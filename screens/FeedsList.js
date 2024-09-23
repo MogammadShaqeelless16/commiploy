@@ -6,7 +6,7 @@ import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
 import { AuthContext } from '../context/AuthContext';
-import supabase from '../supabaseClient'; // Import your Supabase client
+import supabase from '../supabaseClient';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -21,30 +21,26 @@ const FeedsList = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch products
         const { data: productData, error: productError } = await supabase
           .from('products')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (productError) throw productError;
         setProducts(productData);
 
-        // Fetch jobs
         const { data: jobData, error: jobError } = await supabase
           .from('jobs')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (jobError) throw jobError;
         setJobs(jobData);
 
-        // Fetch services
         const { data: serviceData, error: serviceError } = await supabase
           .from('services')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (serviceError) throw serviceError;
         setServices(serviceData);
-
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -66,7 +62,6 @@ const FeedsList = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Show the profile alert only if the user is not logged in */}
       {!isLoggedIn && showProfileAlert && (
         <ProfileAlert 
           navigation={navigation} 
@@ -74,7 +69,11 @@ const FeedsList = ({ navigation }) => {
         />
       )}
 
-      <SectionHeader title="Nearby Products" />
+      <SectionHeader 
+        title="Nearby Products" 
+        navigation={navigation} 
+        navigateTo="ProductsList" // Update this to your product list screen name
+      />
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
@@ -83,16 +82,26 @@ const FeedsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-      <SectionHeader title="Nearby Jobs" />
+
+      <SectionHeader 
+        title="Nearby Jobs" 
+        navigation={navigation} 
+        navigateTo="JobList" // Update this to your job list screen name
+      />
       <FlatList
         data={jobs}
-        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />} // Pass navigation
+        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />}
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-      <SectionHeader title="Service Providers" />
+
+      <SectionHeader 
+        title="Service Providers" 
+        navigation={navigation} 
+        navigateTo="ServiceProviderList" // Update this to your service provider list screen name
+      />
       <FlatList
         data={services}
         renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}

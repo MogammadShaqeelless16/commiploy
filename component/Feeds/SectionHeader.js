@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SectionHeader = ({ title }) => (
+const SectionHeader = ({ title, navigation, navigateTo }) => (
   <View style={styles.sectionHeader}>
     <Text style={styles.sectionTitle}>{title}</Text>
-    <TouchableOpacity style={styles.seeMoreButton}>
+    <TouchableOpacity 
+      style={styles.seeMoreButton} 
+      onPress={() => navigation.navigate(navigateTo)} // Navigate on press
+    >
       <Text style={styles.seeMoreText}>See More</Text>
     </TouchableOpacity>
   </View>
