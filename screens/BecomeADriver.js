@@ -1,50 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const BecomeADriver = ({ navigation }) => {
+const BecomeADriver = () => {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Become a Driver Partner</Text>
-      <Text style={styles.subHeader}>
-        Join the Takealot.com Delivery Team Today!
+    <View style={styles.container}>
+      <Text style={styles.title}>Become a Driver Partner!</Text>
+      <Text style={styles.subtitle}>
+        Join our delivery team and make a difference today!
       </Text>
+      
+      <Text style={styles.sectionTitle}>What You Need:</Text>
+      <Text style={styles.bulletPoint}>• Own smartphone with Android v7 or higher for the delivery app & GPS.</Text>
+      <Text style={styles.bulletPoint}>• South African ID or Work Permit for foreign nationals.</Text>
+      <Text style={styles.bulletPoint}>• Valid South African Driver’s License (or National/International License for foreign nationals).</Text>
+      <Text style={styles.bulletPoint}>• Your own motorbike, light vehicle, or manual bicycle.</Text>
+      <Text style={styles.bulletPoint}>• Proof of Address.</Text>
+      <Text style={styles.bulletPoint}>• Proof of Bank Details.</Text>
+      <Text style={styles.bulletPoint}>• Vehicle Registration Form (RC1) and valid Roadworthy Certificate.</Text>
+      <Text style={styles.bulletPoint}>• Clear Criminal Record.</Text>
+      <Text style={styles.bulletPoint}>• Must be older than 16 years to apply.</Text>
 
-      <Text style={styles.requirementsHeader}>What You Need:</Text>
-      <Text style={styles.requirementItem}>• Own smartphone with Android V7 or higher for the delivery app & GPS.</Text>
-      <Text style={styles.requirementItem}>• South African ID or Work Permit for foreign nationals.</Text>
-      <Text style={styles.requirementItem}>• Valid SA Driver’s License.</Text>
-      <Text style={styles.requirementItem}>• National / International Driver’s License (Foreign Nationals).</Text>
-      <Text style={styles.requirementItem}>• Your own motorbike or light vehicle.</Text>
-      <Text style={styles.requirementItem}>• Proof of Address.</Text>
-      <Text style={styles.requirementItem}>• Proof of Bank details.</Text>
-      <Text style={styles.requirementItem}>• Vehicle Registration form (RC1).</Text>
-      <Text style={styles.requirementItem}>• Valid Roadworthy Certificate.</Text>
-      <Text style={styles.requirementItem}>• Clear criminal record.</Text>
+      <Text style={styles.sectionTitle}>Benefits of Working as an Independent Contractor:</Text>
+      <Text style={styles.bulletPoint}>• Flexible working hours from Monday to Sunday.</Text>
+      <Text style={styles.bulletPoint}>• Competitive rates offered during peak times.</Text>
+      <Text style={styles.bulletPoint}>• Personal injury insurance for your protection while on duty.</Text>
+      <Text style={styles.bulletPoint}>• Free training provided for successful applicants.</Text>
+      <Text style={styles.bulletPoint}>• Access to a free road emergency response service.</Text>
 
-      <Text style={styles.benefitsHeader}>Benefits of Working as an Independent Contractor:</Text>
-      <Text style={styles.benefitItem}>• We operate from Monday to Sunday.</Text>
-      <Text style={styles.benefitItem}>• Premium rates offered from Friday to Sunday.</Text>
-      <Text style={styles.benefitItem}>• Personal injury insurance offered.</Text>
-      <Text style={styles.benefitItem}>• Free training provided to successful applicants.</Text>
-      <Text style={styles.benefitItem}>• Access to free road emergency response service.</Text>
-
-      <TouchableOpacity style={styles.applyButton} onPress={() => {/* Navigate to application form or relevant screen */}}>
+      <TouchableOpacity style={styles.applyButton}>
         <Text style={styles.applyButtonText}>Apply Now</Text>
       </TouchableOpacity>
-
-      <Text style={styles.youthHeader}>Youth Employment Opportunities</Text>
-      <Text style={styles.youthDescription}>
-        If you have a bike and a South African ID, you can apply for employment opportunities with us.
-      </Text>
-      <Text style={styles.youthRequirementsHeader}>What You Need:</Text>
-      <Text style={styles.requirementItem}>• South African ID.</Text>
-      <Text style={styles.requirementItem}>• Your own motorbike.</Text>
-      <Text style={styles.requirementItem}>• Proof of Bank details.</Text>
-
-      <TouchableOpacity style={styles.applyButton} onPress={() => navigation.navigate('YouthEmployment')}>
-        <Text style={styles.applyButtonText}>Apply Now</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -52,71 +38,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
   },
-  header: {
+  title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
   },
-  subHeader: {
-    fontSize: 18,
+  subtitle: {
+    fontSize: 16,
     marginBottom: 20,
     color: '#555',
   },
-  requirementsHeader: {
+  sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
-    color: '#007bff',
+    marginBottom: 10,
+    color: '#007BFF',
   },
-  requirementItem: {
-    fontSize: 16,
-    marginVertical: 4,
-    color: '#333',
-  },
-  benefitsHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    color: '#28a745',
-  },
-  benefitItem: {
+  bulletPoint: {
     fontSize: 16,
     marginVertical: 4,
     color: '#333',
   },
   applyButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#007BFF',
     padding: 15,
     borderRadius: 5,
-    marginVertical: 20,
+    marginTop: 20,
     alignItems: 'center',
   },
   applyButtonText: {
-    color: '#ffffff',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  youthHeader: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    color: '#28a745',
-  },
-  youthDescription: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#333',
-  },
-  youthRequirementsHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-    color: '#007bff',
   },
 });
 

@@ -15,6 +15,8 @@ import DeveloperScreen from '../screens/developer/DeveloperScreen';
 import BecomeADriver from '../screens/BecomeADriver'; // Import the BecomeADriver component
 import YouthEmployment from '../screens/YouthEmployment'; // Import the YouthEmployment component
 import YourApplications from '../screens/YourApplications';
+import BecomeAHandyman from '../screens/BecomeAHustler';
+import ListYourBusiness from '../screens/ListYourBusiness';
 
 const Drawer = createDrawerNavigator();
 

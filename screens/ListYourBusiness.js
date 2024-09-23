@@ -1,26 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const YouthEmployment = () => {
+const ListYourBusiness = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Youth Employment Opportunities</Text>
+      <Text style={styles.title}>List Your Business</Text>
       <Text style={styles.subtitle}>
-        If you have a handy skill, you can apply for part-time work!
+        Want to have your business listed? Join our platform today!
       </Text>
 
       <Text style={styles.sectionTitle}>What You Need:</Text>
-      <Text style={styles.bulletPoint}>• A valid South African ID or Passport.</Text>
-      <Text style={styles.bulletPoint}>• Have a skill </Text>
-      <Text style={styles.bulletPoint}>• Proof of Bank Details.</Text>
-      
-      <Text style={styles.sectionTitle}>Benefits:</Text>
-      <Text style={styles.bulletPoint}>• Flexible hours to fit around your studies.</Text>
-      <Text style={styles.bulletPoint}>• Gain work experience and earn money.</Text>
-      <Text style={styles.bulletPoint}>• Join a supportive team and make a difference in your community.</Text>
+      <Text style={styles.bulletPoint}>• A valid business registration document.</Text>
+      <Text style={styles.bulletPoint}>• Proof of Address for your business.</Text>
+      <Text style={styles.bulletPoint}>• Business Description and Services Offered.</Text>
+      <Text style={styles.bulletPoint}>• Contact Information.</Text>
+
+      <Text style={styles.sectionTitle}>Benefits of Listing Your Business:</Text>
+      <Text style={styles.bulletPoint}>• Increased visibility to potential customers.</Text>
+      <Text style={styles.bulletPoint}>• Access to a larger customer base.</Text>
+      <Text style={styles.bulletPoint}>• Opportunities for collaboration with other businesses.</Text>
 
       <TouchableOpacity style={styles.applyButton}>
-        <Text style={styles.applyButtonText}>Apply Now</Text>
+        <Text style={styles.applyButtonText}>List My Business</Text>
       </TouchableOpacity>
     </View>
   );
@@ -69,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default YouthEmployment;
+export default ListYourBusiness;

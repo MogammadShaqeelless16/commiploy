@@ -1,27 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const YouthEmployment = () => {
+const BecomeAHustler = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Youth Employment Opportunities</Text>
+      <Text style={styles.title}>Become a Hustler</Text>
       <Text style={styles.subtitle}>
-        If you have a handy skill, you can apply for part-time work!
+        Apply for freelance opportunities for odd jobs!
       </Text>
 
       <Text style={styles.sectionTitle}>What You Need:</Text>
       <Text style={styles.bulletPoint}>• A valid South African ID or Passport.</Text>
-      <Text style={styles.bulletPoint}>• Have a skill </Text>
+      <Text style={styles.bulletPoint}>• Skills and experience in various services.</Text>
+      <Text style={styles.bulletPoint}>• Own tools and equipment.</Text>
       <Text style={styles.bulletPoint}>• Proof of Bank Details.</Text>
-      
-      <Text style={styles.sectionTitle}>Benefits:</Text>
-      <Text style={styles.bulletPoint}>• Flexible hours to fit around your studies.</Text>
-      <Text style={styles.bulletPoint}>• Gain work experience and earn money.</Text>
-      <Text style={styles.bulletPoint}>• Join a supportive team and make a difference in your community.</Text>
 
-      <TouchableOpacity style={styles.applyButton}>
-        <Text style={styles.applyButtonText}>Apply Now</Text>
-      </TouchableOpacity>
+      <Text style={styles.sectionTitle}>Benefits of Working as a Hustler:</Text>
+      <Text style={styles.bulletPoint}>• Flexible working hours.</Text>
+      <Text style={styles.bulletPoint}>• Variety of jobs to choose from.</Text>
+      <Text style={styles.bulletPoint}>• Opportunity to earn extra income.</Text>
+
     </View>
   );
 };
@@ -69,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default YouthEmployment;
+export default BecomeAHustler;

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#f6bc1c',
     borderRadius: 5,
   },
   seeMoreText: {

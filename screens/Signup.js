@@ -145,13 +145,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
+    width: '100%'
   },
   innerContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
     borderRadius: 10,
-    width: '90%',
+    width: '100%',
     backgroundColor: '#ffffff',
     shadowColor: '#000',
     shadowOffset: {
