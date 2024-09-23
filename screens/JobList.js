@@ -35,7 +35,7 @@ const JobList = ({ navigation }) => {
   const renderJobItem = ({ item }) => (
     <View style={styles.jobCard}>
       <Text style={styles.jobTitle}>
-        <Icon name="work" size={20} color="#007bff" /> {item.title}
+        <Icon name="work" size={20} color="#60b135" /> {item.title}
       </Text>
       <Text style={styles.jobDetails}>
         <Icon name="access-time" size={16} color="#888" /> Duration: {item.duration}
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   detailsButton: {
     marginTop: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: '#60b135',
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 15,

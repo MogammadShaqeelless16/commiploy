@@ -12,6 +12,8 @@ import Support from '../screens/Support';
 import Profile from '../screens/Profile';
 import ChatListScreen from '../screens/chat/ChatListScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
+import BecomeADriver from '../screens/BecomeADriver'; // Import the BecomeADriver component
+import YouthEmployment from '../screens/YouthEmployment'; // Import the YouthEmployment component
 
 const Drawer = createDrawerNavigator();
 
@@ -146,6 +148,20 @@ const DrawerNavigator = ({ navigation }) => {
               }}
             />
           )}
+          <CustomDrawerItem
+            label="Become a Driver"
+            icon={<Ionicons name="bicycle" size={20} color="#007BFF" />}
+            onPress={() => {
+              props.navigation.navigate('BecomeADriver');
+            }}
+          />
+          <CustomDrawerItem
+            label="Youth Employment"
+            icon={<Ionicons name="people" size={20} color="#007BFF" />}
+            onPress={() => {
+              props.navigation.navigate('YouthEmployment');
+            }}
+          />
         </View>
 
         <View style={styles.bottomDrawerSection}>
@@ -183,12 +199,15 @@ const DrawerNavigator = ({ navigation }) => {
       <Drawer.Screen name="Home" component={HomeTabs} />
       <Drawer.Screen name="Profile" component={Profile} />
       {isLoggedIn && <Drawer.Screen name="Settings" component={Settings} />}
-      <Drawer.Screen name="ChatListScreen" component={ChatListScreen} />
+      <Drawer.Screen name="BecomeADriver" component={BecomeADriver} />
+      <Drawer.Screen name="YouthEmployment" component={YouthEmployment} />
       <Drawer.Screen name="News" component={News} />
       <Drawer.Screen name="Help" component={Help} />
       <Drawer.Screen name="Support" component={Support} />
       {isLoggedIn && <Drawer.Screen name="YourApplications" component={YourApplications} />}
       {isDeveloper && <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />}
+      {/* Add new screens for BecomeADriver and YouthEmployment */}
+
     </Drawer.Navigator>
   );
 };

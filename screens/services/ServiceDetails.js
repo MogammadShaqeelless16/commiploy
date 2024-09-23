@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import supabase from '../../supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
@@ -40,8 +40,8 @@ const ServiceDetails = ({ route, navigation }) => {
   const handleContactProvider = async () => {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) {
-      // Show alert if user is not signed in
-      Alert.alert('Login Required', 'You need to have an account to contact the provider. Please log in or sign up.');
+      // Show modal if user is not signed in
+      setModalVisible(true);
     } else {
       if (service && service.shop_id) {
         navigation.navigate('UserProfileDetails', { userId: service.shop_id.owner }); // Assuming owner is the user ID
@@ -106,6 +106,13 @@ const ServiceDetails = ({ route, navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleViewBusiness}>
         <Text style={styles.buttonText}>View Business Details</Text>
       </TouchableOpacity>
+
+      {/* Alert Modal */}
+      <AlertModal 
+        visible={modalVisible} 
+        message="You need to have an account to contact the provider. Please log in or sign up."
+        onClose={() => setModalVisible(false)} 
+      />
     </View>
   );
 };
