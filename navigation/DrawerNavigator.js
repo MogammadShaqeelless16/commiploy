@@ -10,7 +10,7 @@ import News from '../screens/News';
 import Help from '../screens/Help';
 import Support from '../screens/Support';
 import Profile from '../screens/Profile';
-import ChatListScreen from '../screens/chat/ChatListScreen';
+import Settings from '../screens/Settings'
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
 import BecomeADriver from '../screens/BecomeADriver'; // Import the BecomeADriver component
 import YouthEmployment from '../screens/YouthEmployment'; // Import the YouthEmployment component
