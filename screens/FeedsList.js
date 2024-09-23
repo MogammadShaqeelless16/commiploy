@@ -104,7 +104,7 @@ const FeedsList = ({ navigation }) => {
       <SectionHeader 
         title="Service Providers" 
         navigation={navigation} 
-        navigateTo="ServiceProviderList" 
+        navigateTo="Services" 
         iconName="wrench" // Icon for services
       />
       <FlatList
