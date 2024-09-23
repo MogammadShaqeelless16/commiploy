@@ -5,7 +5,6 @@ import { View, Text } from 'react-native';
 
 // Import your screens
 import JobList from '../screens/JobList';
-import YourApplications from '../screens/YourApplications';
 import BusinessList from '../screens/BusinessList';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
