@@ -50,9 +50,9 @@ const LocationDisplay = () => {
   return (
     <View style={styles.locationSection}>
       <Text style={styles.locationTitle}>
-        <Icon name="my-location" size={20} color="#007bff" /> Your Location:
+        <Icon name="my-location" size={20} color="#007bff" />  <Text style={styles.locationText}>{streetName || errorMsg || 'Fetching location...'}</Text>
       </Text>
-      <Text style={styles.locationText}>{streetName || errorMsg || 'Fetching location...'}</Text>
+      
     </View>
   );
 };
