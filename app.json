@@ -14,12 +14,12 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.crechespots",
+      "bundleIdentifier": "com.yourcompany.commiploy",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "crechespots"
+              "commiploy"
             ]
           }
         ]
@@ -30,13 +30,13 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yourcompany.crechespots",
+      "package": "com.yourcompany.commiploy",
       "intentFilters": [
         {
           "action": "VIEW",
           "data": [
             {
-              "scheme": "crechespots"
+              "scheme": "commiploy"
             }
           ],
           "category": [
