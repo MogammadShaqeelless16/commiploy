@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ImageBackground, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { supabase } from '../supabaseClient'; // Import your Supabase client
 
 const SignUp = ({ navigation }) => {
@@ -28,14 +36,13 @@ const SignUp = ({ navigation }) => {
 
       if (authError) {
         Alert.alert('Sign Up Error', authError.message);
-        setLoading(false);
         return;
       }
 
       // Add additional user details to the 'users' table
       const userId = data.user.id;
       const { error: dbError } = await supabase
-        .from('users') // Ensure this is your table name
+        .from('users')
         .upsert({
           id: userId,
           display_name: displayName,
@@ -47,12 +54,11 @@ const SignUp = ({ navigation }) => {
 
       if (dbError) {
         Alert.alert('Update Error', dbError.message);
-        setLoading(false);
         return;
       }
 
       Alert.alert('Sign Up Success', 'Please check your email to confirm your account.');
-      navigation.navigate('Login'); // Navigate to Login screen
+      navigation.navigate('Login');
     } catch (error) {
       Alert.alert('Sign Up Error', error.message);
     } finally {
@@ -61,9 +67,10 @@ const SignUp = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground source={require('../assets/images/Background_mobile.png')} style={styles.container}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.innerContainer}>
         <Text style={styles.title}>Sign Up</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Display Name"
@@ -99,7 +106,9 @@ const SignUp = ({ navigation }) => {
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
         />
+
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
         <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
           <Text style={styles.buttonText}>{loading ? "Signing Up..." : "Sign Up"}</Text>
         </TouchableOpacity>
@@ -111,7 +120,7 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.buttonText}>Go to Login</Text>
         </TouchableOpacity>
       </ScrollView>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -120,6 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#ffffff', // Set background color to white
   },
   innerContainer: {
     flex: 1,

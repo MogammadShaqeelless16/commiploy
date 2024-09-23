@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, navigation }) => {
   if (!job) return null; // Handle undefined job
 
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={() => navigation.navigate('JobDetails', { jobId: job.id })} // Navigate to JobDetails with jobId
+    >
       <View style={styles.iconContainer}>
         {job.icon && <FontAwesome name={job.icon} size={40} color="#007bff" />} {/* Display icon */} 
       </View>

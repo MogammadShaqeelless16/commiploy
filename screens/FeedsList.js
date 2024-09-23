@@ -5,7 +5,6 @@ import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
-import ProfileCompletion from '../component/Profile/ProfileCompletion'; // Import the new component
 import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient'; // Import your Supabase client
 
@@ -25,7 +24,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch products
         const { data: productData, error: productError } = await supabase
           .from('products')
-          .select('*');
+          .select('*'); // Adjust the selection as needed
 
         if (productError) throw productError;
         setProducts(productData);
@@ -33,7 +32,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch jobs
         const { data: jobData, error: jobError } = await supabase
           .from('jobs')
-          .select('*');
+          .select('*'); // Adjust the selection as needed
 
         if (jobError) throw jobError;
         setJobs(jobData);
@@ -41,7 +40,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch services
         const { data: serviceData, error: serviceError } = await supabase
           .from('services')
-          .select('*');
+          .select('*'); // Adjust the selection as needed
 
         if (serviceError) throw serviceError;
         setServices(serviceData);
@@ -67,19 +66,18 @@ const FeedsList = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {showProfileAlert && (
+      {/* Show the profile alert only if the user is not logged in */}
+      {!isLoggedIn && showProfileAlert && (
         <ProfileAlert 
           navigation={navigation} 
           onClose={() => setShowProfileAlert(false)} 
         />
       )}
-      
-      {isLoggedIn && <ProfileCompletion />} {/* Render ProfileCompletion component here */}
 
       <SectionHeader title="Nearby Products" />
       <FlatList
         data={products}
-        renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />} // Pass navigation
+        renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
