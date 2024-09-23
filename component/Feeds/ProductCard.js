@@ -1,6 +1,6 @@
-// ProductCard.js
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const ProductCard = ({ product, navigation }) => {
   return (
@@ -9,8 +9,14 @@ const ProductCard = ({ product, navigation }) => {
       onPress={() => navigation.navigate('ProductDetails', { productId: product.id })}
     >
       <Image source={{ uri: product.image_url }} style={styles.image} />
-      <Text style={styles.title}>{product.title}</Text>
+      <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.price}>Price: R{product.price.toFixed(2)}</Text>
+      
+      {/* Display rating with a star icon */}
+      <View style={styles.ratingContainer}>
+        <Ionicons name="star" size={16} color="#FFD700" />
+        <Text style={styles.ratingText}>{product.rating ? product.rating.toFixed(1) : 'No rating'}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -35,6 +41,16 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 12,
+    color: '#888',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  ratingText: {
+    fontSize: 12,
+    marginLeft: 5,
     color: '#888',
   },
 });

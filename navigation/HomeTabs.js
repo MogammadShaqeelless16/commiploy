@@ -9,7 +9,6 @@ import YourApplications from '../screens/YourApplications';
 import BusinessList from '../screens/BusinessList';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
-import MyCentre from '../screens/MyCentre';
 import ProductsList from '../screens/ProductsList'; 
 
 const Tab = createBottomTabNavigator();

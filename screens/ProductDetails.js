@@ -66,6 +66,9 @@ const ProductDetails = ({ route, navigation }) => {
       <Text style={styles.productName}>{product.name}</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
       <Text style={styles.productPrice}>Price: R{product.price.toFixed(2)}</Text>
+      
+      {/* Display the rating */}
+      <Text style={styles.productRating}>Rating: {product.rating ? product.rating.toFixed(1) : 'Not rated yet'}</Text>
 
       <View style={styles.shopContainer}>
         <Text style={styles.shopTitle}>Sold by: {product.shop_id.name}</Text>
@@ -99,7 +102,7 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
-    height: 200, // Adjust height as needed
+    height: 200,
     borderRadius: 8,
     marginBottom: 20,
   },
@@ -117,6 +120,11 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  productRating: {
+    fontSize: 16,
     marginBottom: 20,
     color: '#333',
   },

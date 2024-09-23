@@ -10,7 +10,6 @@ import ApplicationDetails from '../screens/ApplicationDetails';
 import Apply from '../screens/Apply';
 import EditApplication from '../screens/EditApplication';
 import ForgotPassword from '../screens/ForgotPassword';
-import MyCentreDetails from '../screens/MyCentreDetails';
 import LessonsDetails from '../screens/mycreche/LessonsDetails'
 import FeedDetails from '../screens/ProductItem';
 import ChatScreen from '../screens/chat/ChatScreen';
@@ -75,7 +74,6 @@ const AppNavigator = () => {
           <Stack.Screen name="ApplicationDetails" component={ApplicationDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ headerShown: false }} />
           <Stack.Screen name="EditApplication" component={EditApplication} options={{ headerShown: false }} /> 
-          <Stack.Screen name="MyCentreDetails" component={MyCentreDetails} options={{ headerShown: false }} />
           <Stack.Screen name="LessonsDetails" component={LessonsDetails} options={{ headerShown: false }} />
           <Stack.Screen name="FeedDetails" component={FeedDetails} options={{ headerShown: false }} />
           <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />

@@ -1,4 +1,3 @@
-// FeedsList.js
 import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
@@ -6,6 +5,7 @@ import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
+import ProfileCompletion from '../component/Profile/ProfileCompletion'; // Import the new component
 import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient'; // Import your Supabase client
 
@@ -25,7 +25,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch products
         const { data: productData, error: productError } = await supabase
           .from('products')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (productError) throw productError;
         setProducts(productData);
@@ -33,7 +33,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch jobs
         const { data: jobData, error: jobError } = await supabase
           .from('jobs')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (jobError) throw jobError;
         setJobs(jobData);
@@ -41,7 +41,7 @@ const FeedsList = ({ navigation }) => {
         // Fetch services
         const { data: serviceData, error: serviceError } = await supabase
           .from('services')
-          .select('*'); // Adjust the selection as needed
+          .select('*');
 
         if (serviceError) throw serviceError;
         setServices(serviceData);
@@ -73,10 +73,8 @@ const FeedsList = ({ navigation }) => {
           onClose={() => setShowProfileAlert(false)} 
         />
       )}
-      <View style={styles.progressBarContainer}>
-        <Text style={styles.progressText}>Profile Completion</Text>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+      
+      {isLoggedIn && <ProfileCompletion />} {/* Render ProfileCompletion component here */}
 
       <SectionHeader title="Nearby Products" />
       <FlatList
@@ -119,13 +117,6 @@ const styles = StyleSheet.create({
   },
   verticalList: {
     paddingVertical: 10,
-  },
-  progressBarContainer: {
-    marginTop: 20,
-  },
-  progressText: {
-    fontSize: 16,
-    marginBottom: 5,
   },
   loadingContainer: {
     flex: 1,
