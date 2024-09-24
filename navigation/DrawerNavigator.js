@@ -10,13 +10,11 @@ import News from '../screens/News';
 import Help from '../screens/Help';
 import Support from '../screens/Support';
 import Profile from '../screens/Profile';
-import Settings from '../screens/Settings'
+import Settings from '../screens/Settings';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
-import BecomeADriver from '../screens/BecomeADriver'; // Import the BecomeADriver component
-import YouthEmployment from '../screens/YouthEmployment'; // Import the YouthEmployment component
-import YourApplications from '../screens/YourApplications';
-import BecomeAHandyman from '../screens/BecomeAHustler';
+import BecomeAHustler from '../screens/BecomeAHustler';
 import ListYourBusiness from '../screens/ListYourBusiness';
+import YourApplications from '../screens/YourApplications';
 
 const Drawer = createDrawerNavigator();
 
@@ -104,66 +102,50 @@ const DrawerNavigator = ({ navigation }) => {
           <CustomDrawerItem
             label="Home"
             icon={<Ionicons name="home" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('Home');
-            }}
+            onPress={() => props.navigation.navigate('Home')}
           />
           {isLoggedIn && (
             <CustomDrawerItem
               label="Settings"
               icon={<Ionicons name="settings" size={20} color="#007BFF" />}
-              onPress={() => {
-                props.navigation.navigate('Settings');
-              }}
+              onPress={() => props.navigation.navigate('Settings')}
             />
           )}
           {isBusinessOwner && (
             <CustomDrawerItem
               label="My Business"
               icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
-              onPress={() => {
-                props.navigation.navigate('ChatListScreen');
-              }}
+              onPress={() => props.navigation.navigate('ChatListScreen')}
             />
           )}
           <CustomDrawerItem
             label="Local News"
             icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('News');
-            }}
+            onPress={() => props.navigation.navigate('News')}
           />
           {isLoggedIn && (
             <CustomDrawerItem
               label="My Applications"
               icon={<Ionicons name="apps" size={20} color="#007BFF" />}
-              onPress={() => {
-                props.navigation.navigate('YourApplications');
-              }}
+              onPress={() => props.navigation.navigate('YourApplications')}
             />
           )}
           {isDeveloper && (
             <CustomDrawerItem
               label="Developer"
               icon={<Ionicons name="code" size={20} color="#007BFF" />}
-              onPress={() => {
-                props.navigation.navigate('DeveloperScreen');
-              }}
+              onPress={() => props.navigation.navigate('DeveloperScreen')}
             />
           )}
           <CustomDrawerItem
-            label="Become a Driver"
-            icon={<Ionicons name="bicycle" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('BecomeADriver');
-            }}
+            label="Become a Hustler"
+            icon={<Ionicons name="hammer" size={20} color="#007BFF" />}
+            onPress={() => props.navigation.navigate('BecomeAHustler')}
           />
           <CustomDrawerItem
-            label="Youth Employment"
-            icon={<Ionicons name="people" size={20} color="#007BFF" />}
-            onPress={() => {
-              props.navigation.navigate('YouthEmployment');
-            }}
+            label="List Your Business"
+            icon={<Ionicons name="business" size={20} color="#007BFF" />}
+            onPress={() => props.navigation.navigate('ListYourBusiness')}
           />
         </View>
 
@@ -171,18 +153,12 @@ const DrawerNavigator = ({ navigation }) => {
           <CustomDrawerItem
             label="Help"
             icon={<Ionicons name="help-circle" size={20} color="#007BFF" />}
-            onPress={() => {
-              console.log('Navigating to Help');
-              props.navigation.navigate('Help');
-            }}
+            onPress={() => props.navigation.navigate('Help')}
           />
           <CustomDrawerItem
             label="Support"
             icon={<Ionicons name="headset" size={20} color="#007BFF" />}
-            onPress={() => {
-              console.log('Navigating to Support');
-              props.navigation.navigate('Support');
-            }}
+            onPress={() => props.navigation.navigate('Support')}
           />
         </View>
       </DrawerContentScrollView>
@@ -202,15 +178,13 @@ const DrawerNavigator = ({ navigation }) => {
       <Drawer.Screen name="Home" component={HomeTabs} />
       <Drawer.Screen name="Profile" component={Profile} />
       {isLoggedIn && <Drawer.Screen name="Settings" component={Settings} />}
-      <Drawer.Screen name="BecomeADriver" component={BecomeADriver} />
-      <Drawer.Screen name="YouthEmployment" component={YouthEmployment} />
+      <Drawer.Screen name="BecomeAHustler" component={BecomeAHustler} />
+      <Drawer.Screen name="ListYourBusiness" component={ListYourBusiness} />
       <Drawer.Screen name="News" component={News} />
       <Drawer.Screen name="Help" component={Help} />
       <Drawer.Screen name="Support" component={Support} />
       {isLoggedIn && <Drawer.Screen name="YourApplications" component={YourApplications} />}
       {isDeveloper && <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />}
-      {/* Add new screens for BecomeADriver and YouthEmployment */}
-
     </Drawer.Navigator>
   );
 };
