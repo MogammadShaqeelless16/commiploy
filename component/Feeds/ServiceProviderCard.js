@@ -10,8 +10,8 @@ const ServiceProviderCard = ({ service, navigation }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
       <Text style={styles.title}>{service.name}</Text>
-      <Text style={styles.price}>Price: R {service.price.toFixed(2)}</Text>
-      <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee.toFixed(2)}</Text>
+      <Text style={styles.price}>Price: R {service.price}</Text>
+      <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee}</Text>
     </TouchableOpacity>
   );
 };
