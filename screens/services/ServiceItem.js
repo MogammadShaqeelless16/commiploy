@@ -12,11 +12,11 @@ const ServiceItem = ({ service, onPress }) => {
       <Text style={styles.description}>{service.description}</Text>
       <View style={styles.priceContainer}>
         <Ionicons name="cash" size={16} color="#007bff" />
-        <Text style={styles.price}>Price: R{service.price.toFixed(2)}</Text>
+        <Text style={styles.price}>Price: R{service.price}</Text>
       </View>
       <View style={styles.callOutFeeContainer}>
         <Ionicons name="call" size={16} color="#ff5722" />
-        <Text style={styles.callOutFee}>Call-Out Fee: R{service.call_out_fee.toFixed(2)}</Text>
+        <Text style={styles.callOutFee}>Call-Out Fee: R{service.call_out_fee}</Text>
       </View>
       <Text style={styles.date}>Created At: {new Date(service.created_at).toLocaleDateString()}</Text>
       <Text style={styles.date}>Updated At: {new Date(service.updated_at).toLocaleDateString()}</Text>
