@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity , Image } from 'react-native';
+
+const Image1 = require('../assets/images/hustler.jpeg');
 
 const BecomeAHustler = () => {
   return (
@@ -9,16 +11,15 @@ const BecomeAHustler = () => {
         Apply for freelance opportunities for odd jobs!
       </Text>
 
-      <Text style={styles.sectionTitle}>What You Need:</Text>
-      <Text style={styles.bulletPoint}>• A valid South African ID or Passport.</Text>
-      <Text style={styles.bulletPoint}>• Skills and experience in various services.</Text>
-      <Text style={styles.bulletPoint}>• Own tools and equipment.</Text>
-      <Text style={styles.bulletPoint}>• Proof of Bank Details.</Text>
+      <Image source={Image1} style={styles.Image1} />
 
-      <Text style={styles.sectionTitle}>Benefits of Working as a Hustler:</Text>
-      <Text style={styles.bulletPoint}>• Flexible working hours.</Text>
-      <Text style={styles.bulletPoint}>• Variety of jobs to choose from.</Text>
-      <Text style={styles.bulletPoint}>• Opportunity to earn extra income.</Text>
+      <TouchableOpacity style={styles.applyButton}>
+        <Text style={styles.applyButtonText}>Dont have an account apply with fnb</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.applyButton}>
+        <Text style={styles.applyButtonText}>Apply now. </Text>
+      </TouchableOpacity>
 
     </View>
   );
@@ -47,6 +48,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     color: '#007BFF',
+  },
+  Image1: {
+    width: '30vh',
+    height: '28vh'
   },
   bulletPoint: {
     fontSize: 16,
