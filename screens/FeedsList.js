@@ -8,7 +8,7 @@ import ProfileAlert from '../component/Profile/ProfileAlert';
 import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
-
+import CategoryCard from '../component/Feeds/CategoryCard';
 const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
@@ -85,6 +85,15 @@ const FeedsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
+      
+      <CategoryCard/>
+
+
+ 
+ 
+ 
+ 
+     {/* 
 
       <SectionHeader 
         title="Nearby Jobs" 
@@ -100,7 +109,8 @@ const FeedsList = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-
+      */}
+  
       <SectionHeader 
         title="Service Providers" 
         navigation={navigation} 
