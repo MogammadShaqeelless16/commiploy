@@ -8,6 +8,7 @@ import ProfileAlert from '../component/Profile/ProfileAlert';
 import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
+import Loading from '../component/loadingComponent/loading';
 import CategoryCard from '../component/Feeds/CategoryCard';
 import WelcomeMessage from '../component/Feeds/WelcomeText';
 const { width: screenWidth } = Dimensions.get('window');
@@ -54,12 +55,7 @@ const FeedsList = ({ navigation }) => {
   }, []);
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <Loading />;
   }
 
   return (

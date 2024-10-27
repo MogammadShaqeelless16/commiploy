@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'rea
 import { Rating } from 'react-native-ratings';
 import supabase from '../../supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
+import Loading from '../../component/loadingComponent/loading';
 import AlertModal from '../../component/AlertModal';
 
 const ServiceDetails = ({ route, navigation }) => {
@@ -64,7 +65,7 @@ const ServiceDetails = ({ route, navigation }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007bff" />;
+    return <Loading />;
   }
 
   if (!service) {

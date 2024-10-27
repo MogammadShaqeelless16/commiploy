@@ -4,7 +4,7 @@ import { View, Image, StyleSheet } from 'react-native';
 const Loading = () => {
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/logo.png')} style={styles.image} />
+      <Image source={require('../../assets/Loading.gif')} style={styles.image} />
     </View>
   );
 };

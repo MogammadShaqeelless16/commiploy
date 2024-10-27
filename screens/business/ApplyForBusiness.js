@@ -31,9 +31,10 @@ const ApplyForBusiness = () => {
     loadUserProfile();
   }, []);
 
+  // Validation function for the current step
   const validateCurrentStep = () => {
     const validations = [
-      { condition: currentStep === 0 && !businessDetails.name, message: 'Please fill in the business name.' },
+      { condition: currentStep === 0 && !businessDetails.businessName, message: 'Please fill in the business name.' },
       { condition: currentStep === 0 && !businessDetails.address, message: 'Please fill in the business address.' },
       { condition: currentStep === 1 && !documents.businessCert, message: 'Please upload the business registration certificate.' },
       { condition: currentStep === 2 && !bankDetails, message: 'Please provide your bank details.' },
@@ -47,12 +48,14 @@ const ApplyForBusiness = () => {
     return true;
   };
 
+  // Function to proceed to the next step
   const nextStep = () => {
     if (validateCurrentStep()) {
       setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
     }
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     if (bankDetails) {
       Alert.alert('Success', 'Business application submitted successfully!');
@@ -61,10 +64,12 @@ const ApplyForBusiness = () => {
     }
   };
 
+  // Handle navigation cancellation
   const handleCancel = () => {
     navigation.goBack(); // Directly navigate back
   };
 
+  // Modal management functions
   const openCancelModal = () => {
     setModalVisible(true);
   };
@@ -78,6 +83,7 @@ const ApplyForBusiness = () => {
     handleCancel(); // Navigate back
   };
 
+  // Render the current step of the application
   const renderStep = () => {
     switch (currentStep) {
       case 0:
@@ -85,12 +91,7 @@ const ApplyForBusiness = () => {
       case 1:
         return <DocumentUpload documents={documents} setDocuments={setDocuments} />;
       case 2:
-        return (
-          <BankDetails
-            bankDetails={bankDetails}
-            setBankDetails={setBankDetails}
-          />
-        );
+        return <BankDetails bankDetails={bankDetails} setBankDetails={setBankDetails} />;
       case 3:
         return (
           <ReviewApplication

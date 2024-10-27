@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { fetchProfile } from '../UserOperations/fetchProfile'; // Importing fetchProfile
 import logoImage from '../../assets/images/logo.png'; // Replace with your actual logo image path
+import Loading from '../loadingComponent/loading';
 
 const WelcomeMessage = () => {
   const [user, setUser] = useState(null); // State to hold user information
@@ -24,7 +25,7 @@ const WelcomeMessage = () => {
 
   // Determine the welcome text based on user login status
   const welcomeText = loading 
-    ? 'Loading...' 
+    ? <Loading />
     : user 
       ? `Welcome back, ${user.first_name}!` 
       : 'Welcome to Commiploy';

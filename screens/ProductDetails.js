@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Image } from 'react-native';
 import supabase from '../supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
+import Loading from '../component/loadingComponent/loading';
 
 const ProductDetails = ({ route, navigation }) => {
   const { productId } = route.params;
@@ -42,7 +43,7 @@ const ProductDetails = ({ route, navigation }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007bff" />;
+    return <Loading />;
   }
 
   if (!product) {

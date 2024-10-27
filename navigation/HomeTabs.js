@@ -14,6 +14,7 @@ import FeedsList from '../screens/FeedsList';
 import ProductsList from '../screens/ProductsList';
 import Profile from '../screens/Profile';
 import NewsScreen from '../screens/News';       // Add News screen import
+import Loading from '../component/loadingComponent/loading';
 
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +65,7 @@ const HomeTabs = () => {
   };
 
   if (loading) {
-    return <Text>Loading...</Text>; // Display loading text or spinner
+    return <Loading/>;
   }
 
   return (

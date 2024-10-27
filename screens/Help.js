@@ -5,6 +5,7 @@ import supabase from '../supabaseClient';
 import SearchBar from '../component/Help/SearchBar';
 import ArticleList from '../component/Help/ArticleList';
 import ArticleModal from '../component/Help/ArticleModal';
+import Loading from '../component/loadingComponent/loading';
 
 const Help = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -120,7 +121,7 @@ const Help = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <Loading />;
   }
 
   return (

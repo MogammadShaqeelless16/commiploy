@@ -4,6 +4,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import supabase from '../supabaseClient';
 import placeholderImage from '../assets/images/itemplaceholder.jpg';
+import Loading from '../component/loadingComponent/loading';
 
 const ProductsList = ({ route, navigation }) => {
   const { category = '' } = route.params || {}; // Safely access category
@@ -144,7 +145,7 @@ const ProductsList = ({ route, navigation }) => {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007bff" />
+          <Loading />;
         </View>
       ) : filteredProducts.length === 0 ? (
         <View style={styles.emptyContainer}>

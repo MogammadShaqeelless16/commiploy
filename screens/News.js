@@ -5,6 +5,7 @@ import axios from 'axios';
 import { decode } from 'html-entities';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
+import Loading from '../component/loadingComponent/loading';
 
 const News = () => {
   const [newsArticles, setNewsArticles] = useState([]);
@@ -104,7 +105,7 @@ const News = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <Loading/>;
   }
 
   if (error) {

@@ -87,11 +87,11 @@ const AppNavigator = () => {
           <Stack.Screen name="ServiceDetails" component={ServiceDetails} options={{ headerShown: false }} />
           <Stack.Screen name="BusinessDetails" component={BusinessDetails} options={{ headerShown: false }} />
           <Stack.Screen name="UserProfileDetails" component={UserProfileDetails} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Login" component={Login}  />
           <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
-          <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} />
+          <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} options={{ headerShown: false }} />
 
         </>
       )}
