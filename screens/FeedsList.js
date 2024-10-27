@@ -11,8 +11,13 @@ import LocationDisplay from '../component/LocationDisplay';
 import Loading from '../component/loadingComponent/loading';
 import CategoryCard from '../component/Feeds/CategoryCard';
 import WelcomeMessage from '../component/Feeds/WelcomeText';
-const { width: screenWidth } = Dimensions.get('window');
 import ArtBackground from '../component/BackgroundSprites/ArtBackground';
+import OpenDrawerButton from '../component/OpenDrawerButton';
+import NotificationButton from '../component/NotificationButton';
+import CartButton from '../component/CartButton'; // Import the CartButton component
+
+const { width: screenWidth } = Dimensions.get('window');
+
 const FeedsList = ({ navigation }) => {
   const { isLoggedIn } = useContext(AuthContext);
   const [showProfileAlert, setShowProfileAlert] = useState(!isLoggedIn);
@@ -61,56 +66,41 @@ const FeedsList = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <ArtBackground>
-      <WelcomeMessage />
-      <LocationDisplay />
+        <View style={styles.headerContainer}>
+          <OpenDrawerButton />
+          <View style={styles.rightButtons}>
+            <CartButton />
+            <NotificationButton />
+          </View>
+        </View>
 
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-        keyExtractor={item => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.horizontalList}
-      />
-      
-      <CategoryCard navigation={navigation} />
+        <WelcomeMessage />
+        <LocationDisplay />
 
+        <FlatList
+          data={products}
+          renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+          keyExtractor={item => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        />
 
- 
- 
- 
- 
-     {/* 
+        <CategoryCard navigation={navigation} />
 
-      <SectionHeader 
-        title="Nearby Jobs" 
-        navigation={navigation} 
-        navigateTo="JobList" 
-        iconName="suitcase" // Icon for jobs
-      />
-      <FlatList
-        data={jobs}
-        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />}
-        keyExtractor={item => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.horizontalList}
-      />
-      */}
-  
-      <SectionHeader 
-        title="Service Providers" 
-        navigation={navigation} 
-        navigateTo="Services" 
-        iconName="wrench" // Icon for services
-      />
-      <FlatList
-        data={services.slice(0, 4)} // Limit to the first 4 services
-        renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
-        keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
-        numColumns={2}
-        contentContainerStyle={styles.verticalList}
-      />
+        <SectionHeader
+          title="Service Providers"
+          navigation={navigation}
+          navigateTo="Services"
+          iconName="wrench" // Icon for services
+        />
+        <FlatList
+          data={services.slice(0, 4)} // Limit to the first 4 services
+          renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
+          keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
+          numColumns={2}
+          contentContainerStyle={styles.verticalList}
+        />
       </ArtBackground>
     </ScrollView>
   );
@@ -121,6 +111,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f9f9f9',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  rightButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   horizontalList: {
     paddingVertical: 10,

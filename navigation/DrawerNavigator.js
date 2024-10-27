@@ -171,7 +171,7 @@ const DrawerNavigator = ({ navigation }) => {
         },
       }}
     >
-      <Drawer.Screen name="Home" component={HomeTabs} />
+      <Drawer.Screen name="Home" component={HomeTabs} options={{ headerShown: false }}/>
       <Drawer.Screen name="Profile" component={Profile} />
       {isLoggedIn && <Drawer.Screen name="Settings" component={Settings} />}
       <Drawer.Screen name="BecomeAHustler" component={BecomeAHustler} />
