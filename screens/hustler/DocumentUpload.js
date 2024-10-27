@@ -10,7 +10,7 @@ const DocumentUpload = ({ documents, setDocuments }) => {
         type: '*/*', // Allow all file types
         copyToCacheDirectory: false, // Optional: set to false if you want to keep the original file path
       });
-      
+
       if (result.type === 'success') {
         setDocuments((prev) => ({ ...prev, [type]: result }));
       }
@@ -29,9 +29,11 @@ const DocumentUpload = ({ documents, setDocuments }) => {
             onPress={() => handleDocumentUpload(docType)}
           >
             <Icon name="upload" size={24} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Upload {docType.charAt(0).toUpperCase() + docType.slice(1)}</Text>
+            <Text style={styles.buttonText}>
+              Upload {docType.charAt(0).toUpperCase() + docType.slice(1)}
+            </Text>
           </TouchableOpacity>
-          {documents[docType] && (
+          {documents[docType] && documents[docType].name && ( // Check if the name exists
             <Text style={styles.uploadedText}>
               Uploaded {docType.charAt(0).toUpperCase() + docType.slice(1)}: {documents[docType].name}
             </Text>

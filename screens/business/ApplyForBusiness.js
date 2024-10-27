@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Button, StyleSheet, Modal, Text, TouchableOpacity, Alert } from 'react-native';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
-import UserProfile from './UserProfile';
-import SkillsAndExperience from './SkillsAndExperience';
-import DocumentUpload from './DocumentUpload';
-import BankDetails from './BankDetails';
-import ReviewApplication from './ReviewApplication';
-import ProgressBar from './ProgressBar';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation for navigation
+import BusinessProfile from './BusinessProfile'; // New component for business details
+import DocumentUpload from './DocumentUpload'; // For uploading business documents
+import BankDetails from './BankDetails'; // For bank account information
+import ReviewApplication from './ReviewApplication'; // To review all application data
+import ProgressBar from './ProgressBar'; // Progress indicator
+import { useNavigation } from '@react-navigation/native'; // Navigation hook
 import ArtBackground from '../../component/BackgroundSprites/ArtBackground';
 
-const ApplyForHustler = () => {
-  const navigation = useNavigation(); // Initialize the navigation hook
+const ApplyForBusiness = () => {
+  const navigation = useNavigation(); // Initialize navigation hook
   const [userProfile, setUserProfile] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const [skills, setSkills] = useState([]);
-  const [experience, setExperience] = useState('');
-  const [qualification, setQualification] = useState('');
-  const [documents, setDocuments] = useState({ resume: null, idProof: null, addressProof: null });
-  const [bankDetails, setBankDetails] = useState('');
-  const [hasBankAccount, setHasBankAccount] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false); // State to manage modal visibility
+  const [businessDetails, setBusinessDetails] = useState({}); // Business details state
+  const [documents, setDocuments] = useState({ businessCert: null, taxID: null, operatingAgreement: null }); // Document uploads
+  const [bankDetails, setBankDetails] = useState(''); // Bank details state
+  const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -37,10 +33,10 @@ const ApplyForHustler = () => {
 
   const validateCurrentStep = () => {
     const validations = [
-      { condition: currentStep === 0 && !userProfile.first_name, message: 'Please fill in all fields.' },
-      { condition: currentStep === 1 && !skills.length, message: 'Please enter your skills.' },
-      { condition: currentStep === 2 && !documents.resume, message: 'Please upload your resume.' },
-      { condition: currentStep === 3 && !hasBankAccount && !bankDetails, message: 'Please provide your bank details or apply for an account.' },
+      { condition: currentStep === 0 && !businessDetails.name, message: 'Please fill in the business name.' },
+      { condition: currentStep === 0 && !businessDetails.address, message: 'Please fill in the business address.' },
+      { condition: currentStep === 1 && !documents.businessCert, message: 'Please upload the business registration certificate.' },
+      { condition: currentStep === 2 && !bankDetails, message: 'Please provide your bank details.' },
     ];
 
     const error = validations.find(validation => validation.condition);
@@ -53,20 +49,20 @@ const ApplyForHustler = () => {
 
   const nextStep = () => {
     if (validateCurrentStep()) {
-      setCurrentStep(prevStep => Math.min(prevStep + 1, 4));
+      setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
     }
   };
 
   const handleSubmit = () => {
-    if (hasBankAccount || bankDetails) {
-      Alert.alert('Success', 'Application submitted successfully!');
+    if (bankDetails) {
+      Alert.alert('Success', 'Business application submitted successfully!');
     } else {
-      Alert.alert('Error', 'You must either provide bank details or apply for a bank account.');
+      Alert.alert('Error', 'You must provide bank details.');
     }
   };
 
   const handleCancel = () => {
-    navigation.goBack(); // Directly navigate back without an alert
+    navigation.goBack(); // Directly navigate back
   };
 
   const openCancelModal = () => {
@@ -85,36 +81,20 @@ const ApplyForHustler = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <UserProfile profile={userProfile} />;
+        return <BusinessProfile businessDetails={businessDetails} setBusinessDetails={setBusinessDetails} />;
       case 1:
-        return (
-          <SkillsAndExperience
-            skills={skills}
-            setSkills={setSkills}
-            experience={experience}
-            setExperience={setExperience}
-            qualification={qualification}
-            setQualification={setQualification}
-          />
-        );
-      case 2:
         return <DocumentUpload documents={documents} setDocuments={setDocuments} />;
-      case 3:
+      case 2:
         return (
           <BankDetails
             bankDetails={bankDetails}
             setBankDetails={setBankDetails}
-            hasBankAccount={hasBankAccount}
-            setHasBankAccount={setHasBankAccount}
           />
         );
-      case 4:
+      case 3:
         return (
           <ReviewApplication
-            profile={userProfile}
-            skills={skills}
-            experience={experience}
-            qualification={qualification}
+            businessDetails={businessDetails}
             documents={documents}
             bankDetails={bankDetails}
             handleSubmit={handleSubmit}
@@ -137,7 +117,7 @@ const ApplyForHustler = () => {
           {currentStep > 0 && (
             <Button title="Back" onPress={() => setCurrentStep(currentStep - 1)} />
           )}
-          <Button title={currentStep < 4 ? "Next" : "Submit"} onPress={currentStep < 4 ? nextStep : handleSubmit} />
+          <Button title={currentStep < 3 ? "Next" : "Submit"} onPress={currentStep < 3 ? nextStep : handleSubmit} />
         </View>
 
         {/* Modal for cancel confirmation */}
@@ -215,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ApplyForHustler;
+export default ApplyForBusiness;
