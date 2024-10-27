@@ -47,7 +47,6 @@ const ProductsList = ({ navigation }) => {
         style={styles.productImage}
       />
       <Text style={styles.productTitle}>{item.title}</Text>
-      <Text style={styles.productDescription}>{item.description}</Text>
       <Text style={styles.productPrice}>Price: R{item.price.toFixed(2)}</Text>
       {/* Display shop name */}
       {item.shop_id && <Text style={styles.shopName}>Sold by: {item.shop_id.name}</Text>}
