@@ -1,92 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Image, TextInput } from 'react-native';
-import supabase from '../supabaseClient';
-import LocationDisplay from '../component/LocationDisplay';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const BusinessList = ({ navigation }) => {
-  const [businesses, setBusinesses] = useState([]);
-  const [filteredBusinesses, setFilteredBusinesses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+const ListYourBusiness = () => {
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchBusinesses = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('businesses')
-          .select('id, name, slogan, header_image')
-          .order('name', { ascending: true });
-
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        setBusinesses(data);
-        setFilteredBusinesses(data); // Initialize filtered businesses
-      } catch (fetchError) {
-        console.error('Error fetching businesses:', fetchError.message);
-        Alert.alert('Error', fetchError.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBusinesses();
-  }, []);
-
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    if (query) {
-      const filtered = businesses.filter(business =>
-        business.name.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredBusinesses(filtered);
-    } else {
-      setFilteredBusinesses(businesses);
-    }
+  const openOverlay = () => {
+    setModalVisible(true);
   };
 
-  const renderBusinessItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.businessCard}
-      onPress={() => navigation.navigate('BusinessDetails', { businessId: item.id })}
-    >
-      <Image source={{ uri: item.header_image }} style={styles.logo} />
-      <Text style={styles.businessName}>{item.name}</Text>
-      <Text style={styles.slogan}>{item.slogan}</Text>
-    </TouchableOpacity>
-  );
+  const closeOverlay = () => {
+    setModalVisible(false);
+  };
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+  const confirmNavigation = () => {
+    closeOverlay();
+    navigation.navigate('ApplyBusiness'); // Replace 'ApplyBusiness' with the exact screen name
+  };
 
   return (
     <View style={styles.container}>
-      <LocationDisplay />
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search for a business..."
-        value={searchQuery}
-        onChangeText={handleSearch}
-      />
-      {filteredBusinesses.length === 0 && searchQuery ? (
-        <Text style={styles.emptyText}>No businesses found.</Text>
-      ) : (
-        <FlatList
-          data={filteredBusinesses}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderBusinessItem}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.listContent}
-        />
-      )}
+      <Text style={styles.title}>List Your Business</Text>
+      <Text style={styles.subtitle}>
+        Want to have your business listed? Join our platform today!
+      </Text>
+
+      <Text style={styles.sectionTitle}>What You Need:</Text>
+      <Text style={styles.bulletPoint}>• A valid business registration document.</Text>
+      <Text style={styles.bulletPoint}>• Proof of Address for your business.</Text>
+      <Text style={styles.bulletPoint}>• Business Description and Services Offered.</Text>
+      <Text style={styles.bulletPoint}>• Contact Information.</Text>
+
+      <Text style={styles.sectionTitle}>Benefits of Listing Your Business:</Text>
+      <Text style={styles.bulletPoint}>• Increased visibility to potential customers.</Text>
+      <Text style={styles.bulletPoint}>• Access to a larger customer base.</Text>
+      <Text style={styles.bulletPoint}>• Opportunities for collaboration with other businesses.</Text>
+
+      {/* Button to open overlay */}
+      <TouchableOpacity style={styles.applyButton} onPress={openOverlay}>
+        <Text style={styles.applyButtonText}>List My Business</Text>
+      </TouchableOpacity>
+
+      {/* Overlay Modal */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={closeOverlay}
+      >
+        <View style={styles.overlayContainer}>
+          <View style={styles.overlayContent}>
+            <Text style={styles.overlayText}>Are you ready to apply for your business listing?</Text>
+            <View style={styles.overlayButtonsContainer}>
+              <TouchableOpacity onPress={confirmNavigation} style={styles.overlayButtonConfirm}>
+                <Text style={styles.overlayButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={closeOverlay} style={styles.overlayButtonCancel}>
+                <Text style={styles.overlayButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -95,57 +71,87 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  searchInput: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 16,
-  },
-  businessCard: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    margin: 8,
-    flex: 1, // Ensure cards fill the space
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
   },
-  logo: {
-    width: '100%',
-    height: 100, // Adjusted height for better display
-    borderRadius: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
   },
-  businessName: {
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+    color: '#555',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+    color: '#007BFF',
+  },
+  bulletPoint: {
+    fontSize: 16,
+    marginVertical: 4,
+    color: '#333',
+  },
+  applyButton: {
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  slogan: {
-    fontSize: 12,
-    color: '#555',
+  overlayContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  row: {
-    justifyContent: 'space-between', // Adjust space between columns
+  overlayContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
   },
-  listContent: {
-    paddingBottom: 20,
-  },
-  emptyText: {
+  overlayText: {
+    fontSize: 18,
     textAlign: 'center',
-    marginTop: 20,
-    fontSize: 16,
-    color: '#555',
+    marginBottom: 20,
+    color: '#333',
+  },
+  overlayButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  overlayButtonConfirm: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  overlayButtonCancel: {
+    backgroundColor: '#FF6347',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  overlayButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
-export default BusinessList;
+export default ListYourBusiness;

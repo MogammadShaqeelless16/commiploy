@@ -104,13 +104,14 @@ const DrawerNavigator = ({ navigation }) => {
             icon={<Ionicons name="home" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('Home')}
           />
-          {isLoggedIn && (
+
+          {/*{isLoggedIn && (
             <CustomDrawerItem
               label="Settings"
               icon={<Ionicons name="settings" size={20} color="#007BFF" />}
               onPress={() => props.navigation.navigate('Settings')}
             />
-          )}
+          )} */}
           {isBusinessOwner && (
             <CustomDrawerItem
               label="My Business"

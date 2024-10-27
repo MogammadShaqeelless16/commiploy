@@ -24,6 +24,7 @@ import BusinessDetails from '../screens/business/BusinessDetails';
 import UserProfileDetails from '../screens/UserProfileDetails';
 import ProductDetails from '../screens/ProductDetails';
 import ApplyForHustler from '../screens/hustler/ApplyForHustler';
+import ApplyForBusiness from '../screens/business/ApplyForBusiness';
 
 const Stack = createStackNavigator();
 
@@ -90,6 +91,8 @@ const AppNavigator = () => {
           <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
+          <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} />
+
         </>
       )}
     </Stack.Navigator>

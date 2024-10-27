@@ -7,12 +7,24 @@ const DocumentUpload = ({ documents, setDocuments }) => {
   const handleDocumentUpload = async (type) => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: '*/*', // Allow all file types
-        copyToCacheDirectory: false, // Optional: set to false if you want to keep the original file path
+        type: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'], // Only allow PDF and Word documents
+        copyToCacheDirectory: true,
       });
 
-      if (result.type === 'success') {
-        setDocuments((prev) => ({ ...prev, [type]: result }));
+      console.log('Document Picker Result:', result);
+
+      // Check if the document was canceled or selected
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const document = result.assets[0];
+        console.log(`Successfully picked document: ${document.name}`);
+
+        // Update the document state for display
+        setDocuments((prev) => ({
+          ...prev,
+          [type]: { name: document.name, uri: document.uri },
+        }));
+      } else {
+        console.warn('Document picker was canceled or returned no assets.');
       }
     } catch (err) {
       console.error('Document Picker Error: ', err);
@@ -33,7 +45,7 @@ const DocumentUpload = ({ documents, setDocuments }) => {
               Upload {docType.charAt(0).toUpperCase() + docType.slice(1)}
             </Text>
           </TouchableOpacity>
-          {documents[docType] && documents[docType].name && ( // Check if the name exists
+          {documents[docType] && documents[docType].name && (
             <Text style={styles.uploadedText}>
               Uploaded {docType.charAt(0).toUpperCase() + docType.slice(1)}: {documents[docType].name}
             </Text>
