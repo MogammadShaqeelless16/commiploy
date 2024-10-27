@@ -24,6 +24,7 @@ const HomeTabs = () => {
     profile_picture_url: '',
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isHustler, setIsHustler] = useState(false);
   const [isDeveloper, setIsDeveloper] = useState(false);
   const [isBusinessOwner, setIsBusinessOwner] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,7 @@ const HomeTabs = () => {
           profile_picture_url: userProfile.profile_picture_url,
         });
         setIsDeveloper(userProfile.roles.role_name === 'Developer');
+        setIsHustler(userProfile.roles.role_name === 'Hustler');
         setIsBusinessOwner(userProfile.roles.role_name === 'Business Owner');
       }
     } catch (error) {
@@ -116,11 +118,11 @@ const HomeTabs = () => {
     >
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="News" component={NewsScreen} options={{ tabBarLabel: 'News' }} />
-      {isDeveloper && (
+      {isHustler && (
         <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
       )}
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
-      {isBusinessOwner || isDeveloper && (
+      {isBusinessOwner && (
         <Tab.Screen name="BusinessList" component={BusinessList} options={{ tabBarLabel: 'Business' }} />
       )}
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />

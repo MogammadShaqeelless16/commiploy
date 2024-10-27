@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Alert, StyleSheet, View, Text, Button } from 'react-native';
+import { ScrollView, Alert, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useProfile } from '../component/Profile/useProfile';
 import ProfilePicture from '../component/Profile/ProfilePicture';
 import ProfileForm from '../component/Profile/ProfileForm';
 import ProfileActions from '../component/Profile/ProfileActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native'; // Assuming you're using React Navigation
+import { useNavigation } from '@react-navigation/native';
 import supabase from '../supabaseClient';
+import ArtBackground from '../component/BackgroundSprites/ArtBackground';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 
 const Profile = () => {
   const { profile, loading, updateProfile, error } = useProfile();
   const [localProfile, setLocalProfile] = useState(profile);
-  const navigation = useNavigation(); // For navigation
+  const navigation = useNavigation();
 
   useEffect(() => {
     console.log('Profile data updated:', profile);
@@ -31,26 +33,18 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      console.log('Logging out...');
-      const { error: logoutError } = await supabase.auth.signOut();
-      if (logoutError) {
-        Alert.alert('Error', 'Error logging out');
-        console.error('Logout Error:', logoutError);
-      } else {
-        await AsyncStorage.removeItem('userSession');
-
-        // Reset the navigation stack to the Login screen after logout
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Login' }],
-        });
-
-        // Reset local profile state
-        setLocalProfile(null);
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw new Error(error.message);
       }
-    } catch (error) {
-      Alert.alert('Error', 'Error logging out');
-      console.error('Logout Error:', error);
+      await AsyncStorage.clear();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DrawerNavigator' }],
+      });
+      Alert.alert('Logged out', 'You have been successfully logged out.');
+    } catch (err) {
+      Alert.alert('Error', `Logout failed: ${err.message}`);
     }
   };
 
@@ -62,13 +56,21 @@ const Profile = () => {
   // Conditional rendering based on user authentication
   if (!profile) {
     return (
-      <View style={styles.notLoggedInContainer}>
-        <Text style={styles.notLoggedInText}>
-          Oh no! We see you are not logged in. Please register or login to start purchasing and getting services.
-        </Text>
-        <Button title="Login" onPress={() => navigation.navigate('Login')} />
-        <Button title="Register" onPress={() => navigation.navigate('Register')} />
-      </View>
+      <ArtBackground>
+        <View style={styles.notLoggedInContainer}>
+          <Text style={styles.notLoggedInText}>
+            Oh no! We see you are not logged in. Please register or login to start purchasing and getting services.
+          </Text>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+            <Icon name="login" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUp')}>
+            <Icon name="person-add" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </ArtBackground>
     );
   }
 
@@ -86,20 +88,34 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: 16,
-    backgroundColor: '#fff',
   },
   notLoggedInContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff',
   },
   notLoggedInText: {
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 20,
     color: '#333',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007BFF', // Modern blue color
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginVertical: 8,
+    width: '80%', // Ensure buttons are not too wide
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 8, // Space between icon and text
   },
 });
 

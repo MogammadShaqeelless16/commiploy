@@ -15,18 +15,23 @@ const ProfileActions = ({ loading, onUpdateProfile }) => {
       if (error) {
         throw new Error(error.message);
       }
-
+  
       // Clear AsyncStorage
       await AsyncStorage.clear();
-
-      // Navigate to login screen
-      navigation.navigate('Login'); // Ensure 'Login' matches your route name
-
+  
+      // Reset the navigation state and navigate to DrawerNavigator
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DrawerNavigator' }], // Ensure 'DrawerNavigator' matches your route name
+      });
+  
+      // Alert for successful logout
       Alert.alert('Logged out', 'You have been successfully logged out.');
     } catch (err) {
       Alert.alert('Error', `Logout failed: ${err.message}`);
     }
   };
+  
 
   return (
     <View style={styles.buttonContainer}>
