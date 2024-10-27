@@ -1,5 +1,30 @@
 import supabase from '../../supabaseClient'; // Adjust the path based on your project structure
 
+
+export const fetchCurrentUser = async () => {
+  const { data: session, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !session?.session) {
+    console.error('Error fetching user session:', sessionError);
+    return null;
+  }
+
+  const userId = session.session.user.id; // Get the user's ID from the session
+
+  const { data: userProfile, error } = await supabase
+    .from('users') // Adjust to your actual table name if necessary
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+
+  return userProfile;
+};
+
 export const fetchProfile = async () => {
   console.log('Fetching user session...');
   

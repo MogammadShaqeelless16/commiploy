@@ -14,7 +14,9 @@ import WelcomeMessage from '../component/Feeds/WelcomeText';
 import ArtBackground from '../component/BackgroundSprites/ArtBackground';
 import OpenDrawerButton from '../component/OpenDrawerButton';
 import NotificationButton from '../component/NotificationButton';
-import CartButton from '../component/CartButton'; // Import the CartButton component
+import CartButton from '../component/CartButton';
+import { fetchProfile } from '../component/UserOperations/fetchProfile';
+import CrmDashboard from '../component/Feeds/Dashboard';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -23,11 +25,22 @@ const FeedsList = ({ navigation }) => {
   const [showProfileAlert, setShowProfileAlert] = useState(!isLoggedIn);
   const [products, setProducts] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [profile, setProfile] = useState({
+    first_name: '',
+    profile_picture_url: '',
+  });
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState(null); // Use a single state for role
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (role === null) return; // Wait until the role is determined
+
       try {
         const { data: productData, error: productError } = await supabase
           .from('products')
@@ -57,7 +70,36 @@ const FeedsList = ({ navigation }) => {
     };
 
     fetchData();
-  }, []);
+  }, [role]); // Fetch data whenever the role changes
+
+  const fetchUserProfile = async () => {
+    setLoading(true); // Start loading before fetching profile
+
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      console.log('No active session found, user not logged in');
+      setLoading(false); // End loading if there's no session
+      return;
+    }
+
+    console.log('User is logged in:', session.user.id);
+
+    try {
+      const userProfile = await fetchProfile(session.user.id);
+      if (userProfile) {
+        console.log('User profile fetched:', userProfile);
+        setProfile({
+          first_name: userProfile.first_name,
+          profile_picture_url: userProfile.profile_picture_url,
+        });
+        setRole(userProfile.roles.role_name); // Set the role directly
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    } finally {
+      setLoading(false); // End loading once profile fetch is done
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -77,14 +119,18 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        <FlatList
-          data={products}
-          renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-          keyExtractor={item => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalList}
-        />
+        {role === 'Developer' && <CrmDashboard />}
+
+        {role !== 'Developer' && ( // Check role here
+          <FlatList
+            data={products}
+            renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+        )}
 
         <CategoryCard navigation={navigation} />
 
@@ -92,7 +138,7 @@ const FeedsList = ({ navigation }) => {
           title="Service Providers"
           navigation={navigation}
           navigateTo="Services"
-          iconName="wrench" // Icon for services
+          iconName="wrench"
         />
         <FlatList
           data={services.slice(0, 4)} // Limit to the first 4 services

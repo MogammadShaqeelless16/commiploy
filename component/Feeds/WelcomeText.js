@@ -31,7 +31,7 @@ const WelcomeMessage = () => {
       : 'Welcome to Commiploy';
 
   return (
-    <View style={styles.container}>
+    <View style={styles.Welcontainer}>
       <View style={styles.welcomeContainer}>
         <Image source={logoImage} style={styles.logo} resizeMode="contain" />
         <Text style={styles.welcomeText}>{welcomeText}</Text>
@@ -41,11 +41,11 @@ const WelcomeMessage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  Welcontainer: {
     flex: 1,
     justifyContent: 'start',
     alignItems: 'start',
-    padding: 16,
+    marginBottom: 40,
   },
   welcomeContainer: {
     flexDirection: 'row', // Align logo and text in a row
@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     marginRight: 10, // Space between logo and text
   },
   welcomeText: {
-    fontSize: 20, // Adjust font size as needed
+    fontSize: 20,
+    paddingBottom: 10, // Adjust font size as needed
     fontWeight: 'bold',
     textAlign: 'left', // Align text to the left
   },
