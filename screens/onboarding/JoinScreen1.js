@@ -17,7 +17,7 @@ const JoinScreen1 = () => {
 
       {/* Display "Commiploy" with styling */}
       <Text style={styles.brandText}>
-        <Text style={styles.comm}>Comm</Text>
+        <Text style={styles.comm}>Commi</Text>
         <Text style={styles.ploy}>ploy</Text>
       </Text>
 

@@ -9,6 +9,7 @@ import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
 import CategoryCard from '../component/Feeds/CategoryCard';
+import WelcomeMessage from '../component/Feeds/WelcomeText';
 const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
@@ -63,6 +64,7 @@ const FeedsList = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <WelcomeMessage />
       <LocationDisplay />
 
       <FlatList

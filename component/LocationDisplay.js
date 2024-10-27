@@ -56,7 +56,7 @@ const LocationDisplay = () => {
     <View style={styles.locationSection}>
       <Text style={styles.locationTitle}>
         <Icon name="my-location" size={20} color="#007bff" />  
-        <Text style={styles.locationText}>Your community{streetName || 'Fetching location...'}</Text>
+        <Text style={styles.locationText}>Your community : {streetName || 'Fetching location...'}</Text>
       </Text>
     </View>
   );
