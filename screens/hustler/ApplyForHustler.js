@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, Button, StyleSheet } from 'react-native';
+import { View, ScrollView, Button, StyleSheet, Modal, Text, TouchableOpacity } from 'react-native';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import UserProfile from './UserProfile';
 import SkillsAndExperience from './SkillsAndExperience';
@@ -8,6 +8,7 @@ import BankDetails from './BankDetails';
 import ReviewApplication from './ReviewApplication';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation for navigation
+import ArtBackground from '../../component/BackgroundSprites/ArtBackground';
 
 const ApplyForHustler = () => {
   const navigation = useNavigation(); // Initialize the navigation hook
@@ -19,6 +20,7 @@ const ApplyForHustler = () => {
   const [documents, setDocuments] = useState({ resume: null, idProof: null, addressProof: null });
   const [bankDetails, setBankDetails] = useState('');
   const [hasBankAccount, setHasBankAccount] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // State to manage modal visibility
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -64,15 +66,21 @@ const ApplyForHustler = () => {
   };
 
   const handleCancel = () => {
-    // Navigate back to a previous screen or home
-    Alert.alert(
-      'Cancel Application',
-      'Are you sure you want to cancel the application?',
-      [
-        { text: 'No', style: 'cancel' },
-        { text: 'Yes', onPress: () => navigation.goBack() } // Navigate back
-      ]
-    );
+    // Directly navigate back without an alert
+    navigation.goBack();
+  };
+
+  const openCancelModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeCancelModal = () => {
+    setModalVisible(false);
+  };
+
+  const confirmCancel = () => {
+    closeCancelModal();
+    handleCancel(); // Navigate back
   };
 
   const renderStep = () => {
@@ -119,19 +127,43 @@ const ApplyForHustler = () => {
   };
 
   return (
+    <ArtBackground>
     <ScrollView contentContainerStyle={styles.container}>
       <ProgressBar currentStep={currentStep} />
       {renderStep()}
       <View style={styles.buttonContainer}>
         {currentStep === 0 && ( // Show Cancel button only on the first step
-          <Button title="Cancel" onPress={handleCancel} color="#FF6347" />
+          <Button title="Cancel" onPress={openCancelModal} color="#FF6347" />
         )}
         {currentStep > 0 && (
           <Button title="Back" onPress={() => setCurrentStep(currentStep - 1)} />
         )}
         <Button title={currentStep < 4 ? "Next" : "Submit"} onPress={currentStep < 4 ? nextStep : handleSubmit} />
       </View>
+
+      {/* Modal for cancel confirmation */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={closeCancelModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Are you sure you want to cancel the application?</Text>
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity onPress={confirmCancel} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={closeCancelModal} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
+    </ArtBackground>
   );
 };
 
@@ -145,6 +177,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    padding: 10,
+    marginHorizontal: 10,
+    backgroundColor: '#FF6347',
+    borderRadius: 5,
+    alignItems: 'center',
+    flex: 1,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

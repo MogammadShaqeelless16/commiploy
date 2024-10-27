@@ -25,14 +25,14 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
   // Filter the skills based on the input query
   const filteredSkills = skillsList.filter(skill =>
     skill.toLowerCase().includes(query.toLowerCase())
-  );
+  ).slice(0, 3); // Limit to the first 3 matches
 
   // Function to handle skill selection
   const handleSkillSelect = (skill) => {
     if (!skills.includes(skill)) {
       setSkills([...skills, skill]);
     }
-    setQuery('');
+    setQuery(''); // Clear the input after selection
   };
 
   // Function to remove a skill from the selected skills
@@ -43,6 +43,35 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Skills & Experience</Text>
+
+      {/* Display selected skills above the input field */}
+      <View style={styles.selectedSkillsContainer}>
+        {skills.map((skill, index) => (
+          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
+            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      
+
+      {/* Experience Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Experience (in years)"
+        value={experience}
+        onChangeText={setExperience}
+        keyboardType="numeric"
+      />
+
+      {/* Qualification Input */}
+      <Text style={styles.label}>Qualification:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Self-taught, Qualified, etc."
+        value={qualification}
+        onChangeText={setQualification}
+      />
 
       {/* Skills Input with Autocomplete */}
       <Text style={styles.label}>Skills (multi-select):</Text>
@@ -63,33 +92,6 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
           style={styles.autocomplete}
         />
       </View>
-
-      {/* Display selected skills */}
-      <View style={styles.selectedSkillsContainer}>
-        {skills.map((skill, index) => (
-          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
-            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Experience Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Experience (in years)"
-        value={experience}
-        onChangeText={setExperience}
-        keyboardType="numeric"
-      />
-
-      {/* Qualification Input */}
-      <Text style={styles.label}>Qualification:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Self-taught, Qualified, etc."
-        value={qualification}
-        onChangeText={setQualification}
-      />
     </View>
   );
 };
@@ -119,9 +121,6 @@ const styles = StyleSheet.create({
   },
   autocomplete: {
     marginBottom: 15,
-  },
-  autocompleteContainer: {
-    position: 'relative',
   },
   selectedSkillsContainer: {
     flexDirection: 'row',
