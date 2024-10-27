@@ -64,12 +64,6 @@ const FeedsList = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <LocationDisplay />
-      {!isLoggedIn && showProfileAlert && (
-        <ProfileAlert 
-          navigation={navigation} 
-          onClose={() => setShowProfileAlert(false)} 
-        />
-      )}
 
       <SectionHeader 
         title="Nearby Products" 

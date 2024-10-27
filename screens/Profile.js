@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Alert, StyleSheet, View } from 'react-native';
+import { ScrollView, Alert, StyleSheet, View, Text, Button } from 'react-native';
 import { useProfile } from '../component/Profile/useProfile';
 import ProfilePicture from '../component/Profile/ProfilePicture';
 import ProfileForm from '../component/Profile/ProfileForm';
@@ -38,7 +38,12 @@ const Profile = () => {
         console.error('Logout Error:', logoutError);
       } else {
         await AsyncStorage.removeItem('userSession');
-        navigation.replace('Login'); // Navigate to the login screen
+        
+        // Reset the navigation stack to the Login screen after logout
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
       }
     } catch (error) {
       Alert.alert('Error', 'Error logging out');
@@ -50,6 +55,19 @@ const Profile = () => {
     console.log(`Profile field changed: ${field} = ${value}`);
     setLocalProfile({ ...localProfile, [field]: value });
   };
+
+  // Conditional rendering based on user authentication
+  if (!profile) {
+    return (
+      <View style={styles.notLoggedInContainer}>
+        <Text style={styles.notLoggedInText}>
+          Oh no! We see you are not logged in. Please register or login to start purchasing and getting services.
+        </Text>
+        <Button title="Login" onPress={() => navigation.navigate('Login')} />
+        <Button title="Register" onPress={() => navigation.navigate('Register')} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -66,6 +84,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
     backgroundColor: '#fff',
+  },
+  notLoggedInContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  notLoggedInText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#333',
   },
 });
 

@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between', // Changed to 'space-between' to have even spacing
     padding: 10,
   },
   card: {
-    width: '45%',
+    width: '30%', // Set width to 30% for 3 columns
     height: 120,
     marginVertical: 10,
     justifyContent: 'center',
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   cardText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 });

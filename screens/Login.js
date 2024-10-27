@@ -41,7 +41,12 @@ const Login = ({ navigation }) => {
         }).start();
       } else {
         await AsyncStorage.setItem('userSession', JSON.stringify(data.session));
-        navigation.navigate('DrawerNavigator');
+        
+        // Refresh the link or redirect after successful login
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'DrawerNavigator' }],
+        });
       }
     } catch (error) {
       setError(error.message);
