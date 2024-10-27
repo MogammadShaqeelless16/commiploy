@@ -22,19 +22,23 @@ const skillsList = [
 
 // Qualification options
 const qualifications = [
-  { label: 'Select Qualification', value: '' },
+  { label: 'Primary School', value: 'Primary School' },
   { label: 'Grade 10', value: 'Grade 10' },
   { label: 'Grade 11', value: 'Grade 11' },
   { label: 'Grade 12', value: 'Grade 12' },
-  { label: 'Primary School', value: 'Primary School' },
+  { label: 'Certificate', value: 'Certificate' },
+  { label: 'Diploma', value: 'Diploma' },
+  { label: 'Degree', value: 'Degree' },
+
 ];
 
 const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qualification, setQualification }) => {
   const [query, setQuery] = useState('');
+  const [areaOfStudy, setAreaOfStudy] = useState('');
 
-  // Filter the skills based on the input query
+  // Filter the skills based on the input query and exclude already selected skills
   const filteredSkills = skillsList.filter(skill =>
-    skill.toLowerCase().includes(query.toLowerCase())
+    skill.toLowerCase().includes(query.toLowerCase()) && !skills.includes(skill)
   ).slice(0, 3); // Limit to the first 3 matches
 
   // Function to handle skill selection
@@ -54,11 +58,20 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
     <View style={styles.container}>
       <Text style={styles.header}>Skills & Experience</Text>
 
+      {/* Display selected skills */}
+      <View style={styles.selectedSkillsContainer}>
+        {skills.map((skill, index) => (
+          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
+            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       {/* Skills Input with Autocomplete */}
       <Text style={styles.label}>Skills (multi-select):</Text>
       <View style={styles.autocompleteContainer}>
         <Autocomplete
-          data={filteredSkills.length === 0 && query !== '' ? [{ skill: query }] : filteredSkills.map(skill => ({ skill }))}
+          data={query && filteredSkills.length > 0 ? filteredSkills.map(skill => ({ skill })) : []} // Show suggestions only if there's a query
           defaultValue={query}
           onChangeText={text => setQuery(text)}
           placeholder="Type to search manual labor skills"
@@ -74,33 +87,33 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
         />
       </View>
 
-      {/* Display selected skills */}
-      <View style={styles.selectedSkillsContainer}>
-        {skills.map((skill, index) => (
-          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
-            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Experience Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Experience (in years)"
-        value={experience}
-        onChangeText={setExperience}
-        keyboardType="numeric"
-      />
 
       {/* Qualification Dropdown */}
       <Text style={styles.label}>Qualification:</Text>
       <RNPickerSelect
-        onValueChange={(itemValue) => setQualification(itemValue)}
+        onValueChange={(itemValue) => {
+          setQualification(itemValue);
+          if (itemValue === 'Diploma' || itemValue === 'Certificate') {
+            setAreaOfStudy(''); // Reset area of study when qualification changes
+          }
+        }}
         items={qualifications}
         style={pickerSelectStyles}
         placeholder={{ label: 'Select Qualification', value: null }}
       />
 
+      {/* Conditional Area of Study Input */}
+      {(qualification === 'Diploma' || qualification === 'Certificate') && (
+        <>
+          <Text style={styles.label}>Area of Study:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your area of study"
+            value={areaOfStudy}
+            onChangeText={setAreaOfStudy}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -133,12 +146,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: '#007BFF',
     borderWidth: 1,
-    marginBottom: 15,
+    marginBottom: 20, // Increase bottom margin for spacing
     paddingHorizontal: 10,
     borderRadius: 5,
   },
   autocomplete: {
-    marginBottom: 15,
+    marginBottom: 20, // Increase bottom margin for spacing
     borderColor: '#007BFF',
     borderWidth: 1,
     borderRadius: 5,
@@ -175,7 +188,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#007BFF',
     borderRadius: 5,
     color: 'black',
-    marginBottom: 15,
+    marginBottom: 20, // Increase bottom margin for spacing
   },
   inputAndroid: {
     fontSize: 16,
@@ -185,7 +198,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#007BFF',
     borderRadius: 5,
     color: 'black',
-    marginBottom: 15,
+    marginBottom: 20, // Increase bottom margin for spacing
   },
 });
 

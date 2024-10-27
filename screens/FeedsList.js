@@ -109,9 +109,9 @@ const FeedsList = ({ navigation }) => {
         iconName="wrench" // Icon for services
       />
       <FlatList
-        data={services}
+        data={services.slice(0, 4)} // Limit to the first 4 services
         renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
         numColumns={2}
         contentContainerStyle={styles.verticalList}
       />
