@@ -25,12 +25,12 @@ const Sectors = ({ sectors, setSectors, plan, setPlan }) => {
   // Filter the sectors based on the input query and exclude already selected sectors
   const filteredSectors = sectorsList.filter(sec =>
     sec.toLowerCase().includes(query.toLowerCase()) && !sectors.includes(sec)
-  ).slice(0, 5); // Limit to the first 5 matches
+  ).slice(0, 1); // Limit to the first 5 matches
 
   // Function to handle sector selection
   const handleSectorSelect = (sec) => {
-    if (sectors.length >= 5) {
-      setSectorLimitMessage('You can only select up to 5 sectors.');
+    if (sectors.length >= 3) {
+      setSectorLimitMessage('You can only select up to 3 sectors.');
     } else {
       setSectors([...sectors, sec]);
       setSectorLimitMessage(''); // Clear message when a sector is successfully added

@@ -50,15 +50,26 @@ const ApplyForBusiness = () => {
   // Validation function for the current step
   const validateCurrentStep = () => {
     const validations = [
+      // Business Profile Step
       { condition: currentStep === 0 && !businessProfile.businessName, message: 'Please fill in the business name.' },
       { condition: currentStep === 0 && !businessProfile.address, message: 'Please fill in the business address.' },
-      { condition: currentStep === 1 && !documents.businessCert, message: 'Please upload the business registration certificate.' },
-      { condition: currentStep === 2 && !bankDetails, message: 'Please provide your bank details.' },
-      { condition: currentStep === 3 && !contactDetails.name, message: 'Please fill in the contact name.' },
-      { condition: currentStep === 3 && !contactDetails.email, message: 'Please fill in the contact email.' },
-      { condition: currentStep === 3 && !contactDetails.phone, message: 'Please fill in the contact phone number.' },
-      { condition: currentStep === 4 && sectors.length === 0, message: 'Please select at least one sector.' },
-      { condition: currentStep === 4 && !plan, message: 'Please select a plan.' },
+
+      // Contact Details Step
+      { condition: currentStep === 1 && !contactDetails.name, message: 'Please fill in the contact name.' },
+      { condition: currentStep === 1 && !contactDetails.email, message: 'Please fill in the contact email.' },
+      { condition: currentStep === 1 && !contactDetails.phone, message: 'Please fill in the contact phone number.' },
+
+      // Sectors Step
+      { condition: currentStep === 2 && sectors.length === 0, message: 'Please select at least one sector.' },
+      { condition: currentStep === 2 && !plan, message: 'Please select a plan.' },
+
+      // Bank Details Step
+      { condition: currentStep === 3 && !bankDetails, message: 'Please provide your bank details.' },
+
+      // Document Upload Step
+      { condition: currentStep === 4 && !documents.businessCert, message: 'Please upload the business registration certificate.' },
+      { condition: currentStep === 4 && !documents.taxID, message: 'Please upload the tax ID document.' },
+      { condition: currentStep === 4 && !documents.operatingAgreement, message: 'Please upload the operating agreement.' },
     ];
 
     const error = validations.find(validation => validation.condition);
@@ -118,20 +129,18 @@ const ApplyForBusiness = () => {
       case 1:
         return (
           <ContactDetails
-          contactDetails={contactDetails}
-          setContactDetails={setContactDetails}
-        />
-
+            contactDetails={contactDetails}
+            setContactDetails={setContactDetails}
+          />
         );
       case 2:
         return (
           <Sectors
-          sectors={sectors}
-          setSectors={setSectors}
-          plan={plan}
-          setPlan={setPlan}
-        />
-
+            sectors={sectors}
+            setSectors={setSectors}
+            plan={plan}
+            setPlan={setPlan}
+          />
         );
       case 3:
         return (
@@ -142,11 +151,10 @@ const ApplyForBusiness = () => {
         );
       case 4:
         return (
-
           <DocumentUpload 
-          documents={documents} 
-          setDocuments={setDocuments} 
-        />
+            documents={documents} 
+            setDocuments={setDocuments} 
+          />
         );
       case 5:
         return (

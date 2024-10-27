@@ -34,7 +34,7 @@ const DocumentUpload = ({ documents, setDocuments }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Document Uploads</Text>
-      {['resume', 'idProof', 'addressProof'].map((docType) => (
+      {['businessCert', 'taxID', 'operatingAgreement'].map((docType) => (
         <View key={docType} style={styles.documentContainer}>
           <TouchableOpacity
             style={styles.uploadButton}
