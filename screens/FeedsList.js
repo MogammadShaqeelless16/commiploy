@@ -74,7 +74,7 @@ const FeedsList = ({ navigation }) => {
         contentContainerStyle={styles.horizontalList}
       />
       
-      <CategoryCard/>
+      <CategoryCard navigation={navigation} />
 
 
  

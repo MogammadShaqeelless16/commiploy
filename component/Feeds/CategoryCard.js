@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const CategoryCard = () => {
+const CategoryCard = ({ navigation }) => {
   // Define category details: name and color
   const categories = [
     { name: 'Electronics', color: '#FF6347' },
-    { name: 'Foods and Home Appliances', color: '#4682B4' },
+    { name: 'Home Appliances', color: '#4682B4' },
     { name: 'Food & Takeaways', color: '#32CD32' },
     { name: 'Clothes & Accessories', color: '#FFD700' },
     { name: 'Hardware', color: '#f6bc1d' },
@@ -18,6 +18,7 @@ const CategoryCard = () => {
         <TouchableOpacity
           key={index}
           style={[styles.card, { backgroundColor: category.color }]}
+          onPress={() => navigation.navigate('ProductsList', { category: category.name })} // Navigate with selected category
         >
           <Text style={styles.cardText}>{category.name}</Text>
         </TouchableOpacity>
@@ -30,11 +31,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between', // Changed to 'space-between' to have even spacing
+    justifyContent: 'space-between',
     padding: 10,
   },
   card: {
-    width: '30%', // Set width to 30% for 3 columns
+    width: '30%',
     height: 120,
     marginVertical: 10,
     justifyContent: 'center',

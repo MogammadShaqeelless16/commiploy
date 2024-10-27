@@ -118,11 +118,6 @@ const DrawerNavigator = ({ navigation }) => {
               onPress={() => props.navigation.navigate('ChatListScreen')}
             />
           )}
-          <CustomDrawerItem
-            label="Local News"
-            icon={<Ionicons name="newspaper" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('News')}
-          />
           {isLoggedIn && (
             <CustomDrawerItem
               label="My Applications"

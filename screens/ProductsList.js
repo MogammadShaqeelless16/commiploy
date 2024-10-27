@@ -3,25 +3,45 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, 
 import supabase from '../supabaseClient';
 import placeholderImage from '../assets/images/itemplaceholder.jpg'; // Adjust the path as necessary
 
-const ProductsList = ({ navigation }) => {
+const ProductsList = ({ route, navigation }) => {
+  const { category = '' } = route.params || {}; // Safely access category
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('*, shop_id:businesses(*)'); // Fetch products along with shop details
+        .select('*, shop_id:businesses(*)')
+        .eq('category', category); // Filter by category
 
       if (error) {
         throw new Error('Error fetching products');
       }
 
-      setProducts(data);
-      setFilteredProducts(data); // Initialize filtered products
+      // Check if there are products in the selected category
+      if (data.length === 0) {
+        // Fetch all products if no products found in the selected category
+        const { data: allProducts, error: allProductsError } = await supabase
+          .from('products')
+          .select('*, shop_id:businesses(*)');
+
+        if (allProductsError) {
+          throw new Error('Error fetching all products');
+        }
+
+        setProducts(allProducts);
+        setFilteredProducts(allProducts); // Initialize filtered products
+      } else {
+        setProducts(data);
+        setFilteredProducts(data); // Initialize filtered products with category data
+      }
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -31,14 +51,22 @@ const ProductsList = ({ navigation }) => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [category]); // Refetch when category changes
 
   useEffect(() => {
-    const filtered = products.filter(product =>
-      product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered = products.filter(product => {
+      // Check if the product matches the search query
+      const matchesSearch = product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Check if the product matches the price range
+      const price = product.price || 0; // Default to 0 if price is undefined
+      const matchesMinPrice = minPrice ? price >= parseFloat(minPrice) : true;
+      const matchesMaxPrice = maxPrice ? price <= parseFloat(maxPrice) : true;
+
+      return matchesSearch && matchesMinPrice && matchesMaxPrice;
+    });
     setFilteredProducts(filtered);
-  }, [searchQuery, products]);
+  }, [searchQuery, minPrice, maxPrice, products]);
 
   const renderProduct = ({ item }) => (
     <TouchableOpacity style={styles.productContainer} onPress={() => navigation.navigate('ProductDetails', { productId: item.id })}>
@@ -48,7 +76,6 @@ const ProductsList = ({ navigation }) => {
       />
       <Text style={styles.productTitle}>{item.title}</Text>
       <Text style={styles.productPrice}>Price: R{item.price.toFixed(2)}</Text>
-      {/* Display shop name */}
       {item.shop_id && <Text style={styles.shopName}>Sold by: {item.shop_id.name}</Text>}
     </TouchableOpacity>
   );
@@ -61,6 +88,22 @@ const ProductsList = ({ navigation }) => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
+      <View style={styles.priceFilterContainer}>
+        <TextInput
+          style={styles.priceInput}
+          placeholder="Min Price"
+          keyboardType="numeric"
+          value={minPrice}
+          onChangeText={setMinPrice}
+        />
+        <TextInput
+          style={styles.priceInput}
+          placeholder="Max Price"
+          keyboardType="numeric"
+          value={maxPrice}
+          onChangeText={setMaxPrice}
+        />
+      </View>
       
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -68,7 +111,7 @@ const ProductsList = ({ navigation }) => {
         </View>
       ) : filteredProducts.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text>No products found.</Text>
+          <Text>No products found in this category.</Text>
         </View>
       ) : (
         <FlatList
@@ -76,8 +119,8 @@ const ProductsList = ({ navigation }) => {
           renderItem={renderProduct}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
-          numColumns={2} // Set 2 columns for the grid layout
-          columnWrapperStyle={styles.columnWrapper} // Adjust spacing between columns
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
         />
       )}
     </View>
@@ -104,7 +147,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   columnWrapper: {
-    justifyContent: 'space-between', // Space between columns
+    justifyContent: 'space-between',
   },
   productContainer: {
     backgroundColor: '#fff',
@@ -112,22 +155,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
     marginBottom: 16,
-    flex: 0.48, // Adjust width for 2 columns
+    flex: 0.48,
   },
   productImage: {
     width: '100%',
-    height: 120, // Adjusted height for consistency
+    height: 60,
     borderRadius: 8,
     marginBottom: 8,
   },
   productTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  productDescription: {
-    fontSize: 12,
-    marginTop: 4,
-    color: '#555',
   },
   productPrice: {
     fontSize: 14,
@@ -146,6 +184,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 16,
+  },
+  priceFilterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  priceInput: {
+    flex: 1,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+    height: 40,
   },
 });
 
