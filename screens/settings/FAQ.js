@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   answerContainer: {
     padding: 15,
-    backgroundColor: '#f9f9f9',
+
   },
   answerText: {
     fontSize: 16,

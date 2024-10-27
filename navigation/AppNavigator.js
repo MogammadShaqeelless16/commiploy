@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnboardingScreen from './OnboardingNavigator';
@@ -22,6 +23,7 @@ import ServiceDetails from '../screens/services/ServiceDetails';
 import BusinessDetails from '../screens/business/BusinessDetails';
 import UserProfileDetails from '../screens/UserProfileDetails';
 import ProductDetails from '../screens/ProductDetails';
+import ApplyForHustler from '../screens/hustler/ApplyForHustler';
 
 const Stack = createStackNavigator();
 
@@ -85,8 +87,9 @@ const AppNavigator = () => {
           <Stack.Screen name="BusinessDetails" component={BusinessDetails} options={{ headerShown: false }} />
           <Stack.Screen name="UserProfileDetails" component={UserProfileDetails} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="SignUp" component={SignUp} /> 
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
+          <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

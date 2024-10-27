@@ -1,9 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity , Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const Image1 = require('../assets/images/hustler.jpeg');
 
 const BecomeAHustler = () => {
+  const navigation = useNavigation(); // Initialize navigation
+
+  // Function to navigate to ApplyForHustler screen
+  const handleApplyPress = () => {
+    navigation.navigate('ApplyForHustler'); // Navigate to ApplyForHustler screen
+  };
+
+  // Function to open the FNB account link
+  const handleFNBAccountPress = () => {
+    const url = "https://www.fnb.co.za/business-banking/accounts/solopreneur-bundle/index.html";
+    Linking.openURL(url);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Become a Hustler</Text>
@@ -13,14 +27,13 @@ const BecomeAHustler = () => {
 
       <Image source={Image1} style={styles.Image1} />
 
-      <TouchableOpacity style={styles.applyButton}>
-        <Text style={styles.applyButtonText}>Dont have an account apply with fnb</Text>
+      <TouchableOpacity style={styles.applyButton} onPress={handleFNBAccountPress}>
+        <Text style={styles.applyButtonText}>Don't have an account? Apply with FNB</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.applyButton}>
-        <Text style={styles.applyButtonText}>Apply now. </Text>
+      <TouchableOpacity style={styles.applyButton} onPress={handleApplyPress}>
+        <Text style={styles.applyButtonText}>Apply Now</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -42,21 +55,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#555',
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    color: '#007BFF',
-  },
   Image1: {
     width: '30vh',
-    height: '28vh'
-  },
-  bulletPoint: {
-    fontSize: 16,
-    marginVertical: 4,
-    color: '#333',
+    height: '28vh',
   },
   applyButton: {
     backgroundColor: '#007BFF',

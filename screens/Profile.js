@@ -38,12 +38,15 @@ const Profile = () => {
         console.error('Logout Error:', logoutError);
       } else {
         await AsyncStorage.removeItem('userSession');
-        
+
         // Reset the navigation stack to the Login screen after logout
         navigation.reset({
           index: 0,
           routes: [{ name: 'Login' }],
         });
+
+        // Reset local profile state
+        setLocalProfile(null);
       }
     } catch (error) {
       Alert.alert('Error', 'Error logging out');

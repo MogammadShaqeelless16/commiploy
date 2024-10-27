@@ -18,7 +18,6 @@ const ArticleList = ({ articles, onArticleClick }) => (
 const styles = StyleSheet.create({
   articleCard: {
     padding: 16,
-    backgroundColor: '#f9f9f9',
     borderRadius: 8,
     marginBottom: 12,
     borderWidth: 1,

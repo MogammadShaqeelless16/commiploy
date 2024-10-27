@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     justifyContent: 'start',
     alignItems: 'start',
     padding: 16,
-    backgroundColor: '#f9f9f9', // Adjust background color as needed
   },
   welcomeContainer: {
     flexDirection: 'row', // Align logo and text in a row
