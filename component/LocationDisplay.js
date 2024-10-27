@@ -47,12 +47,17 @@ const LocationDisplay = () => {
     fetchLocation();
   }, []);
 
+  // Conditional rendering based on error message
+  if (errorMsg) {
+    return null; // Do not render anything if there's an error
+  }
+
   return (
     <View style={styles.locationSection}>
       <Text style={styles.locationTitle}>
-        <Icon name="my-location" size={20} color="#007bff" />  <Text style={styles.locationText}>{streetName || errorMsg || 'Fetching location...'}</Text>
+        <Icon name="my-location" size={20} color="#007bff" />  
+        <Text style={styles.locationText}>Your community{streetName || 'Fetching location...'}</Text>
       </Text>
-      
     </View>
   );
 };

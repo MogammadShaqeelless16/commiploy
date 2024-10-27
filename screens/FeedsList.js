@@ -65,12 +65,6 @@ const FeedsList = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <LocationDisplay />
 
-      <SectionHeader 
-        title="Nearby Products" 
-        navigation={navigation} 
-        navigateTo="ProductsList" 
-        iconName="shopping-bag" // Icon for products
-      />
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
