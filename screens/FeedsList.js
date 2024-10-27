@@ -109,7 +109,6 @@ const FeedsList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#f9f9f9',
   },
   headerContainer: {
