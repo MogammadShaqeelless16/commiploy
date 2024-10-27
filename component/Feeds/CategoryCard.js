@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 
 // Define category details: name and image
 const categories = [
-  { name: 'Electronics', image: require('../../assets/category-icons/Electronics.png') }, // Update path to your images
+  { name: 'Electronics', image: require('../../assets/category-icons/Electronics.png') },
   { name: 'Groceries', image: require('../../assets/category-icons/Groceries.png') },
   { name: 'Food & Takeaways', image: require('../../assets/category-icons/Food_and_takeaways.png') },
   { name: 'Clothes & Accessories', image: require('../../assets/category-icons/Clothes_and_accessories.png') },
@@ -12,18 +12,28 @@ const categories = [
 ];
 
 const CategoryCard = ({ navigation }) => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    // Check if the screen width is more than 800 pixels for desktop
+    const updateLayout = () => setIsDesktop(Dimensions.get('window').width > 800);
+    updateLayout();
+    Dimensions.addEventListener('change', updateLayout);
+    return () => Dimensions.removeEventListener('change', updateLayout);
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDesktop && styles.desktopContainer]}>
       {categories.map((category, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.card}
-          onPress={() => navigation.navigate('ProductsList', { category: category.name })} // Navigate with selected category
+          style={[styles.card, isDesktop && styles.desktopCard]}
+          onPress={() => navigation.navigate('ProductsList', { category: category.name })}
         >
           <Image
             source={category.image}
             style={styles.image}
-            resizeMode="contain" // Adjust how the image fits
+            resizeMode="contain"
           />
         </TouchableOpacity>
       ))}
@@ -36,19 +46,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  desktopContainer: {
+    flexWrap: 'nowrap', // Prevent wrapping for desktop view
+    justifyContent: 'space-around', // Spread items evenly on desktop
   },
   card: {
-    width: '30%', // Adjust width as needed
-    height: 120, // Set a height for the card
+    width: '30%', // Width for mobile view
+    height: 120,
     marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    overflow: 'hidden', // To prevent image overflow
+    overflow: 'hidden',
+  },
+  desktopCard: {
+    width: '15%', // Reduced width to fit all items in one row on desktop
   },
   image: {
-    width: '100%', // Set width to 100% of the card
-    height: '100%', // Set height to 100% of the card
+    width: '100%',
+    height: '100%',
   },
 });
 

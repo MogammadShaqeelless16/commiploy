@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import ArtBackground from '../../component/BackgroundSprites/ArtBackground';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -8,6 +9,7 @@ const logo = require('../../assets/images/logo.png');
 
 const JoinScreen1 = () => {
   return (
+    <ArtBackground>
     <View style={styles.container}>
       {/* Display the welcome message */}
       <Text style={styles.welcomeText}>Welcome to</Text>
@@ -26,6 +28,7 @@ const JoinScreen1 = () => {
         A platform created{'\n'}for communities,{'\n'}by communities
       </Text>
     </View>
+    </ArtBackground>
   );
 };
 

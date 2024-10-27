@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, Image, TouchableOpacity } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select'; // Import the picker
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import an icon library
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import supabase from '../supabaseClient';
-import placeholderImage from '../assets/images/itemplaceholder.jpg'; // Adjust the path as necessary
+import placeholderImage from '../assets/images/itemplaceholder.jpg';
 
 const ProductsList = ({ route, navigation }) => {
   const { category = '' } = route.params || {}; // Safely access category
@@ -15,6 +15,24 @@ const ProductsList = ({ route, navigation }) => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [numColumns, setNumColumns] = useState(2);
+
+  useEffect(() => {
+    const updateNumColumns = () => {
+      const screenWidth = Dimensions.get('window').width;
+      if (screenWidth > 1200) {
+        setNumColumns(4); // Show 4 columns on very large screens
+      } else if (screenWidth > 800) {
+        setNumColumns(3); // Show 3 columns on desktop
+      } else {
+        setNumColumns(2); // Default to 2 columns on smaller screens
+      }
+    };
+
+    updateNumColumns(); // Initial check
+    Dimensions.addEventListener('change', updateNumColumns); // Add event listener for screen size changes
+    return () => Dimensions.removeEventListener('change', updateNumColumns); // Cleanup on unmount
+  }, []);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -22,28 +40,22 @@ const ProductsList = ({ route, navigation }) => {
       const { data, error } = await supabase
         .from('products')
         .select('*, shop_id:businesses(*)')
-        .eq('category', category); // Filter by category
+        .eq('category', category);
 
-      if (error) {
-        throw new Error('Error fetching products');
-      }
+      if (error) throw new Error('Error fetching products');
 
-      // Check if there are products in the selected category
       if (data.length === 0) {
-        // Fetch all products if no products found in the selected category
         const { data: allProducts, error: allProductsError } = await supabase
           .from('products')
           .select('*, shop_id:businesses(*)');
 
-        if (allProductsError) {
-          throw new Error('Error fetching all products');
-        }
+        if (allProductsError) throw new Error('Error fetching all products');
 
         setProducts(allProducts);
-        setFilteredProducts(allProducts); // Initialize filtered products
+        setFilteredProducts(allProducts);
       } else {
         setProducts(data);
-        setFilteredProducts(data); // Initialize filtered products with category data
+        setFilteredProducts(data);
       }
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -54,18 +66,14 @@ const ProductsList = ({ route, navigation }) => {
 
   useEffect(() => {
     fetchProducts();
-  }, [category]); // Refetch when category changes
+  }, [category]);
 
   useEffect(() => {
     const filtered = products.filter(product => {
-      // Check if the product matches the search query
       const matchesSearch = product.title && product.title.toLowerCase().includes(searchQuery.toLowerCase());
-
-      // Check if the product matches the price range
-      const price = product.price || 0; // Default to 0 if price is undefined
+      const price = product.price || 0;
       const matchesMinPrice = minPrice ? price >= parseFloat(minPrice) : true;
       const matchesMaxPrice = maxPrice ? price <= parseFloat(maxPrice) : true;
-
       const matchesCategory = selectedCategory ? product.category === selectedCategory : true;
 
       return matchesSearch && matchesMinPrice && matchesMaxPrice && matchesCategory;
@@ -85,23 +93,6 @@ const ProductsList = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
-  // Define price range options
-  const priceRanges = [
-    { label: 'No Min', value: '' },
-    { label: 'R0 - R100', value: '0,100' },
-    { label: 'R100 - R500', value: '100,500' },
-    { label: 'R500 - R1000', value: '500,1000' },
-    { label: 'Above R1000', value: '1000,' },
-  ];
-
-  // Define category options (You might want to fetch these from your database)
-  const categoryOptions = [
-    { label: 'All Categories', value: '' },
-    { label: 'Category 1', value: 'Category 1' },
-    { label: 'Category 2', value: 'Category 2' },
-    { label: 'Category 3', value: 'Category 3' },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -115,14 +106,17 @@ const ProductsList = ({ route, navigation }) => {
           <Icon name="filter" size={20} color="#007bff" />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.filterContainer}>
         <RNPickerSelect
           placeholder={{ label: 'Select Min Price', value: null }}
-          items={priceRanges.map(range => ({
-            label: range.label,
-            value: range.value,
-          }))}
+          items={[
+            { label: 'No Min', value: '' },
+            { label: 'R0 - R100', value: '0,100' },
+            { label: 'R100 - R500', value: '100,500' },
+            { label: 'R500 - R1000', value: '500,1000' },
+            { label: 'Above R1000', value: '1000,' },
+          ]}
           onValueChange={(value) => {
             if (value) {
               const [min, max] = value.split(',');
@@ -137,10 +131,12 @@ const ProductsList = ({ route, navigation }) => {
         />
         <RNPickerSelect
           placeholder={{ label: 'Select Category', value: null }}
-          items={categoryOptions.map(option => ({
-            label: option.label,
-            value: option.value,
-          }))}
+          items={[
+            { label: 'All Categories', value: '' },
+            { label: 'Category 1', value: 'Category 1' },
+            { label: 'Category 2', value: 'Category 2' },
+            { label: 'Category 3', value: 'Category 3' },
+          ]}
           onValueChange={(value) => setSelectedCategory(value)}
           style={pickerSelectStyles}
         />
@@ -160,7 +156,7 @@ const ProductsList = ({ route, navigation }) => {
           renderItem={renderProduct}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
-          numColumns={2}
+          numColumns={numColumns}
           columnWrapperStyle={styles.columnWrapper}
         />
       )}
@@ -168,7 +164,6 @@ const ProductsList = ({ route, navigation }) => {
   );
 };
 
-// Styles for the picker
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
@@ -248,11 +243,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
     marginBottom: 16,
-    flex: 0.48,
+    flex: 1, // Make each product flex in the row
   },
   productImage: {
     width: '100%',
-    height: 60,
+    height: 100,
     borderRadius: 8,
     marginBottom: 8,
   },

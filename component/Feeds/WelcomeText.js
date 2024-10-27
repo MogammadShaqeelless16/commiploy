@@ -42,14 +42,14 @@ const WelcomeMessage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'start',
+    alignItems: 'start',
     padding: 16,
     backgroundColor: '#f9f9f9', // Adjust background color as needed
   },
   welcomeContainer: {
     flexDirection: 'row', // Align logo and text in a row
-    alignItems: 'center', // Center align items vertically
+    alignItems: 'start', // Center align items vertically
   },
   logo: {
     width: 30, // Set logo width to 30
