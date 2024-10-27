@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, ScrollView, Alert } from 'react-native';
-import { fetchBusinessProfile, updateBusinessProfile } from '../../component/BusinessOperations/BusinessAPI'; // Adjust import path as necessary
+import { View, Text, TextInput, StyleSheet, Button, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { supabase } from '../../supabaseClient'; // Adjust path as necessary
 
 const BusinessProfile = () => {
   const [businessProfile, setBusinessProfile] = useState({
@@ -10,8 +10,12 @@ const BusinessProfile = () => {
     contactNumber: '',
     email: '',
   });
+  const [businesses, setBusinesses] = useState([]);
+  const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // Load individual profile details
   useEffect(() => {
     const loadBusinessProfile = async () => {
       try {
@@ -22,8 +26,33 @@ const BusinessProfile = () => {
         Alert.alert('Error', 'Unable to load business profile.');
       }
     };
-
     loadBusinessProfile();
+  }, []);
+
+  // Load all businesses
+  useEffect(() => {
+    const fetchBusinesses = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('businesses')
+          .select('id, name, slogan, header_image')
+          .order('name', { ascending: true });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+        setBusinesses(data);
+        setFilteredBusinesses(data); // Initialize filtered businesses
+      } catch (fetchError) {
+        console.error('Error fetching businesses:', fetchError.message);
+        Alert.alert('Error', fetchError.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBusinesses();
   }, []);
 
   const handleSaveProfile = async () => {
@@ -40,6 +69,17 @@ const BusinessProfile = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Business Profile</Text>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#007BFF" />
+      ) : (
+        businesses.map((business) => (
+          <View key={business.id} style={styles.businessContainer}>
+            <Text style={styles.businessTitle}>{business.name}</Text>
+            <Text style={styles.businessSlogan}>{business.slogan}</Text>
+          </View>
+        ))
+      )}
 
       <Text style={styles.label}>Business Name</Text>
       <TextInput
@@ -128,6 +168,22 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
     alignItems: 'center',
+  },
+  businessContainer: {
+    backgroundColor: '#f1f1f1',
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  businessTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  businessSlogan: {
+    fontSize: 14,
+    color: '#777',
+    marginTop: 4,
   },
 });
 

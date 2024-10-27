@@ -22,13 +22,11 @@ const BankDetails = ({ bankDetails, setBankDetails, bankName, setBankName, hasBa
         value={bankDetails}
         onChangeText={setBankDetails}
       />
-
-      <TouchableOpacity onPress={() => setHasBankAccount(!hasBankAccount)}>
         <Text style={styles.link}>
           {hasBankAccount ? 'I have entered my bank details.' : 'I do not have a bank account.'}
         </Text>
-      </TouchableOpacity>
 
+      <TouchableOpacity onPress={() => setHasBankAccount(!hasBankAccount)}>
       <Text style={styles.link}>
         Apply for an account with FNB here:
         <Text
@@ -38,6 +36,9 @@ const BankDetails = ({ bankDetails, setBankDetails, bankName, setBankName, hasBa
           FNB Solopreneur Bundle
         </Text>
       </Text>
+
+      </TouchableOpacity>
+
     </View>
   );
 };

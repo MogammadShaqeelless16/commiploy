@@ -6,8 +6,8 @@ import RNPickerSelect from 'react-native-picker-select';
 // List of manual labor skills for predictive typing
 const skillsList = [
   'Carpentry', 'Welding', 'Masonry', 'Plumbing', 'Electrical Work',
-  'Painting', 'Roofing', 'Landscaping', 'Heavy Equipment Operation', 
-  'HVAC Installation', 'Forklift Operation', 'Bricklaying', 
+  'Painting', 'Roofing', 'Landscaping', 'Heavy Equipment Operation',
+  'HVAC Installation', 'Forklift Operation', 'Bricklaying',
   'Concrete Finishing', 'Drywall Installation', 'Sheet Metal Work',
   'Paving', 'Cleaning', 'Catering', 'Construction Management',
   'Scaffolding', 'Site Management', 'Inspection', 'Quality Control',
@@ -29,22 +29,25 @@ const qualifications = [
   { label: 'Certificate', value: 'Certificate' },
   { label: 'Diploma', value: 'Diploma' },
   { label: 'Degree', value: 'Degree' },
-
 ];
 
 const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qualification, setQualification }) => {
   const [query, setQuery] = useState('');
   const [areaOfStudy, setAreaOfStudy] = useState('');
+  const [skillLimitMessage, setSkillLimitMessage] = useState('');
 
   // Filter the skills based on the input query and exclude already selected skills
   const filteredSkills = skillsList.filter(skill =>
     skill.toLowerCase().includes(query.toLowerCase()) && !skills.includes(skill)
-  ).slice(0, 3); // Limit to the first 3 matches
+  ).slice(0, 1); // Limit to the first 5 matches
 
   // Function to handle skill selection
   const handleSkillSelect = (skill) => {
-    if (!skills.includes(skill)) {
+    if (skills.length >= 5) {
+      setSkillLimitMessage('You can only select up to 5 skills.');
+    } else {
       setSkills([...skills, skill]);
+      setSkillLimitMessage(''); // Clear message when a skill is successfully added
     }
     setQuery('');
   };
@@ -52,41 +55,15 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
   // Function to remove a skill from the selected skills
   const handleSkillRemove = (skill) => {
     setSkills(skills.filter(s => s !== skill));
+    setSkillLimitMessage(''); // Clear message when a skill is removed
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Skills & Experience</Text>
 
-      {/* Display selected skills */}
-      <View style={styles.selectedSkillsContainer}>
-        {skills.map((skill, index) => (
-          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
-            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Skills Input with Autocomplete */}
-      <Text style={styles.label}>Skills (multi-select):</Text>
-      <View style={styles.autocompleteContainer}>
-        <Autocomplete
-          data={query && filteredSkills.length > 0 ? filteredSkills.map(skill => ({ skill })) : []} // Show suggestions only if there's a query
-          defaultValue={query}
-          onChangeText={text => setQuery(text)}
-          placeholder="Type to search manual labor skills"
-          flatListProps={{
-            keyExtractor: item => item.skill,
-            renderItem: ({ item }) => (
-              <TouchableOpacity onPress={() => handleSkillSelect(item.skill)}>
-                <Text style={styles.suggestion}>{item.skill}</Text>
-              </TouchableOpacity>
-            ),
-          }}
-          style={styles.autocomplete}
-        />
-      </View>
-
+      {/* Skill limit message */}
+      {skillLimitMessage ? <Text style={styles.skillLimitMessage}>{skillLimitMessage}</Text> : null}
 
       {/* Qualification Dropdown */}
       <Text style={styles.label}>Qualification:</Text>
@@ -114,6 +91,37 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
           />
         </>
       )}
+
+      {/* Display selected skills */}
+      <View style={styles.selectedSkillsContainer}>
+        {skills.map((skill, index) => (
+          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
+            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Skills Input with Autocomplete */}
+      <Text style={styles.label}>Skills (multi-select):</Text>
+      <View style={styles.autocompleteContainer}>
+        <Autocomplete
+          data={filteredSkills.length > 0 ? filteredSkills.map(skill => ({ skill })) : []} // Show suggestions only if there's a query
+          defaultValue={query}
+          onChangeText={text => setQuery(text)}
+          placeholder="Type to search manual labor skills"
+          flatListProps={{
+            keyExtractor: item => item.skill,
+            renderItem: ({ item }) => (
+              <TouchableOpacity onPress={() => handleSkillSelect(item.skill)}>
+                <Text style={styles.suggestion}>{item.skill}</Text>
+              </TouchableOpacity>
+            ),
+          }}
+          style={styles.autocompleteInput}
+          inputContainerStyle={styles.autocompleteInputContainer}
+          listContainerStyle={styles.suggestionsListContainer}
+        />
+      </View>
     </View>
   );
 };
@@ -121,14 +129,7 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
 // Styles for the component
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: '#fff', // Set background color for better visibility
-    borderRadius: 10, // Add rounded corners
-    shadowColor: '#000', // Add shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow properties for iOS
-    shadowOpacity: 0.2, // Shadow opacity for iOS
-    shadowRadius: 4, // Shadow radius for iOS
-    elevation: 3, // Shadow for Android
+    paddingBottom: 50,
   },
   header: {
     fontSize: 24,
@@ -140,28 +141,41 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
-    marginTop: 15, // Add top margin to labels
+    marginTop: 15,
   },
   input: {
     height: 50,
     borderColor: '#007BFF',
     borderWidth: 1,
-    marginBottom: 20, // Increase bottom margin for spacing
+    marginBottom: 20,
     paddingHorizontal: 10,
     borderRadius: 5,
   },
-  autocomplete: {
-    marginBottom: 20, // Increase bottom margin for spacing
+  autocompleteContainer: {
+    position: 'relative',
+    zIndex: 10,
+  },
+  autocompleteInputContainer: {
     borderColor: '#007BFF',
     borderWidth: 1,
     borderRadius: 5,
-    zIndex: 10, // Set zIndex to ensure it is on top
-    elevation: 5, // Android shadow effect
+  },
+  autocompleteInput: {
+    padding: 10,
+    fontSize: 16,
+  },
+  suggestionsListContainer: {
+    backgroundColor: '#fff',
+    borderColor: '#007BFF',
+    borderWidth: 1,
+    borderRadius: 5,
+    maxHeight: 150,
+    marginTop: 5,
   },
   selectedSkillsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 15,
+    marginTop: 15,
   },
   selectedSkill: {
     backgroundColor: '#007BFF',
@@ -176,6 +190,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
+  skillLimitMessage: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontSize: 14,
+  },
 });
 
 // Styles for RNPickerSelect
@@ -188,7 +208,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#007BFF',
     borderRadius: 5,
     color: 'black',
-    marginBottom: 20, // Increase bottom margin for spacing
+    marginBottom: 20,
   },
   inputAndroid: {
     fontSize: 16,
@@ -198,7 +218,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#007BFF',
     borderRadius: 5,
     color: 'black',
-    marginBottom: 20, // Increase bottom margin for spacing
+    marginBottom: 20,
   },
 });
 

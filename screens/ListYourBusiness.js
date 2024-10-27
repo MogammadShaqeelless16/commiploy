@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ListYourBusiness = () => {
+const ListYourBusiness = ({ navigation }) => { // Receive navigation prop here
+  const handleNavigateToApply = () => {
+    navigation.navigate('ApplyForBusiness'); // Navigate to ApplyForBusiness screen
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>List Your Business</Text>
@@ -20,7 +24,7 @@ const ListYourBusiness = () => {
       <Text style={styles.bulletPoint}>• Access to a larger customer base.</Text>
       <Text style={styles.bulletPoint}>• Opportunities for collaboration with other businesses.</Text>
 
-      <TouchableOpacity style={styles.applyButton}>
+      <TouchableOpacity style={styles.applyButton} onPress={handleNavigateToApply}>
         <Text style={styles.applyButtonText}>List My Business</Text>
       </TouchableOpacity>
     </View>
