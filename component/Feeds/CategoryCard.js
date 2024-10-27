@@ -4,11 +4,11 @@ import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 // Define category details: name and image
 const categories = [
   { name: 'Electronics', image: require('../../assets/category-icons/Electronics.png') }, // Update path to your images
-  { name: 'Home Appliances', image: require('../../assets/category-icons/Home_Appliances.png') },
+  { name: 'Groceries', image: require('../../assets/category-icons/Groceries.png') },
   { name: 'Food & Takeaways', image: require('../../assets/category-icons/Food_and_takeaways.png') },
   { name: 'Clothes & Accessories', image: require('../../assets/category-icons/Clothes_and_accessories.png') },
   { name: 'Hardware', image: require('../../assets/category-icons/Hardware.png') },
-  { name: 'Groceries', image: require('../../assets/category-icons/Groceries.png') },
+  { name: 'Home Appliances', image: require('../../assets/category-icons/Home_Appliances.png') },
 ];
 
 const CategoryCard = ({ navigation }) => {
