@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'start',
     alignItems: 'start',
     marginBottom: 40,
+    paddingLeft: 30,
   },
   welcomeContainer: {
     flexDirection: 'row', // Align logo and text in a row

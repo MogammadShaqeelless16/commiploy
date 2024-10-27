@@ -17,6 +17,10 @@ import NotificationButton from '../component/NotificationButton';
 import CartButton from '../component/CartButton';
 import { fetchProfile } from '../component/UserOperations/fetchProfile';
 import CrmDashboard from '../component/Feeds/Dashboard';
+import BusinessCards from '../component/Feeds/BusinessCard';
+import BusinessAnalytics from '../component/Feeds/BusinessAnalytics';
+import HustlerDashboard from '../component/Feeds/HustlerDashboard';
+import HustlerCard from '../component/Feeds/HustlersCard';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -119,10 +123,19 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        {role === 'Developer' && <CrmDashboard />}
+        {role === 'Business Owner' && (
+          <>
+            <CrmDashboard />
+            <BusinessCards />
+            <BusinessAnalytics />
+          </>
+        )}
 
-        {role !== 'Developer' && ( // Check role here
-          <FlatList
+        {role === 'Hustler' && (
+          <>
+            <HustlerDashboard />
+            <HustlerCard />
+            <FlatList
             data={products}
             renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
             keyExtractor={item => item.id}
@@ -130,23 +143,37 @@ const FeedsList = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
           />
+          </>
         )}
 
-        <CategoryCard navigation={navigation} />
 
-        <SectionHeader
-          title="Service Providers"
-          navigation={navigation}
-          navigateTo="Services"
-          iconName="wrench"
-        />
+      {(role !== 'Business Owner' && role !== 'Developer') && (
+        <>
         <FlatList
-          data={services.slice(0, 4)} // Limit to the first 4 services
-          renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
-          keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
-          numColumns={2}
-          contentContainerStyle={styles.verticalList}
-        />
+            data={products}
+            renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          />
+          <CategoryCard navigation={navigation} />
+          <SectionHeader
+            title="Service Providers"
+            navigation={navigation}
+            navigateTo="Services"
+            iconName="wrench"
+          />
+          <FlatList
+            data={services.slice(0, 4)} // Limit to the first 4 services
+            renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
+            keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
+            numColumns={2}
+            contentContainerStyle={styles.verticalList}
+          />
+        </>
+      )}
+
       </ArtBackground>
     </ScrollView>
   );

@@ -5,7 +5,7 @@ import DashboardCard from './DashboardCard';
 import { fetchCurrentUser } from '../UserOperations/fetchProfile';
 import supabase from '../../supabaseClient';
 
-const CrmDashboard = () => {
+const HustlerDashboard = () => {
   const navigation = useNavigation();
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalLeads, setTotalLeads] = useState(0);
@@ -80,17 +80,17 @@ const CrmDashboard = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.DashboardContainer}>
-      <Text style={styles.header}>My Business Dashboard</Text>
+      <Text style={styles.header}>Hustler Dashboard</Text>
 
       <View style={styles.dashboardOverview}>
         <DashboardCard 
-          title="Total Customers" 
-          endValue={150} 
+          title="Jobs Complete" 
+          endValue={15} 
           onClick={() => navigateTo('Customers')} 
         />
         <DashboardCard 
-          title="Total Orders" 
-          endValue={500} 
+          title="Reviews" 
+          endValue={5} 
           onClick={() => navigateTo('Orders')} 
         />
       </View>
@@ -101,7 +101,7 @@ const CrmDashboard = () => {
 const styles = StyleSheet.create({
    DashboardContainer: {
     flexGrow: 1,
-    backgroundColor: '#f6bc1d',
+    backgroundColor: '#7ed957',
     borderRadius: 10,
   },
   header: {
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CrmDashboard;
+export default HustlerDashboard;
