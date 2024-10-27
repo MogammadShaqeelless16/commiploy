@@ -5,24 +5,41 @@ import 'quill/dist/quill.snow.css';
 
 const QuillEditor = ({ content, onChange }) => {
   const editorRef = useRef(null);
+  const quillRef = useRef(null); // Ref to store the Quill instance
 
   useEffect(() => {
-    if (editorRef.current) {
-      const quill = new Quill(editorRef.current, {
-        theme: 'snow',
-        modules: {
-          toolbar: true,
-        },
-        placeholder: 'Compose an epic...',
-      });
+    // Initialize Quill editor only once when component mounts
+    quillRef.current = new Quill(editorRef.current, {
+      theme: 'snow',
+      modules: {
+        toolbar: true,
+      },
+      placeholder: 'Compose an epic...',
+    });
 
-      quill.on('text-change', () => {
-        onChange(quill.root.innerHTML);
-      });
+    // Set initial content
+    quillRef.current.root.innerHTML = content;
 
-      quill.root.innerHTML = content;
+    // Set up the onChange handler
+    const handleTextChange = () => {
+      onChange(quillRef.current.root.innerHTML);
+    };
+
+    quillRef.current.on('text-change', handleTextChange);
+
+    // Cleanup function to remove event listener and Quill instance
+    return () => {
+      quillRef.current.off('text-change', handleTextChange);
+      quillRef.current = null; // Clear reference
+    };
+  }, []); // Empty dependency array to run this effect only once
+
+  // Update Quill content when `content` prop changes
+  useEffect(() => {
+    if (quillRef.current) {
+      quillRef.current.root.innerHTML = content;
     }
-  }, [content, onChange]);
+  }, [content]);
 
   return (
     <View style={styles.editorContainer}>

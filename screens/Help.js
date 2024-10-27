@@ -19,7 +19,7 @@ const Help = () => {
   useEffect(() => {
     const fetchHelpArticles = async () => {
       const { data, error } = await supabase
-        .from('help_articles')
+        .from('helparticles')
         .select('*');
       if (!error) {
         setHelpArticles(data);
@@ -69,7 +69,7 @@ const Help = () => {
   const handleArticleEdit = async () => {
     if (userRole === 'Administrator' || userRole === 'Developer') {
       const { error } = await supabase
-        .from('help_articles')
+        .from('helparticles')
         .update({ title: newArticleTitle, content: editorContent })
         .eq('id', selectedArticle.id);
       if (!error) {
@@ -86,7 +86,7 @@ const Help = () => {
   const handleArticleDelete = async () => {
     if (userRole === 'Administrator' || userRole === 'Developer') {
       const { error } = await supabase
-        .from('help_articles')
+        .from('helparticles')
         .delete()
         .eq('id', selectedArticle.id);
       if (!error) {
@@ -101,11 +101,11 @@ const Help = () => {
   const handleAddArticle = async () => {
     if (userRole === 'Administrator' || userRole === 'Developer') {
       const { error } = await supabase
-        .from('help_articles')
+        .from('helparticles')
         .insert([{ title: newArticleTitle, content: editorContent }]);
       if (!error) {
         const { data, error: fetchError } = await supabase
-          .from('help_articles')
+          .from('helparticles')
           .select('*');
         if (!fetchError) {
           setHelpArticles(data);
