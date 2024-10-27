@@ -88,9 +88,13 @@ const ArtBackground = ({ children }) => {
   const [backgroundImages, setBackgroundImages] = useState([]);
   const minSize = 50; // Minimum size of images
   const maxSize = 150; // Maximum size of images
+  const screenWidth = Dimensions.get('window').width;
+  
+  // Determine the number of images based on screen width
+  const numberOfImages = screenWidth >= 768 ? 6 : 3; // 6 for desktop, 3 for mobile
 
   useEffect(() => {
-    const selectedImages = getRandomImages(3); // Change to 3 images
+    const selectedImages = getRandomImages(numberOfImages); // Adjusted based on screen size
     const positions = [];
     const imagesWithPositions = selectedImages.map((image) => {
       // Random size for each image
@@ -102,7 +106,7 @@ const ArtBackground = ({ children }) => {
       };
     });
     setBackgroundImages(imagesWithPositions);
-  }, []);
+  }, [numberOfImages]); // Add numberOfImages as a dependency
 
   return (
     <View style={styles.container}>

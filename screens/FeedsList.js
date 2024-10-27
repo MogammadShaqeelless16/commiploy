@@ -11,7 +11,7 @@ import LocationDisplay from '../component/LocationDisplay';
 import CategoryCard from '../component/Feeds/CategoryCard';
 import WelcomeMessage from '../component/Feeds/WelcomeText';
 const { width: screenWidth } = Dimensions.get('window');
-
+import ArtBackground from '../component/BackgroundSprites/ArtBackground';
 const FeedsList = ({ navigation }) => {
   const { isLoggedIn } = useContext(AuthContext);
   const [showProfileAlert, setShowProfileAlert] = useState(!isLoggedIn);
@@ -64,6 +64,7 @@ const FeedsList = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <ArtBackground>
       <WelcomeMessage />
       <LocationDisplay />
 
@@ -114,6 +115,7 @@ const FeedsList = ({ navigation }) => {
         numColumns={2}
         contentContainerStyle={styles.verticalList}
       />
+      </ArtBackground>
     </ScrollView>
   );
 };
