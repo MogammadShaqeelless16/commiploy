@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TextInput, Image, TouchableOpacity } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select'; // Import the picker
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import an icon library
 import supabase from '../supabaseClient';
 import placeholderImage from '../assets/images/itemplaceholder.jpg'; // Adjust the path as necessary
 
@@ -12,6 +14,7 @@ const ProductsList = ({ route, navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -63,10 +66,12 @@ const ProductsList = ({ route, navigation }) => {
       const matchesMinPrice = minPrice ? price >= parseFloat(minPrice) : true;
       const matchesMaxPrice = maxPrice ? price <= parseFloat(maxPrice) : true;
 
-      return matchesSearch && matchesMinPrice && matchesMaxPrice;
+      const matchesCategory = selectedCategory ? product.category === selectedCategory : true;
+
+      return matchesSearch && matchesMinPrice && matchesMaxPrice && matchesCategory;
     });
     setFilteredProducts(filtered);
-  }, [searchQuery, minPrice, maxPrice, products]);
+  }, [searchQuery, minPrice, maxPrice, products, selectedCategory]);
 
   const renderProduct = ({ item }) => (
     <TouchableOpacity style={styles.productContainer} onPress={() => navigation.navigate('ProductDetails', { productId: item.id })}>
@@ -80,31 +85,67 @@ const ProductsList = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  // Define price range options
+  const priceRanges = [
+    { label: 'No Min', value: '' },
+    { label: 'R0 - R100', value: '0,100' },
+    { label: 'R100 - R500', value: '100,500' },
+    { label: 'R500 - R1000', value: '500,1000' },
+    { label: 'Above R1000', value: '1000,' },
+  ];
+
+  // Define category options (You might want to fetch these from your database)
+  const categoryOptions = [
+    { label: 'All Categories', value: '' },
+    { label: 'Category 1', value: 'Category 1' },
+    { label: 'Category 2', value: 'Category 2' },
+    { label: 'Category 3', value: 'Category 3' },
+  ];
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search products..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      <View style={styles.priceFilterContainer}>
+      <View style={styles.searchContainer}>
         <TextInput
-          style={styles.priceInput}
-          placeholder="Min Price"
-          keyboardType="numeric"
-          value={minPrice}
-          onChangeText={setMinPrice}
+          style={styles.searchBar}
+          placeholder="Search products..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
         />
-        <TextInput
-          style={styles.priceInput}
-          placeholder="Max Price"
-          keyboardType="numeric"
-          value={maxPrice}
-          onChangeText={setMaxPrice}
-        />
+        <TouchableOpacity style={styles.filterButton} onPress={() => console.log('Filter pressed')}>
+          <Icon name="filter" size={20} color="#007bff" />
+        </TouchableOpacity>
       </View>
       
+      <View style={styles.filterContainer}>
+        <RNPickerSelect
+          placeholder={{ label: 'Select Min Price', value: null }}
+          items={priceRanges.map(range => ({
+            label: range.label,
+            value: range.value,
+          }))}
+          onValueChange={(value) => {
+            if (value) {
+              const [min, max] = value.split(',');
+              setMinPrice(min);
+              setMaxPrice(max || '');
+            } else {
+              setMinPrice('');
+              setMaxPrice('');
+            }
+          }}
+          style={pickerSelectStyles}
+        />
+        <RNPickerSelect
+          placeholder={{ label: 'Select Category', value: null }}
+          items={categoryOptions.map(option => ({
+            label: option.label,
+            value: option.value,
+          }))}
+          onValueChange={(value) => setSelectedCategory(value)}
+          style={pickerSelectStyles}
+        />
+      </View>
+
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007bff" />
@@ -127,11 +168,63 @@ const ProductsList = ({ route, navigation }) => {
   );
 };
 
+// Styles for the picker
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    color: 'black',
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    color: 'black',
+    marginRight: 10,
+    marginBottom: 10,
+  },
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: '#ffffff',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  searchBar: {
+    flex: 1,
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginRight: 8,
+  },
+  filterButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
   loadingContainer: {
     flex: 1,
@@ -176,28 +269,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
     color: '#888',
-  },
-  searchBar: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 16,
-  },
-  priceFilterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  priceInput: {
-    flex: 1,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginHorizontal: 5,
-    height: 40,
   },
 });
 
