@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Button, StyleSheet, Modal, Text, TouchableOpacity, Alert } from 'react-native';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
-import BusinessProfile from './BusinessProfile'; // New component for business details
-import DocumentUpload from './DocumentUpload'; // For uploading business documents
-import BankDetails from './BankDetails'; // For bank account information
-import ReviewApplication from './ReviewApplication'; // To review all application data
+import BusinessProfile from './BusinessProfile'; // Component for business profile details
+import DocumentUpload from './DocumentUpload'; // Component for uploading business documents
+import BankDetails from './BankDetails'; // Component for bank account information
+import ReviewApplication from './ReviewApplication'; // Component to review all application data
 import ProgressBar from './ProgressBar'; // Progress indicator
 import { useNavigation } from '@react-navigation/native'; // Navigation hook
 import ArtBackground from '../../component/BackgroundSprites/ArtBackground';
+import ContactDetails from './ContactDetails'; // New component for contact details
+import Sectors from './Sectors'; // New component for business sectors
 
 const ApplyForBusiness = () => {
-  const navigation = useNavigation(); // Initialize navigation hook
+  const navigation = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const [businessDetails, setBusinessDetails] = useState({}); // Business details state
-  const [documents, setDocuments] = useState({ businessCert: null, taxID: null, operatingAgreement: null }); // Document uploads
-  const [bankDetails, setBankDetails] = useState(''); // Bank details state
-  const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
+  const [businessProfile, setBusinessProfile] = useState({
+    businessName: '',
+    address: '',
+  }); // Business profile state
+  const [documents, setDocuments] = useState({
+    businessCert: null,
+    taxID: null,
+    operatingAgreement: null,
+  }); // Document uploads
+  const [bankDetails, setBankDetails] = useState('');
+  const [contactDetails, setContactDetails] = useState({
+    name: '',
+    email: '',
+    phone: '',
+  }); // Contact details state
+  const [sectors, setSectors] = useState([]); // Selected sectors
+  const [plan, setPlan] = useState(null); // Selected plan
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -34,10 +50,15 @@ const ApplyForBusiness = () => {
   // Validation function for the current step
   const validateCurrentStep = () => {
     const validations = [
-      { condition: currentStep === 0 && !businessDetails.businessName, message: 'Please fill in the business name.' },
-      { condition: currentStep === 0 && !businessDetails.address, message: 'Please fill in the business address.' },
+      { condition: currentStep === 0 && !businessProfile.businessName, message: 'Please fill in the business name.' },
+      { condition: currentStep === 0 && !businessProfile.address, message: 'Please fill in the business address.' },
       { condition: currentStep === 1 && !documents.businessCert, message: 'Please upload the business registration certificate.' },
       { condition: currentStep === 2 && !bankDetails, message: 'Please provide your bank details.' },
+      { condition: currentStep === 3 && !contactDetails.name, message: 'Please fill in the contact name.' },
+      { condition: currentStep === 3 && !contactDetails.email, message: 'Please fill in the contact email.' },
+      { condition: currentStep === 3 && !contactDetails.phone, message: 'Please fill in the contact phone number.' },
+      { condition: currentStep === 4 && sectors.length === 0, message: 'Please select at least one sector.' },
+      { condition: currentStep === 4 && !plan, message: 'Please select a plan.' },
     ];
 
     const error = validations.find(validation => validation.condition);
@@ -51,7 +72,7 @@ const ApplyForBusiness = () => {
   // Function to proceed to the next step
   const nextStep = () => {
     if (validateCurrentStep()) {
-      setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
+      setCurrentStep(prevStep => Math.min(prevStep + 1, 5));
     }
   };
 
@@ -59,6 +80,7 @@ const ApplyForBusiness = () => {
   const handleSubmit = () => {
     if (bankDetails) {
       Alert.alert('Success', 'Business application submitted successfully!');
+      navigation.goBack(); // Optionally navigate back after submission
     } else {
       Alert.alert('Error', 'You must provide bank details.');
     }
@@ -87,17 +109,54 @@ const ApplyForBusiness = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <BusinessProfile businessDetails={businessDetails} setBusinessDetails={setBusinessDetails} />;
+        return (
+          <BusinessProfile 
+            businessProfile={businessProfile} 
+            setBusinessProfile={setBusinessProfile} 
+          />
+        );
       case 1:
-        return <DocumentUpload documents={documents} setDocuments={setDocuments} />;
+        return (
+          <ContactDetails
+          contactDetails={contactDetails}
+          setContactDetails={setContactDetails}
+        />
+
+        );
       case 2:
-        return <BankDetails bankDetails={bankDetails} setBankDetails={setBankDetails} />;
+        return (
+          <Sectors
+          sectors={sectors}
+          setSectors={setSectors}
+          plan={plan}
+          setPlan={setPlan}
+        />
+
+        );
       case 3:
         return (
+          <BankDetails 
+            bankDetails={bankDetails} 
+            setBankDetails={setBankDetails} 
+          />
+        );
+      case 4:
+        return (
+
+          <DocumentUpload 
+          documents={documents} 
+          setDocuments={setDocuments} 
+        />
+        );
+      case 5:
+        return (
           <ReviewApplication
-            businessDetails={businessDetails}
+            businessDetails={businessProfile}
             documents={documents}
             bankDetails={bankDetails}
+            contactDetails={contactDetails}
+            sectors={sectors}
+            plan={plan}
             handleSubmit={handleSubmit}
           />
         );
@@ -118,7 +177,10 @@ const ApplyForBusiness = () => {
           {currentStep > 0 && (
             <Button title="Back" onPress={() => setCurrentStep(currentStep - 1)} />
           )}
-          <Button title={currentStep < 3 ? "Next" : "Submit"} onPress={currentStep < 3 ? nextStep : handleSubmit} />
+          <Button 
+            title={currentStep < 5 ? "Next" : "Submit"} 
+            onPress={currentStep < 5 ? nextStep : handleSubmit} 
+          />
         </View>
 
         {/* Modal for cancel confirmation */}

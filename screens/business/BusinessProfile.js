@@ -1,42 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { supabase } from '../../supabaseClient'; // Adjust path as necessary
 
-const BusinessProfile = () => {
-  const [businessProfile, setBusinessProfile] = useState({
-    businessName: '',
-    description: '',
-    address: '',
-    contactNumber: '',
-    email: '',
-  });
+const BusinessProfile = ({ businessProfile, setBusinessProfile }) => {
   const [loading, setLoading] = useState(false);
 
-  // Load individual profile details
-  useEffect(() => {
-    const loadBusinessProfile = async () => {
-      setLoading(true);
-      try {
-        const profileData = await fetchBusinessProfile();
-        setBusinessProfile(profileData);
-      } catch (error) {
-        console.error('Error fetching business profile:', error);
-        Alert.alert('Error', 'Unable to load business profile.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadBusinessProfile();
-  }, []);
 
-  // Function to fetch the business profile (this is a placeholder; replace with actual implementation)
-  const fetchBusinessProfile = async () => {
-    const { data, error } = await supabase
-      .from('business_profiles')
-      .select('*')
-      .single(); // Assuming you want a single profile
-    if (error) throw new Error(error.message);
-    return data;
+  const handleInputChange = (field, value) => {
+    console.log(`Changing ${field} to:`, value);
+    setBusinessProfile({ ...businessProfile, [field]: value });
   };
 
   return (
@@ -51,14 +23,14 @@ const BusinessProfile = () => {
           <TextInput
             style={styles.input}
             value={businessProfile.businessName}
-            onChangeText={(text) => setBusinessProfile({ ...businessProfile, businessName: text })}
+            onChangeText={(text) => handleInputChange('businessName', text)}
           />
 
           <Text style={styles.label}>Description</Text>
           <TextInput
             style={[styles.input, styles.multiLineInput]}
             value={businessProfile.description}
-            onChangeText={(text) => setBusinessProfile({ ...businessProfile, description: text })}
+            onChangeText={(text) => handleInputChange('description', text)}
             multiline
           />
 
@@ -66,12 +38,11 @@ const BusinessProfile = () => {
           <TextInput
             style={styles.input}
             value={businessProfile.address}
-            onChangeText={(text) => setBusinessProfile({ ...businessProfile, address: text })}
+            onChangeText={(text) => handleInputChange('address', text)}
           />
 
-
           <Text style={styles.note}>
-            Note: Your app profile will be used to apply for becoming a hustler. 
+            Note: Your app profile will be used to apply for business Profile. 
             Please ensure you have your own account as using someone else's profile 
             is not allowed.
           </Text>
@@ -109,33 +80,13 @@ const styles = StyleSheet.create({
   },
   note: {
     fontSize: 14,
-    color: '#666', // Use a lighter color for the note to distinguish it
+    color: '#666',
     marginTop: 20,
-    textAlign: 'center', // Center the note for better alignment
+    textAlign: 'center',
   },
   multiLineInput: {
     height: 100,
     textAlignVertical: 'top',
-  },
-  buttonContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  businessContainer: {
-    backgroundColor: '#f1f1f1',
-    padding: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  businessTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  businessSlogan: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 4,
   },
 });
 

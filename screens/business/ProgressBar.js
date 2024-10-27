@@ -4,9 +4,10 @@ import { View, Text, StyleSheet } from 'react-native';
 const ProgressBar = ({ currentStep }) => {
   const steps = [
     'Business',
+    'Contact',
     'Sector',
-    'Documents',
     'Bank',
+    'Documents',
     'Review',
   ];
 
