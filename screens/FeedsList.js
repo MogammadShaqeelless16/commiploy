@@ -147,9 +147,9 @@ const FeedsList = ({ navigation }) => {
         )}
 
 
-      {(role !== 'Business Owner' && role !== 'Developer') && (
+      {(role !== 'Business Owner' && role !== 'Developer' && role !== 'Hustler') && (
         <>
-        <FlatList
+        <FlatListsetProfile
             data={products}
             renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
             keyExtractor={item => item.id}
