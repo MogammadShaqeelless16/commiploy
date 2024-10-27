@@ -4,10 +4,10 @@ import { View, Text, StyleSheet } from 'react-native';
 const ProgressBar = ({ currentStep }) => {
   const steps = [
     'Profile',
-    'Skills & Experience',
+    'Skills',
     'Documents',
-    'Bank Details',
-    'Review & Submit',
+    'Bank',
+    'Review',
   ];
 
   return (

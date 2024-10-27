@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
+import RNPickerSelect from 'react-native-picker-select';
 
 // List of manual labor skills for predictive typing
 const skillsList = [
@@ -19,6 +20,15 @@ const skillsList = [
   'Waste Management'
 ];
 
+// Qualification options
+const qualifications = [
+  { label: 'Select Qualification', value: '' },
+  { label: 'Grade 10', value: 'Grade 10' },
+  { label: 'Grade 11', value: 'Grade 11' },
+  { label: 'Grade 12', value: 'Grade 12' },
+  { label: 'Primary School', value: 'Primary School' },
+];
+
 const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qualification, setQualification }) => {
   const [query, setQuery] = useState('');
 
@@ -32,7 +42,7 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
     if (!skills.includes(skill)) {
       setSkills([...skills, skill]);
     }
-    setQuery(''); // Clear the input after selection
+    setQuery('');
   };
 
   // Function to remove a skill from the selected skills
@@ -44,40 +54,11 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
     <View style={styles.container}>
       <Text style={styles.header}>Skills & Experience</Text>
 
-      {/* Display selected skills above the input field */}
-      <View style={styles.selectedSkillsContainer}>
-        {skills.map((skill, index) => (
-          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
-            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      
-
-      {/* Experience Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Experience (in years)"
-        value={experience}
-        onChangeText={setExperience}
-        keyboardType="numeric"
-      />
-
-      {/* Qualification Input */}
-      <Text style={styles.label}>Qualification:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Self-taught, Qualified, etc."
-        value={qualification}
-        onChangeText={setQualification}
-      />
-
       {/* Skills Input with Autocomplete */}
       <Text style={styles.label}>Skills (multi-select):</Text>
       <View style={styles.autocompleteContainer}>
         <Autocomplete
-          data={filteredSkills.length === 0 && query !== '' ? [{ skill: query }] : filteredSkills.map(skill => ({ skill }))} // Display query if no matches
+          data={filteredSkills.length === 0 && query !== '' ? [{ skill: query }] : filteredSkills.map(skill => ({ skill }))}
           defaultValue={query}
           onChangeText={text => setQuery(text)}
           placeholder="Type to search manual labor skills"
@@ -92,6 +73,34 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
           style={styles.autocomplete}
         />
       </View>
+
+      {/* Display selected skills */}
+      <View style={styles.selectedSkillsContainer}>
+        {skills.map((skill, index) => (
+          <TouchableOpacity key={index} onPress={() => handleSkillRemove(skill)}>
+            <Text style={styles.selectedSkill}>{skill} ✖️</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Experience Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Experience (in years)"
+        value={experience}
+        onChangeText={setExperience}
+        keyboardType="numeric"
+      />
+
+      {/* Qualification Dropdown */}
+      <Text style={styles.label}>Qualification:</Text>
+      <RNPickerSelect
+        onValueChange={(itemValue) => setQualification(itemValue)}
+        items={qualifications}
+        style={pickerSelectStyles}
+        placeholder={{ label: 'Select Qualification', value: null }}
+      />
+
     </View>
   );
 };
@@ -100,20 +109,29 @@ const SkillsAndExperience = ({ skills, setSkills, experience, setExperience, qua
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#fff', // Set background color for better visibility
+    borderRadius: 10, // Add rounded corners
+    shadowColor: '#000', // Add shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Shadow properties for iOS
+    shadowOpacity: 0.2, // Shadow opacity for iOS
+    shadowRadius: 4, // Shadow radius for iOS
+    elevation: 3, // Shadow for Android
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#007BFF',
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
+    marginTop: 15, // Add top margin to labels
   },
   input: {
     height: 50,
-    borderColor: '#ccc',
+    borderColor: '#007BFF',
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
@@ -121,6 +139,11 @@ const styles = StyleSheet.create({
   },
   autocomplete: {
     marginBottom: 15,
+    borderColor: '#007BFF',
+    borderWidth: 1,
+    borderRadius: 5,
+    zIndex: 10, // Set zIndex to ensure it is on top
+    elevation: 5, // Android shadow effect
   },
   selectedSkillsContainer: {
     flexDirection: 'row',
@@ -139,6 +162,30 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+  },
+});
+
+// Styles for RNPickerSelect
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 5,
+    color: 'black',
+    marginBottom: 15,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 5,
+    color: 'black',
+    marginBottom: 15,
   },
 });
 
