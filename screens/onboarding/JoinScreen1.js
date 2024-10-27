@@ -9,11 +9,21 @@ const logo = require('../../assets/images/logo.png');
 const JoinScreen1 = () => {
   return (
     <View style={styles.container}>
+      {/* Display the welcome message */}
+      <Text style={styles.welcomeText}>Welcome to</Text>
+      
       {/* Display the logo */}
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>Welcome to Commiploy!</Text>
+
+      {/* Display "Commiploy" with styling */}
+      <Text style={styles.brandText}>
+        <Text style={styles.comm}>Comm</Text>
+        <Text style={styles.ploy}>ploy</Text>
+      </Text>
+
+      {/* Display the description text */}
       <Text style={styles.description}>
-      Opportunities by communities for communities.
+        A platform created{'\n'}for communities,{'\n'}by communities
       </Text>
     </View>
   );
@@ -27,30 +37,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  logo: {
-    width: 150, // Adjust the size of the logo as needed
-    height: 150, // Adjust the size of the logo as needed
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 24,
+  welcomeText: {
+    fontSize: 43,
     fontWeight: 'bold',
-    marginBottom: 10,
     textAlign: 'center',
+    marginBottom: 10,
+  },
+  logo: {
+    width: 200, // Adjust the size of the logo as needed
+    height: 200, // Adjust the size of the logo as needed
+    marginBottom: 10,
+  },
+  brandText: {
+    fontSize: 43,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  comm: {
+    color: '#000', // Black color for "Comm"
+  },
+  ploy: {
+    color: '#7ed957',
   },
   description: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
-    color: '#666',
+    fontWeight: 'bold',
+    color: '#ff54b5', // Custom pink color
+    lineHeight: 24,
   },
 });
-
-
-
-
-
-
-
-
 
 export default JoinScreen1;

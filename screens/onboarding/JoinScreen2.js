@@ -1,41 +1,24 @@
-// JoinScreen2.js
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import Translate from '../../component/Translation/Translate'; // Import Translate component
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
-const { width: screenWidth } = Dimensions.get('window');
-const registeredBadge = require('../../assets/images/Registered.png');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const JoinScreen2 = () => {
-  const { t } = useTranslation(); // Use the translation hook
-
   return (
     <View style={styles.container}>
-      {/* Language Selection */}
-      <Translate /> {/* Include the Translate component for language selection */}
+      {/* Background shop shapes */}
+      <View style={[styles.shopShape, styles.yellowShop]} />
+      <View style={[styles.shopShape, styles.greenShop]} />
+      <View style={[styles.shopShape, styles.redShop]} />
+      <View style={[styles.shopShape, styles.orangeShop]} />
+      <View style={[styles.shopShape, styles.blueShop]} />
 
-      <Text style={styles.title}>
-        {t('description') || 'Welcome, Discover Local Opportunities!'}
-      </Text>
-      <Text style={styles.description}>
-        {t('mommy') || 'Find trustworthy sellers and job listings. Mommy daddy'}
-      </Text>
-
-      {/* Grid layout */}
-      <View style={styles.gridContainer}>
-        <View style={styles.gridItem}>
-          <Image source={registeredBadge} style={styles.badgeImage} />
-          <Text style={styles.featureText}>
-            {t('trustworthy') || 'Commiploy ensures quality and reliability.'}
-          </Text>
-        </View>
+      {/* Main text content */}
+      <Text style={styles.heading}>Not sure what local businesses have to offer?</Text>
+      <View style={styles.bottomTextContainer}>
+        <Text style={styles.subheading}>Browse, buy, and boost your community - all in one app</Text>
+        <Text style={styles.pinkText}>Quick, easy, and safe.</Text>
       </View>
-
-      {/* Additional Information */}
-      <Text style={styles.infoText}>
-        {t('infoText') || 'Some additional information goes here.'}
-      </Text>
     </View>
   );
 };
@@ -43,18 +26,85 @@ const JoinScreen2 = () => {
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    flex: 1,
-    justifyContent: 'center',
+    height: screenHeight,
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
+    paddingVertical: 40,
   },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
-  description: { fontSize: 16, textAlign: 'center', color: '#666', marginBottom: 20 },
-  gridContainer: { width: '100%', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 20 },
-  gridItem: { width: '100%', alignItems: 'center', marginBottom: 20 },
-  badgeImage: { width: 100, height: 100, marginBottom: 10 },
-  featureText: { fontSize: 16, textAlign: 'center', color: '#666', paddingHorizontal: 20 },
-  infoText: { fontSize: 16, textAlign: 'center', color: '#666', marginTop: 20 },
+  // Base style for shop shapes
+  shopShape: {
+    position: 'absolute',
+    opacity: 0.5,
+  },
+  // Unique styles for each "shop" shape
+  yellowShop: {
+    backgroundColor: '#f6bc1d',
+    width: 120,
+    height: 70,
+    borderRadius: 15,
+    transform: [{ rotate: '10deg' }],
+    top: 60,
+    left: 20,
+  },
+  greenShop: {
+    backgroundColor: '#5baf31',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    top: 250,
+    right: 30,
+  },
+  redShop: {
+    backgroundColor: '#df0050',
+    width: 150,
+    height: 80,
+    borderRadius: 30,
+    transform: [{ rotate: '-15deg' }],
+    bottom: 130,
+    left: 50,
+  },
+  orangeShop: {
+    backgroundColor: '#eb692d',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    bottom: 220,
+    right: 80,
+  },
+  blueShop: {
+    backgroundColor: '#029eb0',
+    width: 140,
+    height: 100,
+    borderRadius: 20,
+    transform: [{ rotate: '20deg' }],
+    top: 150,
+    left: 120,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'black',
+    marginTop: 20,
+  },
+  bottomTextContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  subheading: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: 'black',
+    marginVertical: 5,
+  },
+  pinkText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#ff54b5',
+    marginVertical: 5,
+  },
 });
 
 export default JoinScreen2;
