@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Image, TextI
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
 import { fetchCurrentUser } from '../component/UserOperations/fetchProfile';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icons
 
 const BusinessList = ({ navigation }) => {
   const [businesses, setBusinesses] = useState([]);
@@ -79,6 +80,7 @@ const BusinessList = ({ navigation }) => {
   };
 
   const renderBusinessItem = ({ item }) => (
+    
     <TouchableOpacity
       style={styles.businessCard}
       onPress={() => navigation.navigate('BusinessDetails', { businessId: item.id })}
@@ -107,6 +109,9 @@ const BusinessList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Icon name="arrow-back" size={24} color="#007bff" />
+      </TouchableOpacity>
       <LocationDisplay />
       <TextInput
         style={styles.searchInput}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Modal } from 'react-native';
 import supabase from '../../supabaseClient';
+import { Picker } from '@react-native-picker/picker'; // Import Picker
 
 const EditBusinessDetails = ({ route, navigation }) => {
   const { businessId, businessSlug } = route.params;
@@ -172,21 +173,34 @@ const EditBusinessDetails = ({ route, navigation }) => {
   const renderStylingDetails = () => (
     <>
       <Text style={styles.title}>Edit Styling</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Website Template (e.g., template1)"
-        value={editForm.template}
-        onChangeText={(text) => onChange('template', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Font Style (e.g., Arial)"
-        value={editForm.font}
-        onChangeText={(text) => onChange('font', text)}
-      />
+      
+      {/* Dropdown for selecting Website Template */}
+      <Text style={styles.label}>Website Template</Text>
+      <Picker
+        selectedValue={editForm.template}
+        style={styles.picker}
+        onValueChange={(itemValue) => onChange('template', itemValue)}
+      >
+        <Picker.Item label="Template 1" value="template1" />
+        <Picker.Item label="Template 2" value="template2" />
+        <Picker.Item label="Template 3" value="template3" />
+      </Picker>
+  
+      {/* Dropdown for selecting Font Style */}
+      <Text style={styles.label}>Font Style</Text>
+      <Picker
+        selectedValue={editForm.font}
+        style={styles.picker}
+        onValueChange={(itemValue) => onChange('font', itemValue)}
+      >
+        <Picker.Item label="Arial" value="Arial" />
+        <Picker.Item label="Times New Roman" value="Times New Roman" />
+        <Picker.Item label="Courier New" value="Courier New" />
+        <Picker.Item label="Verdana" value="Verdana" />
+        <Picker.Item label="Georgia" value="Georgia" />
+      </Picker>
     </>
   );
-
   // Open business website link
   const openWebsiteLink = () => {
     setIsModalVisible(true);
@@ -224,9 +238,6 @@ const EditBusinessDetails = ({ route, navigation }) => {
             <TouchableOpacity style={styles.saveButton} onPress={onSave}>
               <Text style={styles.saveButtonText}>Save Changes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.websiteButton} onPress={openWebsiteLink}>
-              <Text style={styles.buttonText}>Open Website</Text>
-            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -259,6 +270,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 12,
   },
   input: {
     borderWidth: 1,

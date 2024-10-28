@@ -27,6 +27,8 @@ import ApplyForHustler from '../screens/hustler/ApplyForHustler';
 import ApplyForBusiness from '../screens/business/ApplyForBusiness';
 import ListYourBusiness from '../screens/ListYourBusiness';
 import EditBusinessDetails from '../screens/business/EditBusinessDetails';
+import BusinessList from '../screens/BusinessList';
+import NotificationsScreen from '../screens/Notifications';
 
 const Stack = createStackNavigator();
 
@@ -94,9 +96,10 @@ const AppNavigator = () => {
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} options={{ headerShown: false }} /> 
-          <Stack.Screen name="ListYourBusiness" component={ListYourBusiness}  />
-          <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  options={{ headerShown: false }} />
-
+          <Stack.Screen name="ListYourBusiness" component={ListYourBusiness}  /> 
+          <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  options={{ headerShown: false }} /> 
+          <Stack.Screen name="BusinessList" component={BusinessList}  options={{ headerShown: false }} />
+          <Stack.Screen name="NotificationsScreen" component={NotificationsScreen}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

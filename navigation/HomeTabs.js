@@ -25,8 +25,6 @@ const HomeTabs = () => {
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isHustler, setIsHustler] = useState(false);
-  const [isDeveloper, setIsDeveloper] = useState(false);
-  const [isBusinessOwner, setIsBusinessOwner] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -122,9 +120,6 @@ const HomeTabs = () => {
         <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
       )}
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
-      {isBusinessOwner && (
-        <Tab.Screen name="BusinessList" component={BusinessList} options={{ tabBarLabel: 'Business' }} />
-      )}
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
 
 

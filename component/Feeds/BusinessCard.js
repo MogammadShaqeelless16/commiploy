@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const BusinessCards = () => {
+  const navigation = useNavigation(); // Initialize navigation
+
   // Define category details: name and color
   const categories = [
     { name: 'Inventory', color: '#FF6347' },
     { name: 'Reports', color: '#4682B4' },
-    { name: 'Business Profile', color: '#32CD32' },
+    { name: 'Business Profile', color: '#32CD32', navigateTo: 'BusinessList' }, // Add navigateTo property
   ];
 
   return (
@@ -15,6 +18,11 @@ const BusinessCards = () => {
         <TouchableOpacity
           key={index}
           style={[styles.card, { backgroundColor: category.color }]}
+          onPress={() => {
+            if (category.navigateTo) {
+              navigation.navigate(category.navigateTo); // Navigate to BusinessList if present
+            }
+          }}
         >
           <Text style={styles.cardText}>{category.name}</Text>
         </TouchableOpacity>
@@ -27,11 +35,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between', // Changed to 'space-between' to have even spacing
+    justifyContent: 'space-between',
     padding: 10,
   },
   card: {
-    width: '30%', // Set width to 30% for 3 columns
+    width: '30%',
     height: 120,
     marginVertical: 10,
     justifyContent: 'center',
