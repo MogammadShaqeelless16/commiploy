@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, StyleSheet, Dimensions, FlatList, View } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
 import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
 import ProfileAlert from '../component/Profile/ProfileAlert';
-import { AuthContext } from '../context/AuthContext';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
 import Loading from '../component/loadingComponent/loading';
@@ -25,83 +24,70 @@ import HustlerCard from '../component/Feeds/HustlersCard';
 const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
-  const { isLoggedIn } = useContext(AuthContext);
-  const [showProfileAlert, setShowProfileAlert] = useState(!isLoggedIn);
   const [products, setProducts] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [services, setServices] = useState([]);
   const [profile, setProfile] = useState({
     first_name: '',
     profile_picture_url: '',
   });
-  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState(null); // Use a single state for role
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     fetchUserProfile();
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (role === null) return; // Wait until the role is determined
+  const fetchData = async () => {
+    try {
+      const { data: productData, error: productError } = await supabase
+        .from('products')
+        .select('*');
+      if (productError) throw productError;
+      setProducts(productData);
 
-      try {
-        const { data: productData, error: productError } = await supabase
-          .from('products')
-          .select('*');
+      const { data: jobData, error: jobError } = await supabase
+        .from('jobs')
+        .select('*');
+      if (jobError) throw jobError;
+      setJobs(jobData);
 
-        if (productError) throw productError;
-        setProducts(productData);
-
-        const { data: jobData, error: jobError } = await supabase
-          .from('jobs')
-          .select('*');
-
-        if (jobError) throw jobError;
-        setJobs(jobData);
-
-        const { data: serviceData, error: serviceError } = await supabase
-          .from('services')
-          .select('*');
-
-        if (serviceError) throw serviceError;
-        setServices(serviceData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [role]); // Fetch data whenever the role changes
+      const { data: serviceData, error: serviceError } = await supabase
+        .from('services')
+        .select('*');
+      if (serviceError) throw serviceError;
+      setServices(serviceData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUserProfile = async () => {
-    setLoading(true); // Start loading before fetching profile
+    setLoading(true);
 
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
       console.log('No active session found, user not logged in');
-      setLoading(false); // End loading if there's no session
+      setLoading(false);
       return;
     }
-
-    console.log('User is logged in:', session.user.id);
 
     try {
       const userProfile = await fetchProfile(session.user.id);
       if (userProfile) {
-        console.log('User profile fetched:', userProfile);
         setProfile({
           first_name: userProfile.first_name,
           profile_picture_url: userProfile.profile_picture_url,
         });
-        setRole(userProfile.roles.role_name); // Set the role directly
+        setRole(userProfile.roles.role_name);
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
     } finally {
-      setLoading(false); // End loading once profile fetch is done
+      setLoading(false);
     }
   };
 
@@ -123,57 +109,51 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        {role === 'Business Owner' && (
+        {role === 'Business Owner' ? (
           <>
             <CrmDashboard />
             <BusinessCards />
             <BusinessAnalytics />
           </>
-        )}
-
-        {role === 'Hustler' && (
+        ) : role === 'Hustler' ? (
           <>
             <HustlerDashboard />
             <HustlerCard />
             <FlatList
-            data={products}
-            renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-            keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
-          />
+              data={products}
+              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+            />
+          </>
+        ) : (
+          <>
+            <FlatList
+              data={products}
+              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+            />
+            <CategoryCard navigation={navigation} />
+            <SectionHeader
+              title="Service Providers"
+              navigation={navigation}
+              navigateTo="Services"
+              iconName="wrench"
+            />
+            <FlatList
+              data={services.slice(0, 4)}
+              renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
+              keyExtractor={item => item.id.toString()}
+              numColumns={2}
+              contentContainerStyle={styles.verticalList}
+            />
           </>
         )}
-
-
-      {(role !== 'Business Owner' && role !== 'Developer' && role !== 'Hustler') && (
-        <>
-        <FlatListsetProfile
-            data={products}
-            renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-            keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
-          />
-          <CategoryCard navigation={navigation} />
-          <SectionHeader
-            title="Service Providers"
-            navigation={navigation}
-            navigateTo="Services"
-            iconName="wrench"
-          />
-          <FlatList
-            data={services.slice(0, 4)} // Limit to the first 4 services
-            renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
-            keyExtractor={item => item.id.toString()} // Ensure keyExtractor uses a string
-            numColumns={2}
-            contentContainerStyle={styles.verticalList}
-          />
-        </>
-      )}
-
       </ArtBackground>
     </ScrollView>
   );
@@ -199,11 +179,6 @@ const styles = StyleSheet.create({
   },
   verticalList: {
     paddingVertical: 10,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

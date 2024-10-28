@@ -134,9 +134,9 @@ const ProductsList = ({ route, navigation }) => {
           placeholder={{ label: 'Select Category', value: null }}
           items={[
             { label: 'All Categories', value: '' },
-            { label: 'Category 1', value: 'Category 1' },
-            { label: 'Category 2', value: 'Category 2' },
-            { label: 'Category 3', value: 'Category 3' },
+            { label: 'Electronics', value: 'Electronics' },
+            { label: 'Home Appliances', value: 'Home Appliances' },
+            { label: 'Health', value: 'Health' },
           ]}
           onValueChange={(value) => setSelectedCategory(value)}
           style={pickerSelectStyles}

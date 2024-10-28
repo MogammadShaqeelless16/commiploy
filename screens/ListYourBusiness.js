@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 const ListYourBusiness = ({ navigation }) => { // Receive navigation prop here
   const handleNavigateToApply = () => {
@@ -7,7 +7,7 @@ const ListYourBusiness = ({ navigation }) => { // Receive navigation prop here
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>List Your Business</Text>
       <Text style={styles.subtitle}>
         Want to have your business listed? Join our platform today!
@@ -19,15 +19,50 @@ const ListYourBusiness = ({ navigation }) => { // Receive navigation prop here
       <Text style={styles.bulletPoint}>• Business Description and Services Offered.</Text>
       <Text style={styles.bulletPoint}>• Contact Information.</Text>
 
-      <Text style={styles.sectionTitle}>Benefits of Listing Your Business:</Text>
-      <Text style={styles.bulletPoint}>• Increased visibility to potential customers.</Text>
-      <Text style={styles.bulletPoint}>• Access to a larger customer base.</Text>
-      <Text style={styles.bulletPoint}>• Opportunities for collaboration with other businesses.</Text>
+      <Text style={styles.sectionTitle}>Business Packages:</Text>
+      <View style={styles.tableContainer}>
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderText}>Feature</Text>
+          <Text style={styles.tableHeaderText}>Free</Text>
+          <Text style={styles.tableHeaderText}>Basic</Text>
+          <Text style={styles.tableHeaderText}>Pro</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Landing Page Builder</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>External Domain Support</Text>
+          <Text style={styles.tableCell}>❌</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>CRM</Text>
+          <Text style={styles.tableCell}>❌</Text>
+          <Text style={styles.tableCell}>Manual Leads Management</Text>
+          <Text style={styles.tableCell}>Advanced CRM</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Analytics</Text>
+          <Text style={styles.tableCell}>Basic</Text>
+          <Text style={styles.tableCell}>Enhanced</Text>
+          <Text style={styles.tableCell}>Advanced</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Support</Text>
+          <Text style={styles.tableCell}>Email</Text>
+          <Text style={styles.tableCell}>Email & Chat</Text>
+          <Text style={styles.tableCell}>Priority Support</Text>
+        </View>
+      </View>
 
       <TouchableOpacity style={styles.applyButton} onPress={handleNavigateToApply}>
         <Text style={styles.applyButtonText}>List My Business</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -71,6 +106,38 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  tableContainer: {
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 5,
+    overflow: 'hidden',
+    marginTop: 20,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+  },
+  tableHeaderText: {
+    flex: 1,
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+  },
+  tableCell: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
   },
 });
 

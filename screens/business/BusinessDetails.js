@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, Linking, TouchableOpacity, Image } from 'react-native';
 import supabase from '../../supabaseClient';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icons
+import { fetchCurrentUser } from '../../component/UserOperations/fetchProfile';
 
 const BusinessDetails = ({ route, navigation }) => {
   const { businessId } = route.params;
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false); // New state for checking ownership
 
   const fetchBusinessDetails = async () => {
     setLoading(true);
@@ -22,8 +24,37 @@ const BusinessDetails = ({ route, navigation }) => {
       }
 
       setBusiness(data);
+      console.log("Business details:", data); // Log the fetched business details
+
+      // Fetch the user's business IDs to check ownership
+      const user = await fetchCurrentUser();
+
+      // Check if user is fetched successfully
+      if (!user) {
+        Alert.alert('Error', 'Unable to fetch user data.');
+        setLoading(false);
+        return;
+      }
+
+      const { data: userBusinessesData, error: businessesError } = await supabase
+        .from('users_businesses')
+        .select('business_id')
+        .eq('user_id', user.id);
+
+      if (businessesError) {
+        throw new Error('Error fetching user businesses');
+      }
+
+      console.log("User's businesses:", userBusinessesData); // Log the user's businesses
+
+      // Check if the business ID exists in the user's businesses
+      const isUserOwner = userBusinessesData.some((item) => item.business_id === businessId);
+      setIsOwner(isUserOwner);
+      console.log("Is user owner:", isUserOwner); // Log ownership status
+      
     } catch (error) {
       Alert.alert('Error', error.message);
+      console.error("Error fetching business details or user businesses:", error); // Log errors
     } finally {
       setLoading(false);
     }
@@ -57,6 +88,15 @@ const BusinessDetails = ({ route, navigation }) => {
       )}
       <Text style={styles.businessName}>{business.name}</Text>
 
+      {isOwner && (
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate('EditBusinessDetails', { businessId })}
+        >
+          <Text style={styles.editButtonText}>Edit Business</Text>
+        </TouchableOpacity>
+      )}
+
       <View style={styles.detailsContainer}>
         <View style={styles.detailRow}>
           <Icon name="email" size={20} color="#555" />
@@ -89,7 +129,7 @@ const BusinessDetails = ({ route, navigation }) => {
           </TouchableOpacity>
         )}
         {business.twitter && (
-          <TouchableOpacity onPress={() => Linking.openURL(business.linkedin)}>
+          <TouchableOpacity onPress={() => Linking.openURL(business.twitter)}>
             <Text style={styles.socialLink}>Twitter</Text>
           </TouchableOpacity>
         )}
@@ -132,6 +172,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#333',
+  },
+  editButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   detailsContainer: {
     marginBottom: 20,

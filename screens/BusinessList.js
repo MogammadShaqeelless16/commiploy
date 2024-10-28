@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Image, TextInput } from 'react-native';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
+import { fetchCurrentUser } from '../component/UserOperations/fetchProfile';
 
 const BusinessList = ({ navigation }) => {
   const [businesses, setBusinesses] = useState([]);
@@ -13,17 +14,47 @@ const BusinessList = ({ navigation }) => {
     const fetchBusinesses = async () => {
       setLoading(true);
       try {
-        const { data, error } = await supabase
-          .from('businesses')
-          .select('id, name, slogan, header_image')
-          .order('name', { ascending: true });
+        // Fetch the current user to get their ID
+        const user = await fetchCurrentUser();
 
-        if (error) {
-          throw new Error(error.message);
+        // Check if user is fetched successfully
+        if (!user) {
+          Alert.alert('Error', 'Unable to fetch user data.');
+          setLoading(false);
+          return;
         }
 
-        setBusinesses(data);
-        setFilteredBusinesses(data); // Initialize filtered businesses
+        // Fetch the user's business IDs from the users_businesses table
+        const { data: userBusinessesData, error: businessesError } = await supabase
+          .from('users_businesses')
+          .select('business_id')
+          .eq('user_id', user.id); // Use the user's ID
+
+        if (businessesError) {
+          throw new Error(businessesError.message);
+        }
+
+        // Extract business IDs
+        const businessIds = userBusinessesData.map(item => item.business_id);
+
+        // Fetch businesses using the retrieved IDs
+        if (businessIds.length > 0) {
+          const { data, error } = await supabase
+            .from('businesses')
+            .select('id, name, slogan, header_image')
+            .in('id', businessIds)
+            .order('name', { ascending: true });
+
+          if (error) {
+            throw new Error(error.message);
+          }
+
+          setBusinesses(data);
+          setFilteredBusinesses(data); // Initialize filtered businesses
+        } else {
+          setBusinesses([]); // No businesses found
+          setFilteredBusinesses([]);
+        }
       } catch (fetchError) {
         console.error('Error fetching businesses:', fetchError.message);
         Alert.alert('Error', fetchError.message);
@@ -115,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     margin: 8,
-    flex: 1, // Ensure cards fill the space
+    flex: 1,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -127,7 +158,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    height: 100, // Adjusted height for better display
+    height: 100,
     borderRadius: 8,
     marginBottom: 8,
   },
@@ -135,12 +166,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  businessDescription: {
+  slogan: {
     fontSize: 12,
     color: '#555',
   },
   row: {
-    justifyContent: 'space-between', // Adjust space between columns
+    justifyContent: 'space-between',
   },
   listContent: {
     paddingBottom: 20,

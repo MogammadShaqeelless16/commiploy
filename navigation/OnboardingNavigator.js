@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import JoinScreen1 from '../screens/onboarding/JoinScreen1';
 import JoinScreen2 from '../screens/onboarding/JoinScreen2';
 import JoinScreen3 from '../screens/onboarding/JoinScreen3';
+import JoinScreen4 from '../screens/onboarding/JoinScreen4';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -58,11 +59,12 @@ const OnboardingScreen = ({ onComplete }) => {
         <JoinScreen1 />
         <JoinScreen2 />
         <JoinScreen3 />
+        <JoinScreen4 />
       </ScrollView>
       <View style={styles.bottomContainer}>
         <View style={styles.paginationContainer}>
           <View style={styles.paginationDots}>
-            {[0, 1, 2].map((_, index) => (
+            {[0, 1, 2, 3].map((_, index) => (
               <View
                 key={index}
                 style={[
@@ -77,7 +79,7 @@ const OnboardingScreen = ({ onComplete }) => {
           style={styles.nextButton}
           onPress={handleNext}
         >
-          <Text style={styles.nextButtonText}>{currentIndex < 2 ? 'Next' : 'Get Started'}</Text>
+          <Text style={styles.nextButtonText}>{currentIndex < 3 ? 'Next' : 'Get Started'}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
