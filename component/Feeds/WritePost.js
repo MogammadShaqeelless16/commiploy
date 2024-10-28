@@ -1,24 +1,43 @@
-import React, { useState } from 'react';
+// WritePost.js
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // For icons, like a "pencil" icon for the input
+import Icon from 'react-native-vector-icons/FontAwesome'; // For icons
+import { useNavigation } from '@react-navigation/native'; // Hook for navigation
 
-const WritePost = ({ onPost }) => {
+const WritePost = () => {
+  const navigation = useNavigation(); // Get the navigation prop using the hook
   const [postText, setPostText] = useState('');
 
+  // List of random placeholders
+  const placeholders = [
+    "Post a gig",
+    "Need a handyman",
+    "Someone to clean your car",
+    "Garden cleaning",
+    "Someone to walk your dog",
+  ];
+
+  // Randomly select a placeholder when the component mounts
+  const [placeholder, setPlaceholder] = useState('');
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * placeholders.length);
+    setPlaceholder(placeholders[randomIndex]);
+  }, []);
+
   const handlePost = () => {
-    if (postText.trim()) {
-      onPost(postText); // Callback function to handle the post submission
-      setPostText(''); // Clear the input field after posting
-    }
+    // Navigate to the Post a Gig page, passing the postText
+    navigation.navigate('PostJob', { postText });
+    setPostText(''); // Clear the input field after navigation (optional)
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.postcontainer}>
       <View style={styles.inputContainer}>
         <Icon name="pencil" size={20} color="#666" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Find a Hustler? / Post a Gig?"
+          placeholder={placeholder} // Use the random placeholder
           placeholderTextColor="#aaa"
           value={postText}
           onChangeText={setPostText}
@@ -33,10 +52,10 @@ const WritePost = ({ onPost }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  postcontainer: {
+    padding: '16',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
     backgroundColor: '#fff',
     borderRadius: 12,
     shadowColor: '#000',

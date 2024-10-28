@@ -33,6 +33,8 @@ import NotificationsScreen from '../screens/Notifications';
 import CheckoutScreen from '../screens/cart/CheckoutScreen';
 import JobList from '../screens/JobList';
 import Wallet from '../component/Profile/Wallet';
+import PostGig from '../component/Feeds/PostGig';
+import PostJob from '../component/Job/PostJob';
 
 const Stack = createStackNavigator();
 
@@ -108,6 +110,8 @@ const AppNavigator = () => {
           <Stack.Screen name="CheckoutScreen" component={CheckoutScreen}  options={{ headerShown: false }} />
           <Stack.Screen name="JobList" component={JobList}  options={{ headerShown: false }} />
           <Stack.Screen name="Wallet" component={Wallet}  options={{ headerShown: false }} />
+          <Stack.Screen name="PostGig" component={PostGig}  options={{ headerShown: false }} />
+          <Stack.Screen name="PostJob" component={PostJob}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>
