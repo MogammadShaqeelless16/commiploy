@@ -73,7 +73,7 @@ const CheckoutScreen = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Thank You for Trying Our App!</Text>
             <Text style={styles.modalMessage}>
-              We can't process orders at this time as we are pending approval for our payment system.
+              We can't process orders at this time as this is a demo System.
             </Text>
             <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
               <Text style={styles.modalButtonText}>Close</Text>
