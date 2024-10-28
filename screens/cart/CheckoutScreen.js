@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native'; 
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import supabase from '../../supabaseClient';
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // Get the route object
-  const { totalAmount = 0 } = route.params || {}; // Destructure totalAmount with a default value
+  const route = useRoute();
+  const { totalAmount = 0 } = route.params || {};
   const [cartItems, setCartItems] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const profile = await fetchProfile(); // Fetch user profile
+        const profile = await fetchProfile(); 
 
         const { data: cartData, error } = await supabase
           .from('cart')
-          .select('cart_id, product_id, quantity') // Adjust fields as necessary
-          .eq('user_uuid', profile.id); // Assuming user_uuid matches profile.id
+          .select('cart_id, product_id, quantity')
+          .eq('user_uuid', profile.id);
 
         if (error) {
           console.error('Error fetching cart items:', error.message);
           return;
         }
-
-        // Assuming cartData contains products with their prices
         setCartItems(cartData);
       } catch (fetchError) {
         console.error('Error fetching cart:', fetchError.message);
@@ -35,35 +34,12 @@ const CheckoutScreen = () => {
     fetchCartItems();
   }, []);
 
-  const handlePayment = async () => {
-    // PayFast configuration
-    const payfastUrl = 'https://sandbox.payfast.co.za/eng/process'; // Use the sandbox URL for testing
-    const merchantId = 'YOUR_MERCHANT_ID'; // Your PayFast merchant ID
-    const merchantKey = 'YOUR_MERCHANT_KEY'; // Your PayFast merchant key
-    const returnUrl = 'https://yourwebsite.com/success'; // URL after payment success
-    const cancelUrl = 'https://yourwebsite.com/cancel'; // URL if payment is cancelled
-    const ipnUrl = 'https://yourwebsite.com/ipn'; // Your Instant Payment Notification URL
+  const handlePayment = () => {
+    setModalVisible(true); // Show modal with the demo message
+  };
 
-    // Prepare payment data
-    const paymentData = {
-      merchant_id: merchantId,
-      merchant_key: merchantKey,
-      amount: totalAmount.toFixed(2), // Use the passed totalAmount
-      item_name: 'Order from Cart',
-      return_url: returnUrl,
-      cancel_url: cancelUrl,
-      ipn_url: ipnUrl,
-      email: 'customer@example.com', // Customer email
-      // Add more data as necessary
-    };
-
-    // Convert data to query string
-    const queryString = Object.keys(paymentData)
-      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(paymentData[key]))
-      .join('&');
-
-    // Navigate to PayFast for payment processing
-    navigation.navigate('WebViewScreen', { url: `${payfastUrl}?${queryString}` });
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -81,9 +57,30 @@ const CheckoutScreen = () => {
       <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
         <Text style={styles.payButtonText}>Pay with PayFast</Text>
       </TouchableOpacity>
+
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Back to Cart</Text>
       </TouchableOpacity>
+
+      {/* Modal for Demo Message */}
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="fade"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Thank You for Trying Our App!</Text>
+            <Text style={styles.modalMessage}>
+              We can't process orders at this time as we are pending approval for our payment system.
+            </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -120,7 +117,7 @@ const styles = StyleSheet.create({
   },
   paymentIcon: {
     width: 350,
-    height:  300,
+    height: 300,
     resizeMode: 'contain',
   },
   payButton: {
@@ -141,6 +138,40 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     color: '#007bff',
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
   },
 });

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'react-native';
+import HTMLView from 'react-native-htmlview'; // Import HTMLView for basic HTML rendering
 import QuillEditor from '../QuillEditor'; // Ensure QuillEditor is properly implemented
 
 const ArticleModal = ({ 
@@ -13,44 +14,48 @@ const ArticleModal = ({
   onSave, 
   onDelete, 
   userRole 
-}) => (
-  <Modal visible={visible} animationType="slide">
-    <View style={styles.modalContainer}>
-      {userRole === 'Administrator' || userRole === 'Developer' ? (
-        <>
-          <TextInput
-            style={styles.titleInput}
-            placeholder="Title"
-            value={newArticleTitle}
-            onChangeText={setNewArticleTitle}
-          />
-          <QuillEditor content={editorContent} onChange={setEditorContent} />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-              <Text style={styles.saveButtonText}>{article ? 'Save Changes' : 'Add Article'}</Text>
-            </TouchableOpacity>
-            {article && (
-              <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-                <Text style={styles.deleteButtonText}>Delete</Text>
+}) => {
+  const sanitizedContent = article ? article.content.replace(/<script[^>]*>.*?<\/script>/gi, '') : '';
+
+  return (
+    <Modal visible={visible} animationType="slide">
+      <View style={styles.modalContainer}>
+        {userRole === 'Administrator' || userRole === 'Developer' ? (
+          <>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="Title"
+              value={newArticleTitle}
+              onChangeText={setNewArticleTitle}
+            />
+            <QuillEditor content={editorContent} onChange={setEditorContent} />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.saveButton} onPress={onSave}>
+                <Text style={styles.saveButtonText}>{article ? 'Save Changes' : 'Add Article'}</Text>
               </TouchableOpacity>
-            )}
-            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              {article && (
+                <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+                  <Text style={styles.deleteButtonText}>Delete</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <ScrollView>
+            <Text style={styles.titleText}>{article?.title}</Text>
+            <HTMLView value={sanitizedContent} stylesheet={htmlStyles} />
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <>
-          <Text style={styles.titleText}>{article?.title}</Text>
-          <Text style={styles.titleText}>{article?.content}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </View>
-  </Modal>
-);
+          </ScrollView>
+        )}
+      </View>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -71,14 +76,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  editor: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-  },
   buttonContainer: {
-    flexDirection:'row',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
   },
@@ -125,5 +124,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ArticleModal;
+// Define custom styles for the HTMLView
+const htmlStyles = StyleSheet.create({
+  p: { fontSize: 16, lineHeight: 24 },
+  h1: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  h2: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
+  a: { color: '#007bff', textDecorationLine: 'underline' },
+});
 
+export default ArticleModal;
