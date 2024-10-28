@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, TouchableOp
 import supabase from '../supabaseClient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LocationDisplay from '../component/LocationDisplay';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const JobList = ({ navigation }) => {
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
@@ -61,6 +61,9 @@ const JobList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#007bff" />
+        </TouchableOpacity>
       <LocationDisplay />
       <View style={styles.jobsSection}>
         <Text style={styles.jobsTitle}>Available Jobs</Text>
