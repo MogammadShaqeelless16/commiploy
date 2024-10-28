@@ -117,7 +117,7 @@ const DrawerNavigator = ({ navigation }) => {
               onPress={() => props.navigation.navigate('ChatListScreen')}
             />
           )}
-          {isLoggedIn && (
+          {role !== 'Hustler' && (
             <CustomDrawerItem
               label="My Applications"
               icon={<Ionicons name="apps" size={20} color="#007BFF" />}
