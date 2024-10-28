@@ -138,11 +138,13 @@ const DrawerNavigator = ({ navigation }) => {
             onPress={() => props.navigation.navigate('BecomeAHustler')}
           />
           )}
+          {role !== 'Business Owner' && ( 
           <CustomDrawerItem
             label="List Your Business"
             icon={<Ionicons name="business" size={20} color="#007BFF" />}
             onPress={() => props.navigation.navigate('ListYourBusiness')}
           />
+        )}
         </View>
 
         <View style={styles.bottomDrawerSection}>

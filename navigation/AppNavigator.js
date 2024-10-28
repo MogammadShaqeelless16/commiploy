@@ -13,6 +13,7 @@ import EditApplication from '../screens/EditApplication';
 import ForgotPassword from '../screens/ForgotPassword';
 import LessonsDetails from '../screens/mycreche/LessonsDetails'
 import FeedDetails from '../screens/ProductItem';
+import CartScreen from '../screens/cart/CartScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
 import UserProfileScreen from '../screens/chat/UserProfileScreen';
 import DeveloperScreen from '../screens/developer/DeveloperScreen';
@@ -100,6 +101,7 @@ const AppNavigator = () => {
           <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  options={{ headerShown: false }} /> 
           <Stack.Screen name="BusinessList" component={BusinessList}  options={{ headerShown: false }} />
           <Stack.Screen name="NotificationsScreen" component={NotificationsScreen}  options={{ headerShown: false }} />
+          <Stack.Screen name="CartScreen" component={CartScreen}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>
