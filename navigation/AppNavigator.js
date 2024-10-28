@@ -95,7 +95,7 @@ const AppNavigator = () => {
           <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} options={{ headerShown: false }} /> 
           <Stack.Screen name="ListYourBusiness" component={ListYourBusiness}  />
-          <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  />
+          <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  options={{ headerShown: false }} />
 
         </>
       )}

@@ -42,7 +42,7 @@ const ArticleModal = ({
       ) : (
         <>
           <Text style={styles.titleText}>{article?.title}</Text>
-          <QuillEditor content={editorContent} onChange={() => {}} />
+          <Text style={styles.titleText}>{article?.content}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Modal } from 'react-native';
 import supabase from '../../supabaseClient';
 
 const EditBusinessDetails = ({ route, navigation }) => {
-  const { businessId } = route.params;
-  
-  // Form state for editing business details
+  const { businessId, businessSlug } = route.params;
+
   const [editForm, setEditForm] = useState({
     name: '',
     description: '',
@@ -20,14 +19,14 @@ const EditBusinessDetails = ({ route, navigation }) => {
     longitude: '',
     latitude: '',
     slogan: '',
-    template: 'template1',
-    font: 'Arial',
+    template: 'template1',  // Added default template
+    font: 'Arial',          // Added default font style
   });
 
   const [loading, setLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1); // Track the current step
+  const [isModalVisible, setIsModalVisible] = useState(false); // Control modal visibility
 
-  // Fetch business details to populate form
   const fetchBusinessDetails = async () => {
     setLoading(true);
     try {
@@ -169,29 +168,83 @@ const EditBusinessDetails = ({ route, navigation }) => {
     </>
   );
 
+  // Render Styling Step
+  const renderStylingDetails = () => (
+    <>
+      <Text style={styles.title}>Edit Styling</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Website Template (e.g., template1)"
+        value={editForm.template}
+        onChangeText={(text) => onChange('template', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Font Style (e.g., Arial)"
+        value={editForm.font}
+        onChangeText={(text) => onChange('font', text)}
+      />
+    </>
+  );
+
+  // Open business website link
+  const openWebsiteLink = () => {
+    setIsModalVisible(true);
+    window.open(`https://commibuy.netlify.app/business/${businessSlug}`, '_blank');
+  };
+
   return (
     <View style={styles.container}>
+      <View style={styles.progressBar}>
+        <View style={[styles.progress, { width: `${(currentStep / 4) * 100}%` }]} />
+      </View>
       {currentStep === 1 && renderBasicDetails()}
       {currentStep === 2 && renderContactDetails()}
       {currentStep === 3 && renderLocationDetails()}
+      {currentStep === 4 && renderStylingDetails()} {/* Render styling details */}
 
       <View style={styles.buttonContainer}>
+        {currentStep === 1 && (
+          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        )}
         {currentStep > 1 && (
           <TouchableOpacity style={styles.backButton} onPress={() => setCurrentStep(currentStep - 1)}>
             <Text style={styles.buttonText}>Back</Text>
           </TouchableOpacity>
         )}
-        {currentStep < 3 && (
+        {currentStep < 4 && ( // Update condition for next button
           <TouchableOpacity style={styles.nextButton} onPress={() => setCurrentStep(currentStep + 1)}>
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         )}
-        {currentStep === 3 && (
-          <TouchableOpacity style={styles.saveButton} onPress={onSave}>
-            <Text style={styles.saveButtonText}>Save Changes</Text>
-          </TouchableOpacity>
+        {currentStep === 4 && ( // Show save and open website buttons at the last step
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.saveButton} onPress={onSave}>
+              <Text style={styles.saveButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.websiteButton} onPress={openWebsiteLink}>
+              <Text style={styles.buttonText}>Open Website</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
+
+      {/* Overlay for modal */}
+      <Modal
+        transparent={true}
+        visible={isModalVisible}
+        animationType="slide"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.overlayText}>Opening website...</Text>
+          <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -214,10 +267,29 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 12,
   },
+  progressBar: {
+    height: 10,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  progress: {
+    height: '100%',
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+  },
+  cancelButton: {
+    backgroundColor: '#ff6666',
+    padding: 12,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 5,
+    alignItems: 'center',
   },
   backButton: {
     backgroundColor: '#ddd',
@@ -241,6 +313,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
     alignItems: 'center',
+    marginRight: 5,
+  },
+  websiteButton: {
+    backgroundColor: '#007bff',
+    padding: 12,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
@@ -251,6 +331,22 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  overlayText: {
+    fontSize: 18,
+    color: '#fff',
+    marginBottom: 20,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    textDecorationLine: 'underline',
   },
 });
 

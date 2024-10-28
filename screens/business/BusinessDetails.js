@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icons
 import { fetchCurrentUser } from '../../component/UserOperations/fetchProfile';
 
 const BusinessDetails = ({ route, navigation }) => {
-  const { businessId } = route.params;
+  const { businessId, businessSlug } = route.params;
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false); // New state for checking ownership
@@ -134,6 +134,14 @@ const BusinessDetails = ({ route, navigation }) => {
           </TouchableOpacity>
         )}
       </View>
+
+      {/* Button to open the business website */}
+      <TouchableOpacity
+        style={styles.websiteButton}
+        onPress={() => Linking.openURL(`https://commibuy.netlify.app/business/${business.slug}`)}
+      >
+        <Text style={styles.websiteButtonText}>Visit Website</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -216,6 +224,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#007bff',
     marginVertical: 4,
+  },
+  websiteButton: {
+    backgroundColor: '#28a745',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  websiteButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
