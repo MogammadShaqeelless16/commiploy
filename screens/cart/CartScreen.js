@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import supabase from '../../supabaseClient';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
+import ArtBackground from '../../component/BackgroundSprites/ArtBackground';
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -112,7 +113,10 @@ const CartScreen = () => {
   };
 
   const renderCartItem = ({ item }) => (
-    <View style={styles.cartItem}>
+    <TouchableOpacity 
+      style={styles.cartItem} 
+      onPress={() => navigation.navigate('ProductDetails', { productId: item.product_id })} // Navigate to product details
+    >
       <Text style={styles.productName}>{item.title}</Text>
       <View style={styles.quantityContainer}>
         <TouchableOpacity onPress={() => handleUpdateQuantity(item, false)} style={styles.quantityButton}>
@@ -123,11 +127,11 @@ const CartScreen = () => {
           <Text style={styles.quantityButtonText}>+</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.productPrice}>R{item.price.toFixed(2)} x {item.quantity}</Text>
+      <Text style={styles.productPrice}>R{item.price.toFixed(2)}</Text>
       <TouchableOpacity onPress={() => handleRemoveItem(item.cart_id)} style={styles.removeButton}>
-        <Text style={styles.removeButtonText}>Remove</Text>
+        <Ionicons name="trash" size={24} color="#dc3545" /> {/* Trash icon */}
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   const handleBackPress = () => {
@@ -141,23 +145,25 @@ const CartScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-        <Ionicons name="arrow-back" size={24} color="#007bff" />
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
-      
-      <Text style={styles.title}>Your Cart</Text>
-      <FlatList
-        data={cartItems}
-        renderItem={renderCartItem}
-        keyExtractor={(item) => item.cart_id.toString()} // Changed to cart_id for keyExtractor
-      />
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total: R{totalAmount.toFixed(2)}</Text>
-        <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckoutPress}>
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
+      <ArtBackground>
+        <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+          <Ionicons name="arrow-back" size={24} color="#007bff" />
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
-      </View>
+
+        <Text style={styles.title}>Your Cart</Text>
+        <FlatList
+          data={cartItems}
+          renderItem={renderCartItem}
+          keyExtractor={(item) => item.cart_id.toString()} // Changed to cart_id for keyExtractor
+        />
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalText}>Total: R{totalAmount.toFixed(2)}</Text>
+          <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckoutPress}>
+            <Text style={styles.checkoutButtonText}>Checkout</Text>
+          </TouchableOpacity>
+        </View>
+      </ArtBackground>
     </View>
   );
 };
@@ -208,14 +214,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   removeButton: {
-    backgroundColor: '#dc3545',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-  removeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    padding: 5,
   },
   totalContainer: {
     flexDirection: 'row', // Align items in a row

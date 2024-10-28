@@ -30,6 +30,7 @@ import ListYourBusiness from '../screens/ListYourBusiness';
 import EditBusinessDetails from '../screens/business/EditBusinessDetails';
 import BusinessList from '../screens/BusinessList';
 import NotificationsScreen from '../screens/Notifications';
+import CheckoutScreen from '../screens/cart/CheckoutScreen';
 
 const Stack = createStackNavigator();
 
@@ -102,6 +103,7 @@ const AppNavigator = () => {
           <Stack.Screen name="BusinessList" component={BusinessList}  options={{ headerShown: false }} />
           <Stack.Screen name="NotificationsScreen" component={NotificationsScreen}  options={{ headerShown: false }} />
           <Stack.Screen name="CartScreen" component={CartScreen}  options={{ headerShown: false }} />
+          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>
