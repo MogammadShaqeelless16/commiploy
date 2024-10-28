@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Alert, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import {
+  ScrollView,
+  Alert,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { useProfile } from '../component/Profile/useProfile';
 import ProfilePicture from '../component/Profile/ProfilePicture';
 import ProfileForm from '../component/Profile/ProfileForm';
@@ -33,10 +40,20 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        throw new Error(error.message);
+      // Retrieve the current session to ensure it's valid before logout
+      const session = await supabase.auth.getSession();
+
+      if (!session) {
+        // If no session is found, notify the user to log in again
+        Alert.alert('Session Expired', 'Please log in again.');
+        navigation.navigate('Login');
+        return;
       }
+
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      // Clear AsyncStorage upon successful sign out
       await AsyncStorage.clear();
       navigation.reset({
         index: 0,
@@ -45,6 +62,7 @@ const Profile = () => {
       Alert.alert('Logged out', 'You have been successfully logged out.');
     } catch (err) {
       Alert.alert('Error', `Logout failed: ${err.message}`);
+      console.error('Logout Error:', err);
     }
   };
 
@@ -59,13 +77,20 @@ const Profile = () => {
       <ArtBackground>
         <View style={styles.notLoggedInContainer}>
           <Text style={styles.notLoggedInText}>
-            Oh no! We see you are not logged in. Please register or login to start purchasing and getting services.
+            Oh no! We see you are not logged in. Please register or login to
+            start purchasing and getting services.
           </Text>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Login')}
+          >
             <Icon name="login" size={20} color="#fff" />
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUp')}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('SignUp')}
+          >
             <Icon name="person-add" size={20} color="#fff" />
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
@@ -76,9 +101,18 @@ const Profile = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <ProfilePicture profile={localProfile} onEdit={() => { /* Handle profile picture edit */ }} />
+      <ProfilePicture
+        profile={localProfile}
+        onEdit={() => {
+          /* Handle profile picture edit */
+        }}
+      />
       <ProfileForm profile={localProfile} onChange={handleProfileChange} />
-      <ProfileActions loading={loading} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} />
+      <ProfileActions
+        loading={loading}
+        onUpdateProfile={handleUpdateProfile}
+        onLogout={handleLogout}
+      />
     </ScrollView>
   );
 };

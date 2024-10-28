@@ -15,6 +15,7 @@ import DeveloperScreen from '../screens/developer/DeveloperScreen';
 import BecomeAHustler from '../screens/BecomeAHustler';
 import ListYourBusiness from '../screens/ListYourBusiness';
 import YourApplications from '../screens/YourApplications';
+import Switch from '../screens/settings/Switch';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,7 +25,7 @@ const DrawerNavigator = ({ navigation }) => {
     profile_picture_url: '',
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null); // Use a single state for role
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     fetchUserProfile();
@@ -48,7 +49,7 @@ const DrawerNavigator = ({ navigation }) => {
           first_name: userProfile.first_name,
           profile_picture_url: userProfile.profile_picture_url,
         });
-        setRole(userProfile.roles.role_name); // Set the role directly
+        setRole(userProfile.roles.role_name); 
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -61,7 +62,6 @@ const DrawerNavigator = ({ navigation }) => {
   };
 
   const handleSignUp = () => {
-    console.log('Sign Up button pressed');
     navigation.navigate('SignUp');
   };
 
@@ -103,14 +103,7 @@ const DrawerNavigator = ({ navigation }) => {
             onPress={() => props.navigation.navigate('Home')}
           />
 
-          {/*{isLoggedIn && (
-            <CustomDrawerItem
-              label="Settings"
-              icon={<Ionicons name="settings" size={20} color="#007BFF" />}
-              onPress={() => props.navigation.navigate('Settings')}
-            />
-          )} */}
-          {role === 'Business Owner' && ( 
+          {role === 'Business Owner' && (
             <CustomDrawerItem
               label="My Business"
               icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
@@ -124,27 +117,32 @@ const DrawerNavigator = ({ navigation }) => {
               onPress={() => props.navigation.navigate('YourApplications')}
             />
           )}
-          {role === 'Developer' && ( 
+          {role === 'Developer' && (
             <CustomDrawerItem
               label="Developer"
               icon={<Ionicons name="code" size={20} color="#007BFF" />}
               onPress={() => props.navigation.navigate('DeveloperScreen')}
             />
           )}
-          {role !== 'Hustler' && ( 
-          <CustomDrawerItem
-            label="Become a Hustler"
-            icon={<Ionicons name="hammer" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('BecomeAHustler')}
-          />
+          {role !== 'Hustler' && (
+            <CustomDrawerItem
+              label="Become a Hustler"
+              icon={<Ionicons name="hammer" size={20} color="#007BFF" />}
+              onPress={() => props.navigation.navigate('BecomeAHustler')}
+            />
           )}
-          {role !== 'Business Owner' && ( 
+          {role !== 'Business Owner' && (
+            <CustomDrawerItem
+              label="List Your Business"
+              icon={<Ionicons name="business" size={20} color="#007BFF" />}
+              onPress={() => props.navigation.navigate('ListYourBusiness')}
+            />
+          )}
           <CustomDrawerItem
-            label="List Your Business"
-            icon={<Ionicons name="business" size={20} color="#007BFF" />}
-            onPress={() => props.navigation.navigate('ListYourBusiness')}
+            label="Switch Role"
+            icon={<Ionicons name="swap-horizontal" size={20} color="#007BFF" />}
+            onPress={() => props.navigation.navigate('Switch')}
           />
-        )}
         </View>
 
         <View style={styles.bottomDrawerSection}>
@@ -173,17 +171,17 @@ const DrawerNavigator = ({ navigation }) => {
         },
       }}
     >
-      <Drawer.Screen name="Home" component={HomeTabs} options={{ headerShown: false }}/>
+      <Drawer.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
       <Drawer.Screen name="Profile" component={Profile} />
       {isLoggedIn && <Drawer.Screen name="Settings" component={Settings} />}
-
-      {role !== 'Hustler' && (<Drawer.Screen name="BecomeAHustler" component={BecomeAHustler} />)}
-      {role !== 'Business Owner' && ( <Drawer.Screen name="ListYourBusiness" component={ListYourBusiness} />)}
+      <Drawer.Screen name="Switch" component={Switch} />
+      {role !== 'Hustler' && <Drawer.Screen name="BecomeAHustler" component={BecomeAHustler} />}
+      {role !== 'Business Owner' && <Drawer.Screen name="ListYourBusiness" component={ListYourBusiness} />}
       <Drawer.Screen name="News" component={News} />
       <Drawer.Screen name="Help" component={Help} />
       <Drawer.Screen name="Support" component={Support} />
       {isLoggedIn && <Drawer.Screen name="YourApplications" component={YourApplications} />}
-      {role === 'Developer' && ( <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />)}
+      {role === 'Developer' && <Drawer.Screen name="DeveloperScreen" component={DeveloperScreen} />}
     </Drawer.Navigator>
   );
 };
