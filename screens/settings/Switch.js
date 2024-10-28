@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Picker, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import supabase from '../../supabaseClient';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -9,12 +8,20 @@ const Switch = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
-  const navigation = useNavigation(); // Initialize navigation
+  const [roleUpdated, setRoleUpdated] = useState(false); // Track if role was updated
 
   useEffect(() => {
     fetchCurrentUser();
     fetchRoles();
   }, []);
+
+  // Re-fetch user profile whenever roleUpdated changes
+  useEffect(() => {
+    if (roleUpdated) {
+      fetchCurrentUser();
+      setRoleUpdated(false); // Reset after re-fetching user data
+    }
+  }, [roleUpdated]);
 
   const fetchCurrentUser = async () => {
     try {
@@ -41,7 +48,7 @@ const Switch = () => {
       const { data, error } = await supabase
         .from('roles')
         .select('id, role_name')
-        .in('role_name', ['Hustler', 'Business Owner']); // Limit roles here
+        .in('role_name', ['User','Hustler', 'Business Owner']); // Limit roles here
       if (error) throw error;
       setRoles(data);
     } catch (error) {
@@ -59,14 +66,12 @@ const Switch = () => {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ role_id: selectedRole })
-        .eq('id', currentUser.id);
+        .update({ role_id: selectedRole }) // Correctly update role_id
+        .eq('id', currentUser.id); // Match user by their ID
       if (error) throw error;
 
       Alert.alert('Success', 'User role updated successfully.');
-      
-      // Navigate to the same screen to reload
-      navigation.navigate("Switch"); 
+      setRoleUpdated(true); // Trigger the effect to re-fetch user data
     } catch (error) {
       console.error('Failed to update role:', error);
       Alert.alert('Error', 'Failed to update role.');

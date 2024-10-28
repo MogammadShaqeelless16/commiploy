@@ -44,6 +44,10 @@ const BecomeAHustler = () => {
     Linking.openURL(url);
   };
 
+  const handleSignUp = () => {
+    navigation.navigate('SignUp');
+  };
+
   // Function to close the modal
   const closeModal = () => {
     setModalVisible(false);
@@ -58,7 +62,7 @@ const BecomeAHustler = () => {
 
       <Image source={Image1} style={styles.Image1} />
 
-      <TouchableOpacity style={styles.applyButton} onPress={handleFNBAccountPress}>
+      <TouchableOpacity style={styles.applyButton} onPress={handleApplyPress}>
         <Text style={styles.applyButtonText}>Don't have an account? Apply with FNB</Text>
       </TouchableOpacity>
 
@@ -77,8 +81,8 @@ const BecomeAHustler = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Account Required</Text>
             <Text style={styles.modalMessage}>You need to have an account to become a hustler. Would you like to create one?</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={handleFNBAccountPress}>
-              <Text style={styles.modalButtonText}>Yes, Open FNB Account</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={handleSignUp}>
+              <Text style={styles.modalButtonText}>Yes, Sign Up</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
               <Text style={styles.modalButtonText}>Cancel</Text>
