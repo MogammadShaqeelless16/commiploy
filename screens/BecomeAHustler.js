@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, Linking, Dimensions, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import { fetchProfile } from '../component/UserOperations/fetchProfile'; // Import fetchProfile
 
-const Image1 = require('../assets/images/hustler.png');
+// Import images for mobile and desktop
+const mobileImage = require('../assets/images/hustler_mobile.png');
+const desktopImage = require('../assets/images/hustler.png');
 
 const BecomeAHustler = () => {
   const navigation = useNavigation(); // Initialize navigation
   const [hasAccount, setHasAccount] = useState(false); // State to check if user has an account
   const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
+  const [imageSource, setImageSource] = useState(mobileImage); // Default to mobile image
 
   // Check if user has an account on mount
   useEffect(() => {
@@ -27,7 +30,22 @@ const BecomeAHustler = () => {
     };
 
     checkUserAccount();
+    handleResponsiveImage();
+    
+    // Add an event listener for orientation change
+    const subscription = Dimensions.addEventListener('change', handleResponsiveImage);
+    
+    return () => {
+      subscription?.remove(); // Cleanup the event listener
+    };
   }, []);
+
+  // Function to determine the correct image based on screen width
+  const handleResponsiveImage = () => {
+    const { width } = Dimensions.get('window');
+    // If width is less than 768px, consider it mobile; otherwise desktop
+    setImageSource(width < 768 ? mobileImage : desktopImage);
+  };
 
   // Function to navigate to ApplyForHustler screen
   const handleApplyPress = () => {
@@ -54,15 +72,15 @@ const BecomeAHustler = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}> {/* Wrap the content in ScrollView */}
       <Text style={styles.title}>Become a Hustler</Text>
       <Text style={styles.subtitle}>
         Apply for freelance opportunities for odd jobs!
       </Text>
 
-      <Image source={Image1} style={styles.Image1} />
+      <Image source={imageSource} style={styles.image} /> {/* Use responsive image */}
 
-      <TouchableOpacity style={styles.applyButton} onPress={handleApplyPress}>
+      <TouchableOpacity style={styles.applyButton} onPress={handleFNBAccountPress}>
         <Text style={styles.applyButtonText}>Don't have an account? Apply with FNB</Text>
       </TouchableOpacity>
 
@@ -90,13 +108,13 @@ const BecomeAHustler = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1, // Allow the content to grow
     padding: 16,
     backgroundColor: '#fff',
   },
@@ -111,9 +129,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#555',
   },
-  Image1: {
+  image: {
     width: '100%', // Adjusted for better responsiveness
-    height: 200, // Set fixed height for the image
     resizeMode: 'contain', // Maintain aspect ratio
     marginBottom: 20,
   },
