@@ -79,7 +79,7 @@ const OnboardingScreen = ({ onComplete }) => {
           style={styles.nextButton}
           onPress={handleNext}
         >
-          <Text style={styles.nextButtonText}>{currentIndex < 3 ? 'Next' : 'Get Started'}</Text>
+          <Text style={styles.nextButtonText}>{currentIndex < 4 ? 'Next' : 'Get Started'}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
