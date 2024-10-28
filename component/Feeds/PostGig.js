@@ -20,7 +20,7 @@ const PostGig = () => {
 
     try {
       const { error } = await supabase
-        .from('gigs') // Make sure 'gigs' table exists in your Supabase database
+        .from('jobs') // Make sure 'gigs' table exists in your Supabase database
         .insert([
           {
             title,

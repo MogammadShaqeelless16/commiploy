@@ -60,8 +60,8 @@ const Switch = () => {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ id: selectedRole })
-        .eq('id', currentUser.id);
+        .update({ role_id: selectedRole }) // Update role_id here correctly
+        .eq('id', currentUser.id); // Match user by their ID
       if (error) throw error;
       Alert.alert('Success', 'User role updated successfully.');
     } catch (error) {
@@ -85,7 +85,7 @@ const Switch = () => {
         onValueChange={(itemValue) => setSelectedRole(itemValue)}
       >
         {roles.map((role) => (
-          <Picker.Item key={role.role_id} label={role.role_name} value={role.role_id} />
+          <Picker.Item key={role.id} label={role.role_name} value={role.id} />
         ))}
       </Picker>
 
