@@ -26,7 +26,7 @@ const WritePost = ({ onPost }) => {
         />
       </View>
       <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-        <Text style={styles.postButtonText}>Post</Text>
+        <Text style={styles.postButtonText}>+</Text>
       </TouchableOpacity>
     </View>
   );

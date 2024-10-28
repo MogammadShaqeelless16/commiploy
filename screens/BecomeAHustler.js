@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, Linking } from 
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import { fetchProfile } from '../component/UserOperations/fetchProfile'; // Import fetchProfile
 
-const Image1 = require('../assets/images/hustler.jpeg');
+const Image1 = require('../assets/images/hustler.png');
 
 const BecomeAHustler = () => {
   const navigation = useNavigation(); // Initialize navigation
