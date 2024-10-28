@@ -23,6 +23,46 @@ const ListYourBusiness = ({ navigation }) => {
         style={styles.image} 
       />
 
+<Text style={styles.sectionTitle}>Business Packages:</Text>
+      <View style={styles.tableContainer}>
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderText}>Feature</Text>
+          <Text style={styles.tableHeaderText}>Free</Text>
+          <Text style={styles.tableHeaderText}>Basic</Text>
+          <Text style={styles.tableHeaderText}>Pro</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Landing Page Builder</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>External Domain Support</Text>
+          <Text style={styles.tableCell}>❌</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+          <Text style={styles.tableCell}>✔️</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>CRM</Text>
+          <Text style={styles.tableCell}>❌</Text>
+          <Text style={styles.tableCell}>Manual Leads Management</Text>
+          <Text style={styles.tableCell}>Advanced CRM</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Analytics</Text>
+          <Text style={styles.tableCell}>Basic</Text>
+          <Text style={styles.tableCell}>Enhanced</Text>
+          <Text style={styles.tableCell}>Advanced</Text>
+        </View>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Support</Text>
+          <Text style={styles.tableCell}>Email</Text>
+          <Text style={styles.tableCell}>Email & Chat</Text>
+          <Text style={styles.tableCell}>Priority Support</Text>
+        </View>
+      </View>
+
       <Text style={styles.sectionTitle}>What You Need:</Text>
       <Text style={styles.bulletPoint}>• A valid business registration document.</Text>
       <Text style={styles.bulletPoint}>• Proof of Address for your business.</Text>
