@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Picker, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import supabase from '../../supabaseClient';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -8,13 +9,13 @@ const Switch = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
+  const navigation = useNavigation(); // Initialize navigation
 
   useEffect(() => {
     fetchCurrentUser();
     fetchRoles();
   }, []);
 
-  // Fetch current user information using fetchProfile
   const fetchCurrentUser = async () => {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -35,7 +36,6 @@ const Switch = () => {
     }
   };
 
-  // Fetch roles and limit to "Hustler" and "Business Owner"
   const fetchRoles = async () => {
     try {
       const { data, error } = await supabase
@@ -50,7 +50,6 @@ const Switch = () => {
     }
   };
 
-  // Switch user role
   const switchRole = async () => {
     if (!currentUser || !selectedRole) {
       Alert.alert('Error', 'No user is currently logged in or no role selected.');
@@ -60,10 +59,14 @@ const Switch = () => {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ role_id: selectedRole }) // Update role_id here correctly
-        .eq('id', currentUser.id); // Match user by their ID
+        .update({ role_id: selectedRole })
+        .eq('id', currentUser.id);
       if (error) throw error;
+
       Alert.alert('Success', 'User role updated successfully.');
+      
+      // Navigate to the same screen to reload
+      navigation.navigate("Switch"); 
     } catch (error) {
       console.error('Failed to update role:', error);
       Alert.alert('Error', 'Failed to update role.');
@@ -75,7 +78,10 @@ const Switch = () => {
       <Text style={styles.title}>Switch User Role</Text>
 
       {currentUser && (
-        <Text style={styles.info}>Current User: {currentUser.email}</Text>
+        <Text style={styles.info}>
+          Current User: {currentUser.email} {"\n"} 
+          Role: {roles.find(role => role.id === currentUser.role_id)?.role_name || 'Unknown'}
+        </Text>
       )}
 
       <Text style={styles.label}>Select Role:</Text>

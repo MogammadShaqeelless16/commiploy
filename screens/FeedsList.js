@@ -4,7 +4,6 @@ import ProductCard from '../component/Feeds/ProductCard';
 import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
 import SectionHeader from '../component/Feeds/SectionHeader';
-import ProfileAlert from '../component/Profile/ProfileAlert';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
 import Loading from '../component/loadingComponent/loading';
@@ -110,7 +109,10 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        <WritePost />
+        {/* Only render WritePost if user is logged in */}
+        {profile.first_name && (
+          <WritePost onPost={(text) => console.log("User posted:", text)} />
+        )}
 
         {role === 'Business Owner' ? (
           <>

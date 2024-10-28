@@ -18,7 +18,7 @@ const WritePost = ({ onPost }) => {
         <Icon name="pencil" size={20} color="#666" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="What's on your mind?"
+          placeholder="Find a Hustler? / Post a Gig?"
           placeholderTextColor="#aaa"
           value={postText}
           onChangeText={setPostText}
