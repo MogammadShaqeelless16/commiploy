@@ -31,6 +31,7 @@ import EditBusinessDetails from '../screens/business/EditBusinessDetails';
 import BusinessList from '../screens/BusinessList';
 import NotificationsScreen from '../screens/Notifications';
 import CheckoutScreen from '../screens/cart/CheckoutScreen';
+import JobList from '../screens/JobList';
 
 const Stack = createStackNavigator();
 
@@ -93,8 +94,8 @@ const AppNavigator = () => {
           <Stack.Screen name="ServiceDetails" component={ServiceDetails} options={{ headerShown: false }} />
           <Stack.Screen name="BusinessDetails" component={BusinessDetails} options={{ headerShown: false }} />
           <Stack.Screen name="UserProfileDetails" component={UserProfileDetails} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={Login}  />
-          <Stack.Screen name="SignUp" component={SignUp} /> 
+          <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }}  />
+          <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}  /> 
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForHustler" component={ApplyForHustler} options={{ headerShown: false }} />
           <Stack.Screen name="ApplyForBusiness" component={ApplyForBusiness} options={{ headerShown: false }} /> 
@@ -102,8 +103,9 @@ const AppNavigator = () => {
           <Stack.Screen name="EditBusinessDetails" component={EditBusinessDetails}  options={{ headerShown: false }} /> 
           <Stack.Screen name="BusinessList" component={BusinessList}  options={{ headerShown: false }} />
           <Stack.Screen name="NotificationsScreen" component={NotificationsScreen}  options={{ headerShown: false }} />
-          <Stack.Screen name="CartScreen" component={CartScreen}  options={{ headerShown: false }} />
+          <Stack.Screen name="CartScreen" component={CartScreen}  options={{ headerShown: false }} /> 
           <Stack.Screen name="CheckoutScreen" component={CheckoutScreen}  options={{ headerShown: false }} />
+          <Stack.Screen name="JobList" component={JobList}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

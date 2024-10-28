@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const HustlerCard = () => {
+  const navigation = useNavigation(); // Initialize navigation
   // Define category details: name and color
   const categories = [
     { name: 'My Services', color: '#df0050' },
-    { name: 'Jobs', color: '#029eb0' },
+    { name: 'Jobs', color: '#029eb0' , navigateTo: 'JobList' },
     { name: 'Profits', color: '#32CD32' },
   ];
 
@@ -15,6 +17,11 @@ const HustlerCard = () => {
         <TouchableOpacity
           key={index}
           style={[styles.card, { backgroundColor: category.color }]}
+          onPress={() => {
+            if (category.navigateTo) {
+              navigation.navigate(category.navigateTo); // Navigate to BusinessList if present
+            }
+          }}
         >
           <Text style={styles.cardText}>{category.name}</Text>
         </TouchableOpacity>

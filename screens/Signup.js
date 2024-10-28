@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { supabase } from '../supabaseClient'; // Import your Supabase client
+import ArtBackground from '../component/BackgroundSprites/ArtBackground';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -17,9 +19,34 @@ const SignUp = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [idNumber, setIdNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+
+  const validateEmail = (email) => {
+    // Regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      return false;
+    } else {
+      setEmailError('');
+      return true;
+    }
+  };
+
+  const validatePhoneNumber = (phoneNumber) => {
+    // Regular expression for a 10-digit phone number (e.g., U.S. format)
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("Please enter a valid 10-digit phone number.");
+      return false;
+    } else {
+      setPhoneError('');
+      return true;
+    }
+  };
 
   const handleSignUp = async () => {
     setLoading(true);
@@ -27,6 +54,12 @@ const SignUp = ({ navigation }) => {
 
     if (password !== confirmPassword) {
       setError("Passwords don't match");
+      setLoading(false);
+      return;
+    }
+
+    // Run email and phone number validations
+    if (!validateEmail(email) || !validatePhoneNumber(phoneNumber)) {
       setLoading(false);
       return;
     }
@@ -47,7 +80,6 @@ const SignUp = ({ navigation }) => {
           first_name: firstName,
           last_name: lastName,
           phone_number: phoneNumber,
-          id_number: idNumber,
           email,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -69,8 +101,11 @@ const SignUp = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <ArtBackground>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#007bff" />
+        </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.innerContainer}>
-
         <TextInput
           style={styles.input}
           placeholder="First Name"
@@ -87,10 +122,25 @@ const SignUp = ({ navigation }) => {
           style={styles.input}
           placeholder="Email"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            validateEmail(text);
+          }}
           autoCapitalize="none"
           keyboardType="email-address"
         />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChangeText={(text) => {
+            setPhoneNumber(text);
+            validatePhoneNumber(text);
+          }}
+          keyboardType="phone-pad"
+        />
+        {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -104,20 +154,6 @@ const SignUp = ({ navigation }) => {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="ID Number"
-          value={idNumber}
-          onChangeText={setIdNumber}
-          keyboardType="numeric"
         />
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -135,6 +171,7 @@ const SignUp = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </ArtBackground>
     </View>
   );
 };
@@ -144,7 +181,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
     width: '100%'
   },
   innerContainer: {
@@ -153,7 +189,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: '100%',
-    backgroundColor: '#ffffff',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -163,33 +198,26 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center',
-    color: '#333',
-  },
   input: {
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 16, // Increased margin for better spacing
+    marginBottom: 16,
     paddingHorizontal: 10,
     borderRadius: 8,
     backgroundColor: '#f9f9f9',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align buttons side by side
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#4a90e2',
+    backgroundColor: '#62c0ca',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    width: '48%', // Adjusted width for two columns
+    width: '48%',
   },
   buttonText: {
     color: '#ffffff',
