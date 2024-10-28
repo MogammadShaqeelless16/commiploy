@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Alert, TextInput , TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import supabase from '../supabaseClient'; // Ensure the correct import path
 import { useNavigation } from '@react-navigation/native';
 import ServiceItem from './services/ServiceItem';
@@ -15,17 +15,36 @@ const Services = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [numColumns, setNumColumns] = useState(2); // Default columns for mobile view
+
+  // Dynamically adjust columns based on screen width
+  useEffect(() => {
+    const updateNumColumns = () => {
+      const screenWidth = Dimensions.get('window').width;
+      if (screenWidth > 800) {
+        setNumColumns(4); // Larger screen
+      } else if (screenWidth > 600) {
+        setNumColumns(3); // Medium-sized screen
+      } else {
+        setNumColumns(2); // Mobile screen
+      }
+    };
+
+    updateNumColumns(); // Initial setup
+
+    // Add listener for screen size changes
+    const subscription = Dimensions.addEventListener('change', updateNumColumns);
+    return () => subscription?.remove();
+  }, []);
 
   const fetchServices = async () => {
     try {
       const { data, error } = await supabase
-        .from('services') // Change this to your services table
+        .from('services')
         .select('id, name, description, price, call_out_fee, created_at, updated_at')
-        .eq('is_available', true); // Assuming there's an availability field
+        .eq('is_available', true);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       setServices(data);
       setFilteredServices(data);
@@ -42,8 +61,6 @@ const Services = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-
-    // Filter services based on search query
     const queryLower = query.toLowerCase();
     const filtered = services.filter(service =>
       service.name.toLowerCase().includes(queryLower)
@@ -79,16 +96,20 @@ const Services = () => {
           style={styles.searchBar}
           placeholder="Search products..."
           value={searchQuery}
-          onChangeText={setSearchQuery}
+          onChangeText={handleSearch}
         />
         <TouchableOpacity style={styles.filterButton} onPress={() => console.log('Filter pressed')}>
           <Icon name="filter" size={20} color="#007bff" />
         </TouchableOpacity>
       </View>
+
       <FlatList
         data={filteredServices}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+        numColumns={numColumns} // Adjust the number of columns dynamically
+        key={numColumns} // Re-render on column change for layout consistency
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
@@ -121,10 +142,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
   },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+  listContainer: {
+    alignItems: 'center', // Center content when there are fewer columns
   },
 });
 

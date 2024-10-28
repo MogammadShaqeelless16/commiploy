@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Picker, TouchableOpacity } from 'react-native';
 import supabase from '../../supabaseClient';
+import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Switch = () => {
@@ -13,13 +14,20 @@ const Switch = () => {
     fetchRoles();
   }, []);
 
-  // Fetch current user information
+  // Fetch current user information using fetchProfile
   const fetchCurrentUser = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      setCurrentUser(user);
-      if (user && user.role_id) {
-        setSelectedRole(user.role_id); // Set initial role selection based on current user role
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        console.error('No active session found:', sessionError);
+        Alert.alert('Error', 'No active session found.');
+        return;
+      }
+
+      const userProfile = await fetchProfile(session.user.id);
+      if (userProfile) {
+        setCurrentUser(userProfile);
+        setSelectedRole(userProfile.role_id); // Set initial role based on current user role
       }
     } catch (error) {
       console.error('Failed to retrieve user:', error);
@@ -27,12 +35,13 @@ const Switch = () => {
     }
   };
 
-  // Fetch roles from the database
+  // Fetch roles and limit to "Hustler" and "Business Owner"
   const fetchRoles = async () => {
     try {
       const { data, error } = await supabase
         .from('roles')
-        .select('role_id, role_name');
+        .select('id, role_name')
+        .in('role_name', ['Hustler', 'Business Owner']); // Limit roles here
       if (error) throw error;
       setRoles(data);
     } catch (error) {
@@ -51,7 +60,7 @@ const Switch = () => {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ role_id: selectedRole })
+        .update({ id: selectedRole })
         .eq('id', currentUser.id);
       if (error) throw error;
       Alert.alert('Success', 'User role updated successfully.');

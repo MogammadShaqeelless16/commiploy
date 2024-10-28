@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 
-const ServiceProviderCard = ({ service, navigation }) => {
+const ServiceProviderCard = ({ service, navigation, numColumns = 2 }) => {
+  const { width } = useWindowDimensions(); // Get screen width dynamically
+
+  // Calculate card width based on numColumns
+  const cardWidth = (width - 32 - (numColumns - 1) * 12) / numColumns;
+
   const handlePress = () => {
-    // Navigate to the service details page
     navigation.navigate('ServiceDetails', { serviceId: service.id });
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={handlePress}>
+    <TouchableOpacity style={[styles.card, { width: cardWidth }]} onPress={handlePress}>
       <Text style={styles.title}>{service.name}</Text>
       <Text style={styles.price}>Price: R {service.price}</Text>
       <Text style={styles.callOutFee}>Call-out Fee: R {service.call_out_fee}</Text>
@@ -23,8 +27,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 15,
     marginRight: 12,
-    width: '48%', // Adjust for grid layout (2 columns)
-    aspectRatio: 1, // Ensures consistent card size with square aspect ratio
+    aspectRatio: 1, // Keeps card square
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.2,
