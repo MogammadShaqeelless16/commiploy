@@ -27,7 +27,7 @@ const WelcomeMessage = () => {
   const welcomeText = loading 
     ? <Loading />
     : user 
-      ? `Welcome back, ${user.first_name}!` 
+      ? `Welcome, ${user.first_name}!` 
       : 'Welcome to Commiploy';
 
   return (

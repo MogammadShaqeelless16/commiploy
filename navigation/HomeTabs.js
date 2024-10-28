@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View, Text, Alert, Image } from 'react-native';
-import supabase from '../supabaseClient'; // Ensure supabase is imported
+import { View, Alert } from 'react-native';
+import supabase from '../supabaseClient';
 import { fetchProfile } from '../component/UserOperations/fetchProfile';
 
 // Import your screens
 import JobList from '../screens/JobList';
-
 import BusinessList from '../screens/BusinessList';
 import Services from '../screens/Services';
 import FeedsList from '../screens/FeedsList';
 import ProductsList from '../screens/ProductsList';
 import Profile from '../screens/Profile';
-import NewsScreen from '../screens/News';       // Add News screen import
+import NewsScreen from '../screens/News';
+import Login from '../screens/Login'; // Import the Login screen
 import Loading from '../component/loadingComponent/loading';
 
 const Tab = createBottomTabNavigator();
@@ -32,12 +32,13 @@ const HomeTabs = () => {
   }, []);
 
   const fetchUserProfile = async () => {
-    setLoading(true); // Start loading before fetching profile
+    setLoading(true);
 
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
       console.log('No active session found, user not logged in');
-      setLoading(false); // End loading if there's no session
+      setIsLoggedIn(false);
+      setLoading(false);
       return;
     }
 
@@ -52,20 +53,18 @@ const HomeTabs = () => {
           first_name: userProfile.first_name,
           profile_picture_url: userProfile.profile_picture_url,
         });
-        setIsDeveloper(userProfile.roles.role_name === 'Developer');
         setIsHustler(userProfile.roles.role_name === 'Hustler');
-        setIsBusinessOwner(userProfile.roles.role_name === 'Business Owner');
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
       Alert.alert('Error', 'Error fetching profile data');
     } finally {
-      setLoading(false); // End loading once profile fetch is done
+      setLoading(false);
     }
   };
 
   if (loading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   return (
@@ -91,6 +90,7 @@ const HomeTabs = () => {
               iconName = 'hammer-outline';
               break;
             case 'Profile':
+            case 'Login': // Use the same icon for Profile and Login tabs
               iconName = 'person-outline';
               break;
             case 'News':
@@ -121,9 +121,12 @@ const HomeTabs = () => {
       )}
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
-
-
-      <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
+      
+      {isLoggedIn ? (
+        <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
+      ) : (
+        <Tab.Screen name="Login" component={Login} options={{ tabBarLabel: 'Login' }} />
+      )}
     </Tab.Navigator>
   );
 };
