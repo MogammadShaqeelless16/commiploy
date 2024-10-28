@@ -120,8 +120,9 @@ const HomeTabs = () => {
         <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
       )}
       <Tab.Screen name="ProductsList" component={ProductsList} options={{ tabBarLabel: 'Products' }} />
+      {!isHustler && (
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
-      
+       )}  
       {isLoggedIn ? (
         <Tab.Screen name="Profile" component={Profile} options={{ tabBarLabel: 'Profile' }} />
       ) : (

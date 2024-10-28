@@ -5,8 +5,8 @@ import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-nat
 const categories = [
   { name: 'Electronics', image: require('../../assets/category-icons/Electronics.png') },
   { name: 'Groceries', image: require('../../assets/category-icons/Groceries.png') },
-  { name: 'Food & Takeaways', image: require('../../assets/category-icons/Food_and_takeaways.png') },
-  { name: 'Clothes & Accessories', image: require('../../assets/category-icons/Clothes_and_accessories.png') },
+  { name: 'Food', image: require('../../assets/category-icons/Food_and_takeaways.png') },
+  { name: 'Clothes', image: require('../../assets/category-icons/Clothes_and_accessories.png') },
   { name: 'Hardware', image: require('../../assets/category-icons/Hardware.png') },
   { name: 'Home Appliances', image: require('../../assets/category-icons/Home_Appliances.png') },
 ];

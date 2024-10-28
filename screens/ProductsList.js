@@ -136,7 +136,10 @@ const ProductsList = ({ route, navigation }) => {
             { label: 'All Categories', value: '' },
             { label: 'Electronics', value: 'Electronics' },
             { label: 'Home Appliances', value: 'Home Appliances' },
-            { label: 'Health', value: 'Health' },
+            { label: 'Health', value: 'Health' }, 
+            { label: 'Food', value: 'Food' },
+            { label: 'Clothes', value: 'Clothes' },
+            { label: 'Groceries', value: 'Groceries' },
           ]}
           onValueChange={(value) => setSelectedCategory(value)}
           style={pickerSelectStyles}

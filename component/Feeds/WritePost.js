@@ -45,7 +45,7 @@ const WritePost = () => {
         />
       </View>
       <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-        <Text style={styles.postButtonText}>+</Text>
+        <Text style={styles.postButtonText}>Post Gig</Text>
       </TouchableOpacity>
     </View>
   );
