@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, Picker, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Modal, Picker, TouchableOpacity } from 'react-native';
 import supabase from '../../supabaseClient';
 import { fetchProfile } from '../../component/UserOperations/fetchProfile';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -9,6 +9,7 @@ const Switch = () => {
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
   const [roleUpdated, setRoleUpdated] = useState(false); // Track if role was updated
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
 
   useEffect(() => {
     fetchCurrentUser();
@@ -20,6 +21,7 @@ const Switch = () => {
     if (roleUpdated) {
       fetchCurrentUser();
       setRoleUpdated(false); // Reset after re-fetching user data
+      setModalVisible(true); // Show the modal after role is updated
     }
   }, [roleUpdated]);
 
@@ -48,7 +50,7 @@ const Switch = () => {
       const { data, error } = await supabase
         .from('roles')
         .select('id, role_name')
-        .in('role_name', ['User','Hustler', 'Business Owner']); // Limit roles here
+        .in('role_name', ['User', 'Hustler', 'Business Owner']); // Limit roles here
       if (error) throw error;
       setRoles(data);
     } catch (error) {
@@ -70,7 +72,6 @@ const Switch = () => {
         .eq('id', currentUser.id); // Match user by their ID
       if (error) throw error;
 
-      Alert.alert('Success', 'User role updated successfully.');
       setRoleUpdated(true); // Trigger the effect to re-fetch user data
     } catch (error) {
       console.error('Failed to update role:', error);
@@ -104,6 +105,23 @@ const Switch = () => {
         <Icon name="swap-horiz" size={20} color="#fff" />
         <Text style={styles.buttonText}>Switch Role</Text>
       </TouchableOpacity>
+
+      {/* Modal for showing success message */}
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>Your role has been updated successfully!</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -147,6 +165,40 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     marginLeft: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContainer: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 

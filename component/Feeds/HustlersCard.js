@@ -8,7 +8,7 @@ const HustlerCard = () => {
   const categories = [
     { name: 'My Services', color: '#df0050' },
     { name: 'Jobs', color: '#029eb0' , navigateTo: 'JobList' },
-    { name: 'Profits', color: '#32CD32' },
+    { name: 'Profits', color: '#32CD32' , navigateTo: 'Wallet'},
   ];
 
   return (
