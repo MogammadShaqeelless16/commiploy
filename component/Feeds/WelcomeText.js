@@ -25,7 +25,7 @@ const WelcomeMessage = () => {
 
   // Determine the welcome text based on user login status
   const welcomeText = loading 
-    ? <Loading />
+    ?  <Text>Loading...</Text>
     : user 
       ? `Welcome, ${user.first_name}!` 
       : 'Welcome to Commiploy';
