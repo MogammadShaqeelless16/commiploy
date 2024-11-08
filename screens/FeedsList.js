@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Dimensions, FlatList, View } from 'react-native';
+import { ScrollView, StyleSheet, Dimensions, FlatList, View , ActivityIndicator , Text} from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
 import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
