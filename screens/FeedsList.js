@@ -92,7 +92,12 @@ const FeedsList = ({ navigation }) => {
   };
 
   if (loading) {
-    return <Loading />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -135,21 +140,15 @@ const FeedsList = ({ navigation }) => {
           </>
         ) : (
           <>
-            <FlatList
-              data={products}
-              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalList}
-            />
-            <CategoryCard navigation={navigation} />
-            <SectionHeader
-              title="Service Providers"
-              navigation={navigation}
-              navigateTo="Services"
-              iconName="wrench"
-            />
+                <FlatList
+        data={jobs}
+        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />}
+        keyExtractor={item => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalList}
+      />
+
             <FlatList
               data={services.slice(0, 4)}
               renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
