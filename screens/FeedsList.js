@@ -20,6 +20,7 @@ import BusinessAnalytics from '../component/Feeds/BusinessAnalytics';
 import HustlerDashboard from '../component/Feeds/HustlerDashboard';
 import HustlerCard from '../component/Feeds/HustlersCard';
 import WritePost from '../component/Feeds/WritePost';
+import WriteProduct from '../component/Feeds/WriteProduct';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -130,6 +131,7 @@ const FeedsList = ({ navigation }) => {
 
         {role === 'Business Owner' ? (
           <>
+          <WriteProduct />
             <CrmDashboard />
             <BusinessCards />
             <BusinessAnalytics />
