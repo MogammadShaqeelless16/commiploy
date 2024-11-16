@@ -37,6 +37,8 @@ import PostGig from '../component/Feeds/PostGig';
 import PostJob from '../component/Job/PostJob';
 import PostProduct from '../component/Product/PostProduct';
 import InventoryPage from '../screens/InventoryScreen';
+import ReportDetails from '../screens/ReportDetails';
+import ReportPage from '../screens/ReportScreen';
 
 const Stack = createStackNavigator();
 
@@ -116,6 +118,8 @@ const AppNavigator = () => {
           <Stack.Screen name="PostJob" component={PostJob}  options={{ headerShown: false }} />
           <Stack.Screen name="PostProduct" component={PostProduct}  options={{ headerShown: false }} />
           <Stack.Screen name="InventoryPage" component={InventoryPage}  options={{ headerShown: false }} />
+          <Stack.Screen name="ReportPage" component={ReportPage} options={{ title: 'Reports' }} />
+          <Stack.Screen name="ReportDetails" component={ReportDetails} options={{ title: 'Report Details' }} />
         </>
       )}
     </Stack.Navigator>
