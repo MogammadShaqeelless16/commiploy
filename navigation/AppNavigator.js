@@ -36,6 +36,7 @@ import Wallet from '../component/Profile/Wallet';
 import PostGig from '../component/Feeds/PostGig';
 import PostJob from '../component/Job/PostJob';
 import PostProduct from '../component/Product/PostProduct';
+import InventoryPage from '../screens/InventoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -114,6 +115,7 @@ const AppNavigator = () => {
           <Stack.Screen name="PostGig" component={PostGig}  options={{ headerShown: false }} />
           <Stack.Screen name="PostJob" component={PostJob}  options={{ headerShown: false }} />
           <Stack.Screen name="PostProduct" component={PostProduct}  options={{ headerShown: false }} />
+          <Stack.Screen name="InventoryPage" component={InventoryPage}  options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

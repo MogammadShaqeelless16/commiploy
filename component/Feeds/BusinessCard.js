@@ -8,7 +8,7 @@ const BusinessCards = () => {
   // Define category details: name and color
   const categories = [
     { name: 'Inventory', color: '#FF6347' },
-    { name: 'Reports', color: '#4682B4' },
+    { name: 'Reports', color: '#4682B4', navigateTo: 'InventoryPage'  },
     { name: 'Business Profile', color: '#32CD32', navigateTo: 'BusinessList' }, // Add navigateTo property
   ];
 
