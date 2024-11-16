@@ -58,7 +58,7 @@ const BecomeAHustler = () => {
 
   // Function to open the FNB account link
   const handleFNBAccountPress = () => {
-    const url = "https://www.fnb.co.za/business-banking/accounts/solopreneur-bundle/index.html";
+    const url = "https://www.africanbank.co.za/en/home/business-transactional-account/";
     Linking.openURL(url);
   };
 
@@ -81,7 +81,7 @@ const BecomeAHustler = () => {
       <Image source={imageSource} style={styles.image} /> {/* Use responsive image */}
 
       <TouchableOpacity style={styles.applyButton} onPress={handleFNBAccountPress}>
-        <Text style={styles.applyButtonText}>Don't have an account? Apply with FNB</Text>
+        <Text style={styles.applyButtonText}>Don't have an account? Apply with Africa Bank</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.applyButton} onPress={handleApplyPress}>

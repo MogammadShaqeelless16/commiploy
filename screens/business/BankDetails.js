@@ -30,12 +30,12 @@ const BankDetails = ({ bankDetails, setBankDetails, bankName, setBankName, hasBa
       </TouchableOpacity>
 
       <Text style={styles.link}>
-        Apply for an account with FNB here:
+        Apply for an account with Africa Bank here:
         <Text
           style={styles.linkUrl}
-          onPress={() => Linking.openURL('https://www.fnb.co.za/business-banking/accounts/solopreneur-bundle/index.html')}
+          onPress={() => Linking.openURL('https://www.africanbank.co.za/en/home/business-transactional-account/')}
         >
-          FNB Solopreneur Bundle
+          Africa Bank
         </Text>
       </Text>
     </View>
