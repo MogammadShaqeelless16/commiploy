@@ -105,10 +105,6 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        {/* Only render WritePost if user is logged in and not a Business Owner */}
-        {profile.first_name && role !== 'Business Owner' && (
-          <WritePost onPost={(text) => console.log("User posted:", text)} />
-        )}
 
 
         {/* Only show WriteProduct and Business Owner specific components for Business Owners */}
