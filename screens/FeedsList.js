@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Dimensions, FlatList, View , ActivityIndicator , Text} from 'react-native';
+import { ScrollView, StyleSheet, Dimensions, FlatList, View, ActivityIndicator, Text } from 'react-native';
 import ProductCard from '../component/Feeds/ProductCard';
-import JobCard from '../component/Feeds/JobCard';
 import ServiceProviderCard from '../component/Feeds/ServiceProviderCard';
-import SectionHeader from '../component/Feeds/SectionHeader';
 import supabase from '../supabaseClient';
 import LocationDisplay from '../component/LocationDisplay';
 import Loading from '../component/loadingComponent/loading';
-import CategoryCard from '../component/Feeds/CategoryCard';
 import WelcomeMessage from '../component/Feeds/WelcomeText';
 import ArtBackground from '../component/BackgroundSprites/ArtBackground';
 import OpenDrawerButton from '../component/OpenDrawerButton';
@@ -26,7 +23,6 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const FeedsList = ({ navigation }) => {
   const [products, setProducts] = useState([]);
-  const [jobs, setJobs] = useState([]);
   const [services, setServices] = useState([]);
   const [profile, setProfile] = useState({
     first_name: '',
@@ -47,12 +43,6 @@ const FeedsList = ({ navigation }) => {
         .select('*');
       if (productError) throw productError;
       setProducts(productData);
-
-      const { data: jobData, error: jobError } = await supabase
-        .from('jobs')
-        .select('*');
-      if (jobError) throw jobError;
-      setJobs(jobData);
 
       const { data: serviceData, error: serviceError } = await supabase
         .from('services')
@@ -115,43 +105,49 @@ const FeedsList = ({ navigation }) => {
         <WelcomeMessage />
         <LocationDisplay />
 
-        {/* Only render WritePost if user is logged in */}
-        {profile.first_name && (
+        {/* Only render WritePost if user is logged in and not a Business Owner */}
+        {profile.first_name && role !== 'Business Owner' && (
           <WritePost onPost={(text) => console.log("User posted:", text)} />
         )}
 
-<FlatList
-              data={products}
-              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalList}
-            />
 
-        {role === 'Business Owner' ? (
+        {/* Only show WriteProduct and Business Owner specific components for Business Owners */}
+        {profile.first_name && role === 'Business Owner' && (
           <>
-          <WriteProduct />
+            <WriteProduct />
             <CrmDashboard />
             <BusinessCards />
             <BusinessAnalytics />
           </>
-        ) : role === 'Hustler' ? (
+        )}
+
+        {/* Show Hustler-specific content for Hustlers */}
+        {role === 'Hustler' && (
           <>
             <HustlerDashboard />
             <HustlerCard />
           </>
-        ) : (
-          <>
+        )}
 
-            <FlatList
-              data={services.slice(0, 4)}
-              renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
-              keyExtractor={item => item.id.toString()}
-              numColumns={2}
-              contentContainerStyle={styles.verticalList}
-            />
-          </>
+<FlatList
+          data={products}
+          renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+          keyExtractor={item => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalList}
+        />
+
+
+        {/* Show Services for non-Business Owners and non-Hustlers */}
+        {role !== 'Business Owner' && role !== 'Hustler' && (
+          <FlatList
+            data={services.slice(0, 4)}
+            renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
+            keyExtractor={item => item.id.toString()}
+            numColumns={2}
+            contentContainerStyle={styles.verticalList}
+          />
         )}
       </ArtBackground>
     </ScrollView>
@@ -178,6 +174,11 @@ const styles = StyleSheet.create({
   },
   verticalList: {
     paddingVertical: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

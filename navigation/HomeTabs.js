@@ -116,7 +116,7 @@ const HomeTabs = () => {
     >
       <Tab.Screen name="FeedsList" component={FeedsList} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="News" component={NewsScreen} options={{ tabBarLabel: 'News' }} />
-      <Tab.Screen name="JobList" component={JobList} options={{ tabBarLabel: 'Jobs' }} />
+      <Tab.Screen name="ProductList" component={ProductList} options={{ tabBarLabel: 'Product' }} />
       {!isHustler && (
       <Tab.Screen name="Services" component={Services} options={{ tabBarLabel: 'Services' }} />
        )}  
