@@ -119,6 +119,15 @@ const FeedsList = ({ navigation }) => {
           <WritePost onPost={(text) => console.log("User posted:", text)} />
         )}
 
+<FlatList
+              data={products}
+              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+            />
+
         {role === 'Business Owner' ? (
           <>
             <CrmDashboard />
@@ -129,25 +138,9 @@ const FeedsList = ({ navigation }) => {
           <>
             <HustlerDashboard />
             <HustlerCard />
-            <FlatList
-              data={products}
-              renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalList}
-            />
           </>
         ) : (
           <>
-                <FlatList
-        data={jobs}
-        renderItem={({ item }) => <JobCard job={item} navigation={navigation} />}
-        keyExtractor={item => item.id}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.horizontalList}
-      />
 
             <FlatList
               data={services.slice(0, 4)}
