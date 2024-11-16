@@ -125,26 +125,39 @@ const FeedsList = ({ navigation }) => {
           </>
         )}
 
-<FlatList
+      {/* Show Local Products */}
+      <>
+        <Text style={styles.header}>Local Products</Text> {/* Header for Local Products */}
+        <FlatList
           data={products}
-          renderItem={({ item }) => <ProductCard product={item} navigation={navigation} />}
+          renderItem={({ item }) => (
+            <ProductCard product={item} navigation={navigation} />
+          )}
           keyExtractor={item => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}
         />
+      </>
 
 
-        {/* Show Services for non-Business Owners and non-Hustlers */}
-        {role !== 'Business Owner' && role !== 'Hustler' && (
+
+      {/* Show Services for non-Business Owners and non-Hustlers */}
+      {role !== 'Business Owner' && role !== 'Hustler' && (
+        <>
+          <Text style={styles.header}>Services</Text> {/* Header for Services */}
           <FlatList
             data={services.slice(0, 4)}
-            renderItem={({ item }) => <ServiceProviderCard service={item} navigation={navigation} />}
+            renderItem={({ item }) => (
+              <ServiceProviderCard service={item} navigation={navigation} />
+            )}
             keyExtractor={item => item.id.toString()}
             numColumns={2}
             contentContainerStyle={styles.verticalList}
           />
-        )}
+        </>
+      )}
+
       </ArtBackground>
     </ScrollView>
   );
@@ -175,6 +188,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
   },
 });
 
