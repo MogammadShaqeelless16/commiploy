@@ -22,12 +22,12 @@ const PostProduct = ({ navigation }) => {
 
   const fakeGenerateProductDescription = () => {
     const fakeDescriptions = [
-      'This product is of the highest quality, designed to meet your needs.',
-      'A premium item that will enhance your lifestyle with top-notch features.',
-      'Experience the best of innovation and functionality with this product.',
-      'This product offers exceptional performance at an affordable price.',
-      'Crafted with precision and durability, this product is made to last.'
-    ];
+      'These AirPods offer the highest sound quality, designed to meet all your audio needs.',
+      'A premium accessory that will elevate your listening experience with advanced features.',
+      'Experience the best of wireless innovation and seamless functionality with these AirPods.',
+      'These AirPods provide exceptional sound performance at an unbeatable price.',
+      'Crafted with precision and durability, these AirPods are built to last and deliver top-tier audio.'
+    ];    
     const randomIndex = Math.floor(Math.random() * fakeDescriptions.length);
     return fakeDescriptions[randomIndex];
   };
