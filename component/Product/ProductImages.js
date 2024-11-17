@@ -45,19 +45,6 @@ const ProductImages = ({ productImages, setProductImages }) => {
               <View key={index} style={styles.imageWrapper}>
                 <Image source={{ uri: image.uri }} style={styles.imagePreview} />
                 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Image Title"
-                  value={image.title}
-                  onChangeText={(text) => handleTitleChange(index, text)}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Image Description"
-                  value={image.description}
-                  onChangeText={(text) => handleDescriptionChange(index, text)}
-                  multiline
-                />
               </View>
             ))}
           </ScrollView>
