@@ -1,11 +1,16 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 // Placeholder report data (this could be fetched from an API or database in a real-world application)
 const reports = [
   { id: '1', name: 'Sales Report', description: 'View sales data over time.' },
   { id: '2', name: 'Inventory Report', description: 'View stock levels and product details.' },
   { id: '3', name: 'User Activity Report', description: 'View user interaction data.' },
+  { id: '4', name: 'Financial Report', description: 'Analyze revenue, expenses, and profit margins.' },
+  { id: '5', name: 'Customer Feedback Report', description: 'Review customer suggestions and complaints.' },
+  { id: '6', name: 'Marketing Performance Report', description: 'Evaluate the results of campaigns and advertising.' },
+  { id: '7', name: 'HR Report', description: 'Monitor employee performance and attendance.' },
+  { id: '8', name: 'Operational Efficiency Report', description: 'Assess productivity and process improvements.' },
 ];
 
 const ReportPage = ({ navigation }) => {
