@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Button, StyleSheet, Alert, Modal, Text, TouchableOpacity } from 'react-native';
 import ProductDetails from './ProductDetails';
 import ProductLocation from './ProductLocation';
@@ -20,11 +20,23 @@ const PostProduct = ({ navigation }) => {
   const [productImages, setProductImages] = useState([]);
   const [showCancelModal, setShowCancelModal] = useState(false);  // State to handle modal visibility
 
+  const fakeGenerateProductDescription = () => {
+    const fakeDescriptions = [
+      'This product is of the highest quality, designed to meet your needs.',
+      'A premium item that will enhance your lifestyle with top-notch features.',
+      'Experience the best of innovation and functionality with this product.',
+      'This product offers exceptional performance at an affordable price.',
+      'Crafted with precision and durability, this product is made to last.'
+    ];
+    const randomIndex = Math.floor(Math.random() * fakeDescriptions.length);
+    return fakeDescriptions[randomIndex];
+  };
+
   const validateCurrentStep = () => {
     const validations = [
-      { condition: currentStep === 0 && (!productDetails.name || !productDetails.description || !productDetails.price), message: 'Please fill in all product details.' },
-      { condition: currentStep === 1 && !productLocation.address, message: 'Please provide a location.' },
-      { condition: currentStep === 2 && productImages.length === 0, message: 'Please upload at least one image.' },
+      { condition: currentStep === 0 && productImages.length === 0, message: 'Please upload at least one image.' },
+      { condition: currentStep === 1 && (!productDetails.name || !productDetails.description || !productDetails.price), message: 'Please fill in all product details.' },
+      { condition: currentStep === 2 && !productLocation.address, message: 'Please provide a location.' },
     ];
 
     const error = validations.find(validation => validation.condition);
@@ -40,6 +52,18 @@ const PostProduct = ({ navigation }) => {
       setCurrentStep(prevStep => Math.min(prevStep + 1, 3));
     }
   };
+
+  // Handle image upload and description generation
+  useEffect(() => {
+    if (productImages.length > 0 && !productDetails.description) {
+      // Simulate generating description after image upload
+      const generatedDescription = fakeGenerateProductDescription();
+      setProductDetails(prevState => ({
+        ...prevState,
+        description: generatedDescription,
+      }));
+    }
+  }, [productImages]);
 
   // Function to handle the cancellation action
   const cancelPosting = () => {
@@ -61,15 +85,13 @@ const PostProduct = ({ navigation }) => {
     try {
       const { data, error } = await supabase
         .from('products')
-        .insert([
-          {
-            name: productDetails.name,
-            description: productDetails.description,
-            price: parseFloat(productDetails.price),
-            address: productLocation.address,
-            images: productImages,
-          },
-        ]);
+        .insert([{
+          name: productDetails.name,
+          description: productDetails.description,
+          price: parseFloat(productDetails.price),
+          address: productLocation.address,
+          images: productImages,
+        }]);
 
       if (error) throw error;
 
@@ -82,11 +104,11 @@ const PostProduct = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <ProgressBar currentStep={currentStep} />
-      {currentStep === 0 && <ProductDetails productDetails={productDetails} setProductDetails={setProductDetails} />}
-      {currentStep === 1 && <ProductLocation productLocation={productLocation} setProductLocation={setProductLocation} />}
-      {currentStep === 2 && <ProductImages productImages={productImages} setProductImages={setProductImages} />}
+      {currentStep === 0 && <ProductImages productImages={productImages} setProductImages={setProductImages} />}
+      {currentStep === 1 && <ProductDetails productDetails={productDetails} setProductDetails={setProductDetails} />}
+      {currentStep === 2 && <ProductLocation productLocation={productLocation} setProductLocation={setProductLocation} />}
       {currentStep === 3 && <ProductReview productDetails={productDetails} productLocation={productLocation} productImages={productImages} handleSubmit={handleSubmit} />}
-      
+
       <View style={styles.buttonContainer}>
         {currentStep > 0 && <Button title="Back" onPress={() => setCurrentStep(currentStep - 1)} />}
         {currentStep < 3 ? <Button title="Next" onPress={nextStep} /> : <Button title="Submit" onPress={handleSubmit} />}
@@ -100,7 +122,7 @@ const PostProduct = ({ navigation }) => {
         animationType="slide"
         transparent={true}
         visible={showCancelModal}
-        onRequestClose={closeModal}  // Handle the modal close action
+        onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
