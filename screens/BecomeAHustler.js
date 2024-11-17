@@ -73,7 +73,7 @@ const BecomeAHustler = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}> {/* Wrap the content in ScrollView */}
-      <Text style={styles.title}>Become a Delivery Bike Driver</Text>
+      <Text style={styles.title}>Become a Delivery Partner</Text>
       <Text style={styles.subtitle}>
           BECOME A DRIVER PARTNER AND JOIN THE COMMIPLOY DELIVERY TEAM TODAY!
       </Text>
