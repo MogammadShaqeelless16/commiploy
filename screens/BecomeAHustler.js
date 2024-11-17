@@ -73,9 +73,9 @@ const BecomeAHustler = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}> {/* Wrap the content in ScrollView */}
-      <Text style={styles.title}>Become a Hustler</Text>
+      <Text style={styles.title}>Become a Delivery Bike Driver</Text>
       <Text style={styles.subtitle}>
-        Apply for freelance opportunities for odd jobs!
+          BECOME A DRIVER PARTNER AND JOIN THE COMMIPLOY DELIVERY TEAM TODAY!
       </Text>
 
       <Image source={imageSource} style={styles.image} /> {/* Use responsive image */}
@@ -98,7 +98,7 @@ const BecomeAHustler = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Account Required</Text>
-            <Text style={styles.modalMessage}>You need to have an account to become a hustler. Would you like to create one?</Text>
+            <Text style={styles.modalMessage}>You need to have an account to become a driver. Would you like to create one?</Text>
             <TouchableOpacity style={styles.modalButton} onPress={handleSignUp}>
               <Text style={styles.modalButtonText}>Yes, Sign Up</Text>
             </TouchableOpacity>

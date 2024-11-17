@@ -103,13 +103,6 @@ const DrawerNavigator = ({ navigation }) => {
             onPress={() => props.navigation.navigate('Home')}
           />
 
-          {role === 'Business Owner' && (
-            <CustomDrawerItem
-              label="My Business"
-              icon={<Ionicons name="storefront-outline" size={20} color="#007BFF" />}
-              onPress={() => props.navigation.navigate('ChatListScreen')}
-            />
-          )}
           {role === 'Developer' && (
             <CustomDrawerItem
               label="Developer"
@@ -119,7 +112,7 @@ const DrawerNavigator = ({ navigation }) => {
           )}
           {role !== 'Hustler' && (
             <CustomDrawerItem
-              label="Become a Hustler"
+              label="Become a Delivery Driver"
               icon={<Ionicons name="hammer" size={20} color="#007BFF" />}
               onPress={() => props.navigation.navigate('BecomeAHustler')}
             />
